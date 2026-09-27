@@ -43,7 +43,7 @@ Submission: PASS
     "groq_api_key_configured": true
   }
   ```
-- **CORS:** Configured with whitelist supporting explicit `FRONTEND_URL`, live Vercel production domain (`https://talentmindai-app.vercel.app`), and local development hosts. Custom header `X-Total-Count` is exposed.
+- **CORS:** Configured with whitelist supporting explicit `FRONTEND_URL`, live Vercel production domains (`https://astra-niyukti.vercel.app`, `https://talentmindai-app.vercel.app`), and local development hosts. Custom header `X-Total-Count` is exposed.
 
 ### 2.3 Database & PostgreSQL Compatibility: PASS
 - **Engine Creation:** Conditional `check_same_thread: False` applied exclusively to SQLite engines. PostgreSQL connection strings received via `DATABASE_URL` use default connection pooling without SQLite-specific dialect errors.

@@ -14,6 +14,7 @@ app = FastAPI(
 # CORS configuration — supports configured FRONTEND_URL, live Vercel domain, and local dev
 _origins_set = {
     settings.FRONTEND_URL.strip(),
+    "https://astra-niyukti.vercel.app",
     "https://talentmindai-app.vercel.app",
     "http://localhost:3000",
     "http://localhost:5500",
