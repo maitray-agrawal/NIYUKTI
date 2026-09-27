@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: talentmind-api
+    name: niyukti-api
     runtime: python
     region: oregon
     plan: starter

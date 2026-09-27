@@ -1,1 +1,1 @@
-# TalentMind AI Backend Application Package
+# NIYUKTI Backend Application Package

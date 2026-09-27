@@ -17,7 +17,7 @@ def seed_db():
         db.close()
         return
 
-    print("Seeding database with TalentMind mockup candidates and roles...")
+    print("Seeding database with NIYUKTI mockup candidates and roles...")
 
     # 1. Add Jobs
     jobs = [

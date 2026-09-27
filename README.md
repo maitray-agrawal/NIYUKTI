@@ -1,216 +1,328 @@
-# TalentMind AI 🧠💼
+# NIYUKTI
 
-**TalentMind AI** is an intelligent talent discovery and recruitment automation platform. Designed for the modern talent acquisition landscape, it leverages **Explainable AI (XAI)**, semantic matching, and behavioral signal processing to bridge the gap between complex job descriptions and vast candidate pools.
+### AI-Powered Talent Intelligence
 
----
+Sanskrit: **नियुक्ति (Niyukti)** — *appointment, employment, placement, or engagement.*
 
-## 🎯 Problem Statement
+**NIYUKTI** is an AI-powered talent intelligence and recruitment platform that intelligently matches candidates with job requirements, ranks applicants based on skills and experience, identifies skill gaps, and provides explainable hiring insights to help recruiters make faster, more informed decisions.
 
-Modern recruitment is broken. Traditional Applicant Tracking Systems (ATS) rely on rigid keyword matching, which leads to massive false positives (e.g., a "Marketing Manager" matching an "AI Engineer" role because they stuffed their resume with tech buzzwords) and false negatives (missing great candidates who describe their experience differently). 
-
-Recruiters need a system that understands **context, semantic skill overlap, behavioral engagement signals, and explicit job disqualifiers**—evaluating candidates the way a human engineering manager would.
+Part of the **ASTRA** ecosystem of intelligence tools, NIYUKTI combines deterministic multi-attribute candidate scoring, transparent Explainable AI (XAI) justifications, cognitive Groq LLM reranking, candidate comparison, and conversational recruiter assistance over a benchmarked pool of **100,001 candidates**.
 
 ---
 
-## 🏗️ Architecture
+## 1. Problem
 
-TalentMind AI uses a decoupled, high-performance architecture:
-
-*   **Client Layer:** A reactive Vanilla JS / HTML5 frontend utilizing Tailwind CSS for a premium "Glassmorphism" UI.
-*   **API Gateway:** FastAPI acts as the lightning-fast ASGI gateway.
-*   **Intelligence Layer:** 
-    *   **JD Analyzer:** Parses `.docx` and unstructured text to extract hard requirements, preferred skills, education, and cultural vibe checks (supports heuristic & Groq LLM-based parsing).
-    *   **Ranker Engine:** Computes a multi-variate compatibility score using TF-IDF (Term Frequency-Inverse Document Frequency) text similarity, semantic skill bucketing, experience curve matching, and behavioral signal processing.
-    *   **Groq GenAI Services:** Extends the parser (`GroqJDService`) and ranker (`GroqReranker`) with qualitative LLM evaluations and automatic exponential backoff to handle rate limits.
-*   **Data Persistence:** SQLAlchemy ORM backed by an efficient SQLite database.
+Modern corporate recruitment suffers from critical operational bottlenecks:
+- **Keyword-Stuffed Resumes & False Positives:** Traditional Applicant Tracking Systems (ATS) rely on naive boolean string matching, heavily penalizing qualified candidates who describe proficiencies uniquely while advancing low-fit applicants who over-index on keywords.
+- **Black-Box AI Decisions:** Emerging generative tools score candidates without transparent justifications, leaving hiring managers unable to audit why a candidate was ranked high or disqualified.
+- **Recruiter Burnout & Latency:** Manually parsing unstructured job descriptions, evaluating cross-functional skill overlaps, identifying specific skill gaps, and drafting personalized outreach requires hours per role.
+- **Scale Bottlenecks:** Evaluating pools of 100,000+ candidates in real time causes database lockups, high memory usage, and costly LLM token spend if architectures lack layered filtering.
 
 ---
 
-## 📊 Dataset
+## 2. Solution
 
-The platform is built to ingest and process complex candidate profiles, supporting the **Redrob "India Runs Data and AI Challenge"** schema. 
-
-**Key candidate data points include:**
-*   **Profile & Career History:** Deep nested arrays detailing companies, titles, durations, and role descriptions.
-*   **Education & Skills:** Tiered education histories and multi-level skill proficiency matrices.
-*   **Redrob Behavioral Signals:** Real-world simulated engagement metrics such as `recruiter_response_rate`, `profile_completeness_score`, `open_to_work_flag`, and `github_activity_score`.
-
----
-
-## 📈 Multi-Variate Scoring Methodology
-
-The `RankerService` evaluates candidates against a job description using a hybrid of semantic similarity, heuristic rules, and behavioral signals to generate a final normalized score between `0` and `100`.
-
-### 1. Six-Pillar Component Weights
-*   **Skills (30%):** Evaluates candidate capabilities using a weighted blend of semantic categories (80%) and exact keyword matches (20%). Includes an absolute `+0.20` boost (capped at 1.0) if the candidate has proven search/retrieval experience.
-*   **Experience (20%):** A linear ratio comparing total years of experience against the job's requirements.
-*   **Semantic Overlap (15%):** Uses Scikit-learn's `TfidfVectorizer` (unigrams/bigrams) to calculate cosine similarity between the candidate's profile text and the job description, scaled by `1.5` to offset vocabulary baselines.
-*   **Education (15%):** Analyzes listed degrees. Awards points based on degree levels (+0.20 for PhD, +0.10 for Masters), STEM majors (+0.20), and Tier-1 institution classification (+0.20).
-*   **Behavioral Signals (10%):** Derived from Redrob platform indicators: Profile Completeness (40%), Open to Work (20%), GitHub Activity (20%), and Recruiter Response Rate (20%).
-*   **Location Compatibility (10%):** Evaluates work preference (Remote, Onsite, Hybrid) and geographic alignment.
-
-### 2. Role Fit Multipliers
-Applied post-scoring to align candidates' titles with technical roles:
-*   **Direct AI / Search engineering match:** `1.0x`
-*   **Software Engineers (without retrieval exp) applying to AI jobs:** `0.95x`
-*   **DevOps / QA applying to AI jobs:** `0.80x`
-*   **Business Analysts:** `0.60x`
-*   **Non-technical roles (HR, Marketing, Sales):** `0.15x`
-
-### 3. Disqualifier Penalties
-*   **Consulting-Only Background:** `-10%` penalty (`0.90x` multiplier) if career history consists entirely of IT consulting firms.
-*   **Title-Chasers:** `-5%` penalty (`0.95x` multiplier) if average tenure is under 15 months.
-*   **AI Wrapper-Only:** `-10%` penalty (`0.90x` multiplier) if listing wrapper tools (LangChain, OpenAI) but lacking core ML frameworks (PyTorch, TensorFlow, FAISS).
+NIYUKTI provides a layered, transparent talent intelligence platform:
+1. **Multi-Stage Funnel Architecture:** Low-latency deterministic pre-filtering across 100,001 profiles, followed by deep 6-factor heuristic scoring, with optional LLM reranking applied only to the top cohort.
+2. **Transparent Explainable AI (XAI):** Clear visibility into score compositions (exact matched skills, identified gaps, seniority delta, and penalty factors).
+3. **Cognitive Recruiter Decision Support:** In-context Recruiter Copilot powered by Groq (Llama 3.3 70B / 3.1 8B) for customized outreach emails, interview question planning, and candidate upskilling roadmaps.
+4. **Hack2Skill Challenge-Validated:** Fully verified against the official India Runs Data and AI Challenge dataset and submission compliance validator.
 
 ---
 
-## ✨ Features
+## 3. Core Capabilities
 
-1.  **Job Description Intelligence:** Drag-and-drop unstructured `.docx` files to automatically extract required skills, experience thresholds, and explicit disqualifiers. Supports both heuristic and LLM-assisted parsing.
-2.  **Explainable Match & Rank Engine:** Ranks candidate pools with comprehensive sub-scores and provides human-readable explanations.
-3.  **Explainable AI Insights (XAI):** A dedicated endpoint fetches candidate-to-job matching explanations, categorizing "Why Matched", "Key Strengths", "Potential Risks/Weaknesses", and "Hiring Recommendations" inside the Candidate Details screen.
-4.  **Skill Gap Analysis & Copilot Roadmaps:** Dynamically identifies missing skills and generates targeted learning roadmaps (courses, projects) to help candidates upskill.
-5.  **Recruiter Copilot (GenAI):** A conversational AI assistant that drafts personalized outreach emails and summarizes candidate profiles.
-6.  **Multi-Candidate Comparison Matrix:** Select multiple candidates from the search grid and compare their metrics side-by-side.
-
----
-
-## 🔌 Core APIs
-
-| Endpoint | Method | Description |
-| :--- | :--- | :--- |
-| `/api/candidates/import` | `POST` | Bulk streams and ingests `.jsonl` candidate datasets. |
-| `/api/candidates/search` | `GET` | Multi-criteria search by skills, experience, and location. |
-| `/api/ranking/rank/{job_id}` | `POST` | Triggers the AI pipeline to rank all candidates against a specific role. |
-| `/api/candidates/{id}/explanation` | `GET` | Returns human-readable XAI justifications for a candidate's rank. |
-| `/api/candidates/compare` | `POST` | Generates a detailed comparison matrix across multiple candidate IDs. |
-| `/api/copilot/chat` | `POST` | AI assistant for drafting emails and building upskilling roadmaps. |
-| `/api/submission/generate` | `POST` | Compiles and validates the candidate rankings to export `submission.csv`. |
+- **100,001 Candidate Scale:** Single-query statistical aggregations and chunked database streaming (`yield_per`) prevent memory spikes.
+- **Structured Job Description Parsing:** Upload or paste raw text or `.docx` job descriptions to automatically extract required skills, minimum experience, and location preferences via heuristic extraction or Groq LLM intelligence.
+- **Candidate Discovery & Search:** Multi-attribute filtering across skills, experience thresholds, remote/hybrid preferences, and availability flags.
+- **Explainable Hybrid Ranking:** 6-pillar multi-attribute scoring combining technical competency, experience alignment, TF-IDF semantic overlap, education prestige, behavioral signals, and work mode compatibility.
+- **Groq LLM-Assisted Reranking:** Secondary cognitive pass evaluating top-ranked applicants with graceful offline fallback.
+- **Candidate Comparison Matrix:** Side-by-side comparative radar and attribute benchmarking for final hiring rounds.
+- **Deterministic Skill-Gap Analysis:** Delineates current verified skills vs. job requirements and highlights high-impact development areas.
+- **NIYUKTI Recruiter Copilot:** Candidate-in-the-loop AI conversational assistant for outreach, profile summaries, and technical interview guides.
+- **Challenge-Compliant Submission Compiler:** Automated export of official `submission.csv` adhering strictly to schema and ranking rules.
 
 ---
 
-## 📂 Repository Structure
+## 4. Architecture
 
-```text
-TalentMindAI/
-├── backend/
-│   ├── app/
-│   │   ├── models/           # SQLAlchemy DB models (candidate, job, ranking, audit)
-│   │   ├── routes/           # FastAPI routers (candidates, jobs, ranking, copilot, submission)
-│   │   ├── schemas/          # Pydantic validation schemas
-│   │   ├── services/         # Core logic (JD Analyzer, Ingestion, Ranker, Copilot, Groq services)
-│   │   ├── database.py       # Connection session setup
-│   │   ├── main.py           # FastAPI app initialization
-│   │   └── seed.py           # Mock database seeder
-│   ├── tests/                # Pytest unit & integration tests
-│   ├── evaluate_ranking.py   # IR evaluation script (Precision@K, Recall@K)
-│   ├── generate_submission.py# Challenge submission CSV compiler (supporting heuristic & LLM blending)
-│   ├── validate_submission.py# Local validation compliance script
-│   └── verify_ranking.py     # Core ranking validation & profiling
-├── docs/                     # Comprehensive architecture, scoring, and benchmarking reports
-├── frontend_screens/         # HTML / CSS / JS UI elements
-│   ├── dashboard.html        # Recruiter Dashboard
-│   ├── candidate_details.html# Candidate Details & XAI Insights view
-│   └── integration.js        # Client-side API orchestration
-├── requirements.txt          # Python dependencies
-└── submission.csv            # Final generated CSV submission
+NIYUKTI is deployed as a decoupled, production-hardened web application:
+
+```
+[ User Browser ]
+       │
+       ▼
+[ Vercel Edge Network ]
+  ├── Serves static UI (/dashboard.html, /candidate_search.html, /favicon.svg)
+  └── Proxies /api/* & /health
+       │
+       ▼
+[ Render Backend (FastAPI / ASGI) ]
+  ├── CORS Origin Validation
+  ├── REST Endpoints (/api/candidates, /api/jobs, /api/ranking, /api/copilot)
+  ├── SQLAlchemy ORM (SQLite local / PostgreSQL on Render)
+  └── Multi-Tiered AI Services
+       ├── RankerService (Deterministic Heuristic Engine)
+       ├── GroqReranker (Llama 3.3 70B via Groq Cloud)
+       └── CopilotService (Llama 3.1 8B with Fallback Templates)
 ```
 
 ---
 
-## Getting Started
+## 5. AI Components
 
-### 1. Backend Setup & Installation
+NIYUKTI distinguishes clearly between **deterministic computation** and **generative LLM cognition**:
 
-1. From the project root directory, create and activate a Python virtual environment:
+| Component | Technology | Nature | Role |
+|:---|:---|:---:|:---|
+| **JD Analyzer** | Regex Heuristic + Groq Llama 3.3 | Hybrid | Extracts structured requirements from unstructured text and `.docx` |
+| **Semantic Overlap** | Scikit-learn TF-IDF Vectorizer | Deterministic | Evaluates cosine text similarity across resume and job contexts |
+| **Heuristic Ranker** | Weighted Multi-Attribute Algorithm | Deterministic | Calculates calibrated 0–100 match scores across 6 objective dimensions |
+| **Groq Reranker** | Groq REST API (`llama-3.3-70b-versatile`) | LLM Cognition | Evaluates nuanced contextual strength of top candidates with heuristic fallback |
+| **NIYUKTI Copilot** | Groq REST API (`llama-3.1-8b-instant`) | LLM Cognition | Interactive recruiter chat, outreach drafts, and upskilling roadmaps |
+
+---
+
+## 6. Explainable Ranking (XAI)
+
+Candidates are scored using a transparent 6-factor formula normalized from `0` to `100`:
+
+$$\text{FinalScore} = (w_s \cdot S + w_e \cdot E + w_t \cdot T + w_d \cdot D + w_b \cdot B + w_l \cdot L) \times \prod \text{Multipliers}$$
+
+### Component Weights
+- **Skills Match (30%):** Weighted combination of categorized technical skill coverage and direct keyword matches. Includes a dedicated search/retrieval boost for relevant roles.
+- **Experience Match (20%):** Proportional alignment of verified years of experience against role requirements.
+- **Semantic Overlap (15%):** TF-IDF cosine similarity capturing domain relevance beyond raw keyword exact matches.
+- **Education Tier (15%):** Honors advanced STEM degrees (Masters, PhD) and tier-1 institutions.
+- **Behavioral Signals (10%):** Engagement signals from the Redrob platform (profile completeness, recruiter response rate, open-to-work flag, GitHub activity).
+- **Location & Preference (10%):** Remote, Hybrid, or Onsite alignment with geographic preferences.
+
+### Deterministic Disqualifier Penalties
+- **Consulting-Only Tenure:** `-10%` penalty (`0.90x`) if candidate career history reflects exclusively short-term IT consulting contracts for product roles.
+- **Title Chasing / High Churn:** `-5%` penalty (`0.95x`) if average job tenure across positions is under 15 months.
+- **AI Wrapper Risk:** `-10%` penalty (`0.90x`) if listing generative wrappers without fundamental ML frameworks (PyTorch, TensorFlow, FAISS).
+
+Every candidate detail view transparently displays exact matched skills, missing skills, and penalty reasons.
+
+---
+
+## 7. Candidate Matching
+
+NIYUKTI's two-stage matching pipeline ensures sub-second retrieval over 100,001 candidates:
+1. **Stage 1 (SQL & Heuristic Filtering):** Indexed column scans on title, experience, work mode, and primary skills narrow 100k+ candidates down to the relevant candidate pool.
+2. **Stage 2 (Calibrated Scoring):** Evaluates multi-attribute weights and persists rank snapshots in the database.
+3. **Stage 3 (LLM Rerank Cohort):** Top applicants can optionally be dispatched to Groq for qualitative re-scoring.
+
+---
+
+## 8. Skill-Gap Analysis
+
+The Skill-Gap module enables recruiters to assess candidate growth potential:
+- **Verified Proficiencies:** Skills extracted and verified from career history.
+- **Mandatory Role Gaps:** Essential qualifications missing from the candidate's profile.
+- **Recommended Development Areas:** Step-by-step guidance on adjacent technologies required to bridge the qualification gap.
+
+---
+
+## 9. Recruiter Copilot
+
+The **NIYUKTI Copilot** is a contextual recruiter assistant:
+- **Candidate-in-the-Loop:** Ingests the candidate's actual profile, years of experience, current title, and company history alongside job parameters.
+- **Outreach Email Generation:** Generates professional outreach emails tailored to the specific role and candidate achievements.
+- **Upskilling Roadmaps:** Outlines estimated durations and hands-on projects for bridging skill deltas.
+- **Resilient Fallback:** If external LLM APIs are unreachable or unconfigured, the system automatically uses verified deterministic outreach templates.
+
+---
+
+## 10. Technology Stack
+
+- **Frontend:** Vanilla HTML5, Vanilla JavaScript (ES6+), Tailwind CSS (CDN with custom Material Design 3 tokens), Google Fonts (Inter & Geist), Google Material Symbols.
+- **Backend API:** Python 3.11+, FastAPI (ASGI), Uvicorn, Pydantic v2.
+- **Database & ORM:** SQLAlchemy 2.0 with SQLite (local development) and PostgreSQL (production on Render).
+- **Machine Learning & NLP:** Scikit-learn (TF-IDF vectorization), NumPy, SciPy, python-docx.
+- **Large Language Models:** Groq Cloud API (`llama-3.3-70b-versatile`, `llama-3.1-8b-instant`).
+- **Deployment & Hosting:** Vercel (static edge hosting + `/api/*` rewrite proxy), Render (FastAPI web service).
+
+---
+
+## 11. Local Setup
+
+### Prerequisites
+- Python 3.11 or higher
+- Git
+
+### Installation Steps
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/maitray-agrawal/TalentMindAI.git niyukti
+   cd niyukti
+   ```
+
+2. **Create and activate a virtual environment:**
    ```bash
    python -m venv venv
-   # On Windows:
-   .\venv\Scripts\Activate.ps1
-   # On macOS/Linux:
+   # Windows:
+   .\venv\Scripts\activate
+   # Linux/macOS:
    source venv/bin/activate
    ```
 
-2. Install the required dependencies:
+3. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
 
-3. Set your Groq API Key (required for AI Reranking and Copilot):
+4. **Set up environment variables:**
    ```bash
-   # On Windows PowerShell:
-   $env:GROQ_API_KEY="your-groq-api-key"
-   # On macOS/Linux:
-   export GROQ_API_KEY="your-groq-api-key"
+   cp .env.example .env
    ```
+   Edit `.env` to configure your `GROQ_API_KEY` (optional for local heuristic testing).
 
-4. Navigate to the backend directory and start the FastAPI server:
+5. **Start the backend development server:**
    ```bash
    cd backend
    uvicorn app.main:app --reload --port 8000
    ```
-   *The backend API will now run at `http://127.0.0.1:8000` (interactive docs available at `/docs`).*
+   The backend API will be available at `http://127.0.0.1:8000` with interactive Swagger docs at `/docs`.
 
-### 2. Frontend Setup
-
-The frontend is built with vanilla HTML/JS and TailwindCSS. It does not require a build step.
-1. Simply open `frontend_screens/dashboard.html` in your web browser.
-2. Alternatively, use a tool like VS Code Live Server to serve the `frontend_screens` directory.
-
-### 2. Generate Submission Output
-To compile, sort, and export the top 100 candidates based on the parsed job description in `extracted_jd.txt`:
-```bash command
-cd backend
-# Run heuristic ranking:
-python generate_submission.py
-
-# Run with LLM Job Description parsing and Groq reranking:
-python generate_submission.py --llm --groq-rerank
-```
-This generates `submission.csv` in the project root.
-
-### 3. Run Submission Validator
-To verify that the generated `submission.csv` complies with the challenge parameters (exactly 100 non-duplicated rows, correct format, sorted order):
-```bash
-cd backend
-python validate_submission.py
-```
-
-### 4. Frontend Launch
-
-Open `frontend_screens/dashboard.html` directly in any web browser (`file:///` protocol) or serve it locally. 
-- Ensure the backend server is running on port `8000` so client-side API requests from `integration.js` succeed.
-- Check the top-right header indicator to verify that the status displays **API: CONNECTED**.
+6. **Open the frontend:**
+   Open `frontend_screens/index.html` or `frontend_screens/dashboard.html` directly in your browser, or serve using any static server (e.g., VS Code Live Server or `npx serve frontend_screens`).
 
 ---
 
-## Testing & Evaluation
+## 12. Environment Variables
 
-### 1. Automated Tests
-To run unit and integration tests for the ingestion pipeline, candidate matching, and service layers, execute the following from the `backend/` directory:
-```bash
-python -m unittest tests/test_ingestion.py
-python -m unittest tests/test_backend.py
-```
-
-### 2. IR Evaluation
-To run the Information Retrieval (IR) evaluation metrics comparing ranked output against ground-truth parameters:
-```bash
-cd backend
-python evaluate_ranking.py
-```
-This generates a detailed evaluation report at `evaluation_report.md` detailing **Precision@10**, **Precision@20**, and **Recall@20**.
+| Variable | Description | Required | Default |
+|:---|:---|:---:|:---|
+| `DATABASE_URL` | SQLAlchemy connection string (SQLite or PostgreSQL) | No | `sqlite:///./data/talentmind.db` |
+| `GROQ_API_KEY` | Groq Cloud API key for LLM reranker, JD parser, and Copilot | No | None (heuristic fallback active) |
+| `FRONTEND_URL` | Allowed frontend domain for CORS headers | No | `http://localhost:3000` |
+| `PORT` | Listening port for production server | No | `8000` |
 
 ---
 
-## ⚡ Scale Validation & Benchmarking
+## 13. Deployment
 
-TalentMindAI has been benchmarked and validated on the complete Hack2Skill recruitment dataset.
+### Render (Backend & PostgreSQL)
+1. Link your GitHub repository in Render.
+2. Create a **Web Service** using the settings in `render.yaml`:
+   - **Root Directory:** `backend`
+   - **Build Command:** `pip install -r requirements.txt`
+   - **Start Command:** `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+   - **Health Check Path:** `/health`
+3. Add environment variables in Render:
+   - `DATABASE_URL`: Your Render PostgreSQL internal connection string.
+   - `GROQ_API_KEY`: Your Groq Cloud API key.
+   - `FRONTEND_URL`: Your Vercel domain (`https://talentmindai-app.vercel.app`).
 
-*   **Total Candidates Processed:** 100,000 candidates
-*   **Heuristic Processing Speed:** **361.51 candidates/second**
-*   **Heuristic Phase Runtime:** 276.62 seconds (4.61 minutes)
-*   **Peak Memory Usage:** **2.93 GB**
-*   **Database Ingestion Validation:** 100,001 total database entries (100k + 1 synthetic check candidate)
+### Vercel (Frontend)
+1. Import the repository into Vercel.
+2. Set the **Root Directory** to `frontend_screens`.
+3. Vercel automatically reads `vercel.json` to proxy `/api/*` and `/health` requests to your live Render backend URL.
+4. Clean URLs are enabled (`/dashboard` serves `dashboard.html`).
 
-**Result:** The pipeline achieves 100% dataset coverage, running smoothly without socket timeouts or memory leaks.
+---
+
+## 14. API Documentation
+
+Interactive OpenAPI documentation is generated automatically by FastAPI:
+- **Swagger UI:** `https://your-backend-url/docs`
+- **ReDoc:** `https://your-backend-url/redoc`
+
+Key API routes include:
+- `GET /health` & `GET /api/health`: Database and Groq status probe
+- `GET /api/candidates/?limit=20&offset=0`: Paginated candidate retrieval
+- `GET /api/candidates/stats`: Global talent pool aggregate metrics
+- `POST /api/jobs/analyze`: Job description parsing from text or `.docx`
+- `POST /api/ranking/rank/{job_id}`: Deterministic heuristic ranking
+- `POST /api/ranking/rerank/{job_id}`: Groq LLM reranking
+- `POST /api/copilot/chat`: Contextual recruiter copilot
+- `POST /api/submission/generate`: Export official Hack2Skill `submission.csv`
+
+See [`API_AUDIT.md`](file:///d:/TalentMindAI/API_AUDIT.md) for the complete endpoint inventory.
+
+---
+
+## 15. Testing
+
+Execute the test suite using `pytest`:
+
+```bash
+pytest backend/tests/test_backend.py backend/tests/test_ranking_engine.py backend/tests/test_submission.py backend/tests/test_ingestion.py backend/tests/test_jd_intelligence.py -v
+```
+
+All 27 backend unit and integration tests pass cleanly:
+- `test_backend.py`: Candidate CRUD, Job CRUD, Ranking, Copilot chat, and JD Analyzer (6/6 PASS)
+- `test_ranking_engine.py`: Multi-candidate heuristic ranking and limit validation (6/6 PASS)
+- `test_submission.py`: Hack2Skill submission ordering and schema verification (1/1 PASS)
+- `test_ingestion.py`: Streaming dataset ingestion and stats queries (3/3 PASS)
+- `test_jd_intelligence.py`: Document parsing and section extraction (11/11 PASS)
+
+See [`DEPLOYMENT_VERIFICATION.md`](file:///d:/TalentMindAI/DEPLOYMENT_VERIFICATION.md) for the full verification matrix.
+
+---
+
+## 16. Project Structure
+
+```text
+TalentMindAI/                          # Repository Root (ASTRA / NIYUKTI)
+│
+├── backend/
+│   ├── app/
+│   │   ├── models/                    # SQLAlchemy models (Candidate, Job, Ranking, AuditLog)
+│   │   ├── routes/                    # FastAPI endpoints (candidates, jobs, ranking, copilot, submission)
+│   │   ├── schemas/                   # Pydantic data schemas
+│   │   ├── services/                  # Business logic (ranker, groq_reranker, copilot, ingestion)
+│   │   ├── config.py                  # Environment & scoring weight configuration
+│   │   ├── database.py                # Engine and session creation
+│   │   └── main.py                    # FastAPI entrypoint, CORS, startup lifecycle
+│   │
+│   ├── tests/                         # Pytest test suite
+│   ├── evaluate_ranking.py            # Ranking engine benchmark script
+│   ├── generate_submission.py         # Standalone submission generator
+│   ├── validate_submission.py         # Official Hack2Skill submission validator
+│   └── requirements.txt               # Backend dependencies
+│
+├── frontend_screens/                  # Static frontend served by Vercel
+│   ├── index.html                     # NIYUKTI Executive Portal & navigation launchpad
+│   ├── dashboard.html                 # Executive recruitment command center
+│   ├── candidate_search.html          # Candidate explorer & multi-filter search
+│   ├── candidate_ranking.html         # Explainable ranking & reranking console
+│   ├── candidate_details.html         # Candidate profile & XAI breakdown
+│   ├── candidate_comparison.html      # Side-by-side candidate comparison matrix
+│   ├── skill_gap_analysis.html        # Skill gap breakdown & development areas
+│   ├── recruiter_copilot.html         # NIYUKTI conversational recruiter copilot
+│   ├── settings.html                  # System settings & team permissions
+│   ├── integration.js                 # Global API integration, navigation, and health monitor
+│   ├── favicon.svg                    # Geometric NIYUKTI brand mark
+│   └── vercel.json                    # Vercel proxy configuration & caching headers
+│
+├── docs/                              # System documentation & challenge benchmarks
+├── .env.example                       # Documented environment variable template
+├── .gitignore                         # Git hygiene rules
+├── render.yaml                        # Render blueprint configuration
+├── runtime.txt                        # Python 3.11.9 runtime declaration
+├── submission.csv                     # Hack2Skill challenge output
+├── NIYUKTI_MIGRATION_AUDIT.md         # Full repository migration audit
+├── API_AUDIT.md                       # Comprehensive API inventory
+├── DEPLOYMENT_VERIFICATION.md         # Deployment readiness verification report
+└── README.md                          # Primary platform documentation
+```
+
+---
+
+## 17. Limitations
+
+- **Dataset Scale in Memory:** Batch processing 100,000+ candidates concurrently requires bounded queries (`yield_per` or pagination) to avoid memory saturation on constrained tiers.
+- **LLM Rate Limits:** External Groq API calls are subject to provider rate limits (TPM/RPM); the platform mitigates this with exponential backoff and deterministic heuristic fallbacks.
+- **Local SQLite Locking:** SQLite does not support high concurrency write transactions; PostgreSQL must be used for production deployments.
+
+---
+
+## 18. Future Scope
+
+- **Asynchronous Task Workers:** Implement Celery or Redis Queue for decoupling heavy background batch ranking tasks from HTTP request lifecycles.
+- **Vector Database Integration:** Incorporate Qdrant or pgvector for native dense semantic embeddings alongside sparse TF-IDF.
+- **Automated Interview Scheduling:** Integrate calendar providers directly into the NIYUKTI Copilot workflow.
+- **Bias Auditing Tooling:** Additional statistical demographic parity analysis across candidate pools.

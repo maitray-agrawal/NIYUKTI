@@ -1,32 +1,232 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TalentMind AI</title>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>NIYUKTI — AI-Powered Talent Intelligence</title>
+    <meta name="description" content="NIYUKTI is an AI-powered talent intelligence and recruitment platform that intelligently matches candidates with job requirements, ranks applicants based on skills and experience, identifies skill gaps, and provides explainable hiring insights to help recruiters make faster, more informed decisions."/>
+    <meta property="og:title" content="NIYUKTI — AI-Powered Talent Intelligence"/>
+    <meta property="og:description" content="Intelligent candidate matching, explainable ranking, and recruiter decision support."/>
+    <meta property="og:type" content="website"/>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Geist:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <!-- Tailwind CSS with MD3 Design Tokens -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        background: "#0b1326",
+                        surface: "#0b1326",
+                        "surface-container": "#171f33",
+                        "surface-container-high": "#222a3d",
+                        "surface-container-highest": "#2d3449",
+                        primary: "#d2bbff",
+                        "primary-container": "#7c3aed",
+                        "on-primary-container": "#ede0ff",
+                        secondary: "#89ceff",
+                        tertiary: "#4edea3",
+                        "on-surface": "#dae2fd",
+                        "on-surface-variant": "#ccc3d8",
+                        outline: "#958da1"
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "sans-serif"],
+                        headline: ["Geist", "sans-serif"]
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        body {
+            background-color: #0b1326;
+            color: #dae2fd;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-card {
+            background: rgba(23, 31, 51, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            border-color: rgba(210, 187, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(124, 58, 237, 0.15);
+        }
+        .ai-glow {
+            box-shadow: 0 0 30px rgba(124, 58, 237, 0.2);
+        }
+    </style>
 </head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-primary/20">
 
-<body>
-    <h1>TalentMind AI</h1>
+    <!-- Top Navigation -->
+    <header class="w-full border-b border-white/10 bg-surface/80 backdrop-blur-xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-18 flex items-center justify-between py-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center shadow-lg shadow-primary-container/30">
+                    <span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">psychology</span>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-bold tracking-widest text-primary/80 uppercase">ASTRA</span>
+                        <span class="text-[10px] text-white/30">•</span>
+                        <span class="text-[10px] text-tertiary font-semibold tracking-wider">नियुक्ति</span>
+                    </div>
+                    <h1 class="font-headline text-xl font-bold tracking-tight text-primary leading-tight">NIYUKTI</h1>
+                </div>
+            </div>
 
-    <p>AI-powered recruitment intelligence platform.</p>
+            <div class="flex items-center gap-4">
+                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container border border-white/5 text-xs text-on-surface-variant">
+                    <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+                    <span>100,001 Candidates Ready</span>
+                </div>
+                <a href="dashboard.html" class="px-5 py-2.5 rounded-xl bg-primary-container hover:bg-primary-container/80 text-on-primary-container text-sm font-semibold tracking-wide transition-all shadow-lg shadow-primary-container/20 flex items-center gap-2">
+                    <span>Open Dashboard</span>
+                    <span class="material-symbols-outlined text-base">arrow_forward</span>
+                </a>
+            </div>
+        </div>
+    </header>
 
-    <ul>
-        <li>
-            <a href="/dashboard.html">Dashboard</a>
-        </li>
-        <li>
-            <a href="/candidate_search.html">Candidate Search</a>
-        </li>
-        <li>
-            <a href="/candidate_ranking.html">Candidate Ranking</a>
-        </li>
-        <li>
-            <a href="/candidate_comparison.html">Candidate Comparison</a>
-        </li>
-        <li>
-            <a href="/recruiter_copilot.html">Recruiter Copilot</a>
-        </li>
-    </ul>
+    <!-- Hero Section -->
+    <main class="max-w-7xl mx-auto px-6 py-12 flex-1 flex flex-col justify-center">
+        <div class="text-center max-w-3xl mx-auto mb-14">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-primary mb-6">
+                <span class="material-symbols-outlined text-sm text-tertiary">verified</span>
+                <span>ASTRA Umbrella • Production Intelligence Platform</span>
+            </div>
+            <h2 class="font-headline text-4xl sm:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight">
+                NIYUKTI
+                <span class="block text-2xl sm:text-3xl font-medium text-primary mt-2">
+                    AI-Powered Talent Intelligence
+                </span>
+            </h2>
+            <p class="text-base sm:text-lg text-on-surface-variant leading-relaxed mb-8">
+                Intelligently match candidates with job requirements, rank applicants based on skills and experience, identify skill gaps, and provide explainable hiring insights to help recruiters make faster, more informed decisions.
+            </p>
+            <div class="flex flex-wrap items-center justify-center gap-4">
+                <a href="dashboard.html" class="px-8 py-3.5 rounded-xl bg-primary text-[#1a0044] hover:bg-primary/90 font-bold text-sm tracking-wide transition-all flex items-center gap-2 shadow-xl shadow-primary/20">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    <span>Launch Command Center</span>
+                </a>
+                <a href="candidate_search.html" class="px-8 py-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium text-sm transition-all flex items-center gap-2">
+                    <span class="material-symbols-outlined">person_search</span>
+                    <span>Search 100k+ Profiles</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- System Architecture Highlights -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            <!-- Dashboard Card -->
+            <a href="dashboard.html" class="glass-card rounded-2xl p-6 block group">
+                <div class="w-12 h-12 rounded-xl bg-primary/10 group-hover:bg-primary/20 text-primary flex items-center justify-center mb-4 transition-colors">
+                    <span class="material-symbols-outlined text-2xl">analytics</span>
+                </div>
+                <h3 class="font-headline text-lg font-bold text-white mb-2 group-hover:text-primary transition-colors flex items-center justify-between">
+                    <span>Executive Dashboard</span>
+                    <span class="material-symbols-outlined text-base text-white/40 group-hover:text-primary transition-colors">north_east</span>
+                </h3>
+                <p class="text-xs text-on-surface-variant leading-relaxed">
+                    Live candidate pipeline metrics, automated JD ingestion, active requisitions, and recruitment velocity tracking.
+                </p>
+            </a>
+
+            <!-- Candidate Search Card -->
+            <a href="candidate_search.html" class="glass-card rounded-2xl p-6 block group">
+                <div class="w-12 h-12 rounded-xl bg-secondary/10 group-hover:bg-secondary/20 text-secondary flex items-center justify-center mb-4 transition-colors">
+                    <span class="material-symbols-outlined text-2xl">person_search</span>
+                </div>
+                <h3 class="font-headline text-lg font-bold text-white mb-2 group-hover:text-secondary transition-colors flex items-center justify-between">
+                    <span>Candidate Search</span>
+                    <span class="material-symbols-outlined text-base text-white/40 group-hover:text-secondary transition-colors">north_east</span>
+                </h3>
+                <p class="text-xs text-on-surface-variant leading-relaxed">
+                    Fast neural-heuristic filtering across 100,001 candidates by skills, experience, remote work mode, and availability.
+                </p>
+            </a>
+
+            <!-- Candidate Ranking Card -->
+            <a href="candidate_ranking.html" class="glass-card rounded-2xl p-6 block group">
+                <div class="w-12 h-12 rounded-xl bg-tertiary/10 group-hover:bg-tertiary/20 text-tertiary flex items-center justify-center mb-4 transition-colors">
+                    <span class="material-symbols-outlined text-2xl">leaderboard</span>
+                </div>
+                <h3 class="font-headline text-lg font-bold text-white mb-2 group-hover:text-tertiary transition-colors flex items-center justify-between">
+                    <span>Hybrid Ranking & XAI</span>
+                    <span class="material-symbols-outlined text-base text-white/40 group-hover:text-tertiary transition-colors">north_east</span>
+                </h3>
+                <p class="text-xs text-on-surface-variant leading-relaxed">
+                    Calibrated multi-attribute scoring with transparent skill matching, behavioral signals, and Groq LLM-assisted reranking.
+                </p>
+            </a>
+
+            <!-- Candidate Comparison Card -->
+            <a href="candidate_comparison.html" class="glass-card rounded-2xl p-6 block group">
+                <div class="w-12 h-12 rounded-xl bg-purple-500/10 group-hover:bg-purple-500/20 text-purple-300 flex items-center justify-center mb-4 transition-colors">
+                    <span class="material-symbols-outlined text-2xl">compare_arrows</span>
+                </div>
+                <h3 class="font-headline text-lg font-bold text-white mb-2 group-hover:text-purple-300 transition-colors flex items-center justify-between">
+                    <span>Candidate Comparison</span>
+                    <span class="material-symbols-outlined text-base text-white/40 group-hover:text-purple-300 transition-colors">north_east</span>
+                </h3>
+                <p class="text-xs text-on-surface-variant leading-relaxed">
+                    Multi-candidate side-by-side radar analysis across technical competencies, seniority depth, and cultural alignment.
+                </p>
+            </a>
+
+            <!-- Skill Gap Card -->
+            <a href="skill_gap_analysis.html" class="glass-card rounded-2xl p-6 block group">
+                <div class="w-12 h-12 rounded-xl bg-amber-500/10 group-hover:bg-amber-500/20 text-amber-300 flex items-center justify-center mb-4 transition-colors">
+                    <span class="material-symbols-outlined text-2xl">trending_up</span>
+                </div>
+                <h3 class="font-headline text-lg font-bold text-white mb-2 group-hover:text-amber-300 transition-colors flex items-center justify-between">
+                    <span>Skill Gap Analysis</span>
+                    <span class="material-symbols-outlined text-base text-white/40 group-hover:text-amber-300 transition-colors">north_east</span>
+                </h3>
+                <p class="text-xs text-on-surface-variant leading-relaxed">
+                    Deterministic skill gap evaluation distinguishing verified candidate proficiencies, role requirements, and development paths.
+                </p>
+            </a>
+
+            <!-- Recruiter Copilot Card -->
+            <a href="recruiter_copilot.html" class="glass-card rounded-2xl p-6 block group">
+                <div class="w-12 h-12 rounded-xl bg-rose-500/10 group-hover:bg-rose-500/20 text-rose-300 flex items-center justify-center mb-4 transition-colors">
+                    <span class="material-symbols-outlined text-2xl">smart_toy</span>
+                </div>
+                <h3 class="font-headline text-lg font-bold text-white mb-2 group-hover:text-rose-300 transition-colors flex items-center justify-between">
+                    <span>NIYUKTI Copilot</span>
+                    <span class="material-symbols-outlined text-base text-white/40 group-hover:text-rose-300 transition-colors">north_east</span>
+                </h3>
+                <p class="text-xs text-on-surface-variant leading-relaxed">
+                    Recruiter conversational co-pilot with candidate-in-the-loop context, interview roadmaps, and personalized outreach drafts.
+                </p>
+            </a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/10 bg-surface/50 py-6">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-on-surface-variant/60">
+            <div class="flex items-center gap-2">
+                <span class="font-bold text-primary">ASTRA / NIYUKTI</span>
+                <span>•</span>
+                <span>AI-Powered Talent Intelligence</span>
+            </div>
+            <div>
+                Sanskrit: <span class="text-white/80">नियुक्ति (Niyukti)</span> — Appointment, Placement, or Engagement
+            </div>
+        </div>
+    </footer>
+
 </body>
 </html>

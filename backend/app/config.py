@@ -11,7 +11,7 @@ DB_DIR = BASE_DIR / "data"
 DB_DIR.mkdir(parents=True, exist_ok=True)
 
 class Settings:
-    PROJECT_NAME: str = "TalentMind AI Recruitment Platform Backend"
+    PROJECT_NAME: str = "NIYUKTI — AI-Powered Talent Intelligence"
     API_V1_STR: str = "/api"
     DATABASE_URL: str = os.getenv("DATABASE_URL", f"sqlite:///{DB_DIR}/talentmind.db")
 

@@ -7,25 +7,34 @@ from app.config import settings
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    description="Intelligent recruitment pipelines and services for the TalentMind AI Platform.",
+    description="ASTRA / NIYUKTI: AI-Powered Talent Intelligence and Recruitment Platform Backend.",
     version="1.0.0"
 )
 
-# CORS configuration — use explicit origin from env var for production security
-_allowed_origins = [
-    settings.FRONTEND_URL,
+# CORS configuration — supports configured FRONTEND_URL, live Vercel domain, and local dev
+_origins_set = {
+    settings.FRONTEND_URL.strip(),
+    "https://talentmindai-app.vercel.app",
     "http://localhost:3000",
     "http://localhost:5500",
     "http://127.0.0.1:3000",
     "http://127.0.0.1:5500",
-]
+}
+# Also parse comma-separated FRONTEND_URL if user provided multiple
+if "," in settings.FRONTEND_URL:
+    for o in settings.FRONTEND_URL.split(","):
+        if o.strip():
+            _origins_set.add(o.strip())
+
+_allowed_origins = [o for o in _origins_set if o]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_allowed_origins,
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
-    expose_headers=["X-Total-Count"],  # Required so browser JS can read this custom header
+    expose_headers=["X-Total-Count"],  # Required so browser JS can read pagination count
 )
 
 # Create database tables on startup (not at import time)
@@ -69,7 +78,13 @@ def health(db=Depends(get_db)):
         status_code=200 if is_healthy else 503,
         content={
             "status": "healthy" if is_healthy else "unhealthy",
+            "project": settings.PROJECT_NAME,
             "database": db_status,
             "groq_api_key_configured": groq_configured
         }
     )
+
+@app.get("/api/health")
+def api_health(db=Depends(get_db)):
+    """Alias for /health under the /api prefix for proxy resilience."""
+    return health(db)

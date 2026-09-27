@@ -1,4 +1,4 @@
-# TalentMind AI Hack2Skill Demo Narration Script
+# NIYUKTI (ASTRA Ecosystem) Hack2Skill Demo Narration Script
 
 This voiceover script is synchronized with the automated browser actions in the demo video. Speak clearly, confidently, and maintain a professional pacing. The target duration is approximately **4 minutes and 30 seconds**.
 
@@ -8,9 +8,9 @@ This voiceover script is synchronized with the automated browser actions in the 
 
 **[Visual: Code Repository structure showing directories, opening docs/architecture.md and docs/dataset_scale_validation.md]**
 
-"Hello judges. Welcome to TalentMind AI—our entry for the Hack2Skill challenge. TalentMind AI is an advanced candidate discovery, parsing, and ranking platform built to solve the core limitations of traditional recruitment systems: keyword stuffing, high false-negatives, and opaque ranking logic.
+"Hello judges. Welcome to NIYUKTI—our talent intelligence platform developed under the ASTRA ecosystem for the Hack2Skill challenge. NIYUKTI is an AI-powered candidate discovery, parsing, and ranking platform built to solve the core limitations of traditional recruitment systems: keyword stuffing, high false-negatives, and opaque ranking logic.
 
-Our architecture is fully decoupled, using FastAPI for high-throughput ASGI services and SQLite via SQLAlchemy for data persistence. We built the platform from a clean slate to handle the challenge dataset, successfully importing and validating **100,001 candidates** as shown in our scale validation documentation. We achieve sub-second query times over this large dataset through database-level indexing and optimized query execution, moving away from slow in-memory filtering."
+Our architecture is fully decoupled, using FastAPI for high-throughput ASGI services and SQLite/PostgreSQL via SQLAlchemy for data persistence. We built the platform to handle massive talent datasets, successfully importing and validating **100,001 candidates** as shown in our scale validation documentation. We achieve high-throughput queries over this large dataset through database-level indexing and optimized query execution, avoiding slow in-memory filtering."
 
 ---
 
@@ -18,7 +18,7 @@ Our architecture is fully decoupled, using FastAPI for high-throughput ASGI serv
 
 **[Visual: Opens dashboard.html. Highlights the 100,001 candidate metric, green API Online status, and shows the Job Description Intelligence upload area]**
 
-"Let’s transition to the TalentMind AI Command Center. 
+"Let’s transition to the NIYUKTI Command Center. 
 
 At the top, you can see our live system metrics, including the total database size of one hundred thousand and one candidates, completely ingested and verified. The dashboard is backed by our specialized `/api/candidates/stats` endpoint, making it highly responsive.
 
@@ -80,4 +80,4 @@ For candidates who fall slightly short of the requirements, the platform automat
 
 Behind the scenes, our FastAPI endpoints are fully documented and conform strictly to API standards. Triggering the final submission generation compiles our rankings into a validated `submission.csv` file, passing all Hack2Skill schemas.
 
-TalentMind AI combines raw data scale, multi-variate intelligence, explainability, and generative AI to deliver a competition-grade recruitment platform. Thank you for your time!"
+NIYUKTI combines raw data scale, multi-variate intelligence, explainability, and generative AI to deliver a competition-grade recruitment platform. Thank you for your time!"

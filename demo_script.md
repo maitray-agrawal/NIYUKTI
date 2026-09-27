@@ -1,4 +1,4 @@
-# TalentMind AI Hack2Skill Demo Script
+# NIYUKTI (ASTRA Ecosystem) Hack2Skill Demo Script
 
 This script outlines the screen-by-screen visual flow of the video demonstration. The Playwright automation drives these actions sequentially, allowing the presenter to sync narration.
 

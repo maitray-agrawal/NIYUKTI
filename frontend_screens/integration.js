@@ -1,6 +1,6 @@
 /**
- * TalentMind AI - Frontend/Backend Integration System
- * Integrates Stitch UI screens with the FastAPI REST API.
+ * NIYUKTI - AI-Powered Talent Intelligence Integration System
+ * Integrates UI screens with the FastAPI REST API under the ASTRA umbrella.
  */
 
 // API base URL: uses relative path for Vercel rewrite proxy to Render backend.
@@ -46,18 +46,36 @@ document.addEventListener('DOMContentLoaded', () => {
 // ==========================================
 
 function setupSidebar() {
-    const nav = document.querySelector('aside nav');
+    const aside = document.querySelector('aside');
+    if (!aside) return;
+
+    // Ensure unified ASTRA / NIYUKTI branding header in sidebar
+    const brandContainer = aside.querySelector('div.flex.items-center.gap-3.px-2.mb-10');
+    if (brandContainer) {
+        brandContainer.innerHTML = `
+            <div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center shadow-lg shadow-primary-container/20">
+                <span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">psychology</span>
+            </div>
+            <div>
+                <span class="text-[10px] font-bold tracking-widest text-primary/80 uppercase block">ASTRA</span>
+                <h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed leading-none">NIYUKTI</h1>
+                <p class="font-label-sm text-[11px] text-on-surface-variant/70 tracking-tight mt-0.5">AI Talent Intelligence</p>
+            </div>
+        `;
+    }
+
+    const nav = aside.querySelector('nav');
     if (!nav) return;
 
     // Map the links to the actual local files
     const linksMap = [
         { name: 'Dashboard', icon: 'dashboard', file: 'dashboard.html' },
         { name: 'Candidate Search', icon: 'person_search', file: 'candidate_search.html' },
-        { name: 'Ranking', icon: 'leaderboard', file: 'candidate_ranking.html' },
+        { name: 'Ranking & XAI', icon: 'leaderboard', file: 'candidate_ranking.html' },
         { name: 'Details', icon: 'description', file: 'candidate_details.html' },
         { name: 'Comparison', icon: 'compare_arrows', file: 'candidate_comparison.html' },
         { name: 'Skill Gap', icon: 'trending_up', file: 'skill_gap_analysis.html' },
-        { name: 'Recruiter Copilot', icon: 'smart_toy', file: 'recruiter_copilot.html' },
+        { name: 'NIYUKTI Copilot', icon: 'smart_toy', file: 'recruiter_copilot.html' },
         { name: 'Settings', icon: 'settings', file: 'settings.html' }
     ];
 

@@ -33,7 +33,7 @@ class GroqJDService:
         headers = {
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
-            "User-Agent": "TalentMindAI/1.0"
+            "User-Agent": "NIYUKTI/1.0"
         }
         
         prompt = (

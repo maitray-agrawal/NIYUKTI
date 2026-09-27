@@ -6,6 +6,10 @@
     {
       "source": "/api/:path*",
       "destination": "https://talentmindai-rgar.onrender.com/api/:path*"
+    },
+    {
+      "source": "/health",
+      "destination": "https://talentmindai-rgar.onrender.com/health"
     }
   ],
 

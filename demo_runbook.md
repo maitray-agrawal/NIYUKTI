@@ -1,6 +1,6 @@
-# TalentMind AI Hack2Skill Demo Runbook
+# NIYUKTI (ASTRA Ecosystem) Hack2Skill Demo Runbook
 
-This runbook describes the steps required to execute, record, and verify the automated TalentMind AI video demonstration.
+This runbook describes the steps required to execute, record, and verify the automated NIYUKTI video demonstration.
 
 ---
 
@@ -50,7 +50,7 @@ Verify the server is running by opening `http://127.0.0.1:8000/` or checking `/d
 Configure OBS Studio to record the automated browser window seamlessly.
 
 1.  **Scene Setup:**
-    *   Create a new scene called **TalentMind AI Demo**.
+    *   Create a new scene called **NIYUKTI Demo**.
 2.  **Sources:**
     *   Add a **Window Capture** source targeting the Chromium browser launched by the Playwright script.
     *   Alternatively, add a **Display Capture** source if you want to capture the VS Code environment transition.

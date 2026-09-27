@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="niyuktiGrad" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#d2bbff" />
+      <stop offset="50%" stop-color="#7c3aed" />
+      <stop offset="100%" stop-color="#4edea3" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="#0b1326" />
+  <rect x="1" y="1" width="62" height="62" rx="15" stroke="rgba(210,187,255,0.2)" stroke-width="1.5" />
+  <!-- Modern Geometric 'N' representing Niyukti & Astrological / Neural nodes -->
+  <path d="M18 46V18L32 36V18" stroke="url(#niyuktiGrad)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M32 46V28L46 46V18" stroke="url(#niyuktiGrad)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
+  <circle cx="18" cy="18" r="2.5" fill="#d2bbff" />
+  <circle cx="46" cy="46" r="2.5" fill="#4edea3" />
+</svg>

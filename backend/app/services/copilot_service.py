@@ -12,7 +12,7 @@ Hi {candidate.name},
 
 I hope this email finds you well. 
 
-I came across your profile on our TalentMind platform and was incredibly impressed by your background. Specifically, your expertise in {", ".join((candidate.skills or [])[:3])} is a strong match for a critical role we are hiring for: {job.title} in our {job.department or "Engineering"} department.
+I came across your profile on our NIYUKTI platform and was incredibly impressed by your background. Specifically, your expertise in {", ".join((candidate.skills or [])[:3])} is a strong match for a critical role we are hiring for: {job.title} in our {job.department or "Engineering"} department.
 
 At Obsidian Network, we are pioneering the next generation of intelligent tools, and we believe your {candidate.experience_years or 0.0} years of experience—especially your work as a {candidate.title or "specialist"}—would make you a stellar fit. 
 
@@ -92,7 +92,7 @@ alex.chen@obsidian.network
             job_context = f"Job Title: {job.title}\nDepartment: {job.department}\nLocation: {job.location}\nRequired Skills: {reqs}\nDescription: {job.description[:500]}..."
 
         system_prompt = (
-            "You are an expert technical recruiter and AI assistant (TalentMind Recruiter Copilot). "
+            "You are an expert technical recruiter and AI assistant (NIYUKTI Recruiter Copilot under the ASTRA umbrella). "
             "Your task is to assist recruiters with outreach, summaries, interview questions, and gap analysis. "
             "Respond based on the provided Candidate and Job context. Output must be structured JSON.\n\n"
             f"--- CANDIDATE CONTEXT ---\n{cand_context}\n\n"

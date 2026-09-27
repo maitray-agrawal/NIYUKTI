@@ -1,1 +1,1 @@
-# Intelligent Services for TalentMind AI
+# Intelligent Services for NIYUKTI

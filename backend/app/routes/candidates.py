@@ -38,7 +38,15 @@ def import_candidates(
 
 @router.get("/stats")
 def get_candidate_stats(db: Session = Depends(get_db)):
-    # Combine scalar count and avg queries into a single query to reduce database scans from 8 to 1
+    is_sqlite = db.bind.dialect.name == "sqlite"
+    if is_sqlite:
+        flag_expr = func.sum(case((func.json_extract(Candidate.redrob_signals, '$.open_to_work_flag') == 1, 1), else_=0))
+        comp_expr = func.avg(func.json_extract(Candidate.redrob_signals, '$.profile_completeness_score'))
+    else:
+        from sqlalchemy import cast, Integer, Float
+        flag_expr = func.sum(case((cast(Candidate.redrob_signals['open_to_work_flag'], Integer) == 1, 1), else_=0))
+        comp_expr = func.avg(cast(Candidate.redrob_signals['profile_completeness_score'], Float))
+
     stats_query = db.query(
         func.count(Candidate.id),
         func.avg(Candidate.experience_years),
@@ -46,8 +54,8 @@ def get_candidate_stats(db: Session = Depends(get_db)):
         func.sum(case(((Candidate.experience_years >= 3.0) & (Candidate.experience_years < 7.0), 1), else_=0)),
         func.sum(case(((Candidate.experience_years >= 7.0) & (Candidate.experience_years < 12.0), 1), else_=0)),
         func.sum(case((Candidate.experience_years >= 12.0, 1), else_=0)),
-        func.sum(case((func.json_extract(Candidate.redrob_signals, '$.open_to_work_flag') == 1, 1), else_=0)),
-        func.avg(func.json_extract(Candidate.redrob_signals, '$.profile_completeness_score'))
+        flag_expr,
+        comp_expr
     ).first()
 
     total = stats_query[0] or 0
@@ -126,7 +134,7 @@ def search_candidates(
             (Candidate.title.ilike(f"%{q}%"))
         )
     if location:
-        query = query.filter(func.json_extract(Candidate.profile, '$.location').ilike(f"%{location}%"))
+        query = query.filter(Candidate.location.ilike(f"%{location}%"))
     if min_experience:
         query = query.filter(Candidate.experience_years >= min_experience)
     if max_experience:
@@ -135,7 +143,12 @@ def search_candidates(
         query = query.filter(Candidate.work_preference.ilike(work_preference))
     if open_to_work is not None:
         flag_val = 1 if open_to_work else 0
-        query = query.filter(func.json_extract(Candidate.redrob_signals, '$.open_to_work_flag') == flag_val)
+        is_sqlite = db.bind.dialect.name == "sqlite"
+        if is_sqlite:
+            query = query.filter(func.json_extract(Candidate.redrob_signals, '$.open_to_work_flag') == flag_val)
+        else:
+            from sqlalchemy import cast, Integer
+            query = query.filter(cast(Candidate.redrob_signals['open_to_work_flag'], Integer) == flag_val)
         
     if skill:
         for s in skill.split(","):
@@ -143,7 +156,9 @@ def search_candidates(
             if s_clean:
                 query = query.filter(Candidate.skills.like(f'%"{s_clean}"%'))
                 
-    return query.offset(offset).limit(limit).all()
+    offset_val = getattr(offset, "default", 0) if not isinstance(offset, int) else offset
+    limit_val = getattr(limit, "default", 50) if not isinstance(limit, int) else limit
+    return query.offset(offset_val).limit(limit_val).all()
 
 @router.get("/", response_model=List[CandidateInDB])
 def read_candidates(
@@ -185,7 +200,9 @@ def read_candidates(
         total_count = query.count()
         response.headers["X-Total-Count"] = str(total_count)
                 
-    return query.offset(offset).limit(limit).all()
+    offset_val = getattr(offset, "default", 0) if not isinstance(offset, int) else offset
+    limit_val = getattr(limit, "default", 20) if not isinstance(limit, int) else limit
+    return query.offset(offset_val).limit(limit_val).all()
 
 @router.get("/{candidate_id}", response_model=CandidateInDB)
 def read_candidate(candidate_id: int, db: Session = Depends(get_db)):
