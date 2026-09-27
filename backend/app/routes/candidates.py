@@ -38,25 +38,29 @@ def import_candidates(
 
 @router.get("/stats")
 def get_candidate_stats(db: Session = Depends(get_db)):
-    is_sqlite = db.bind.dialect.name == "sqlite"
-    if is_sqlite:
-        flag_expr = func.sum(case((func.json_extract(Candidate.redrob_signals, '$.open_to_work_flag') == 1, 1), else_=0))
-        comp_expr = func.avg(func.json_extract(Candidate.redrob_signals, '$.profile_completeness_score'))
-    else:
-        from sqlalchemy import cast, Integer, Float
-        flag_expr = func.sum(case((cast(Candidate.redrob_signals['open_to_work_flag'], Integer) == 1, 1), else_=0))
-        comp_expr = func.avg(cast(Candidate.redrob_signals['profile_completeness_score'], Float))
+    try:
+        is_sqlite = db.bind.dialect.name == "sqlite"
+        if is_sqlite:
+            flag_expr = func.sum(case((func.json_extract(Candidate.redrob_signals, '$.open_to_work_flag') == 1, 1), else_=0))
+            comp_expr = func.avg(func.json_extract(Candidate.redrob_signals, '$.profile_completeness_score'))
+        else:
+            from sqlalchemy import cast, Integer, Float
+            flag_expr = func.sum(case((cast(Candidate.redrob_signals['open_to_work_flag'].as_string(), Integer) == 1, 1), else_=0))
+            comp_expr = func.avg(cast(Candidate.redrob_signals['profile_completeness_score'].as_string(), Float))
 
-    stats_query = db.query(
-        func.count(Candidate.id),
-        func.avg(Candidate.experience_years),
-        func.sum(case((Candidate.experience_years < 3.0, 1), else_=0)),
-        func.sum(case(((Candidate.experience_years >= 3.0) & (Candidate.experience_years < 7.0), 1), else_=0)),
-        func.sum(case(((Candidate.experience_years >= 7.0) & (Candidate.experience_years < 12.0), 1), else_=0)),
-        func.sum(case((Candidate.experience_years >= 12.0, 1), else_=0)),
-        flag_expr,
-        comp_expr
-    ).first()
+        stats_query = db.query(
+            func.count(Candidate.id),
+            func.avg(Candidate.experience_years),
+            func.sum(case((Candidate.experience_years < 3.0, 1), else_=0)),
+            func.sum(case(((Candidate.experience_years >= 3.0) & (Candidate.experience_years < 7.0), 1), else_=0)),
+            func.sum(case(((Candidate.experience_years >= 7.0) & (Candidate.experience_years < 12.0), 1), else_=0)),
+            func.sum(case((Candidate.experience_years >= 12.0, 1), else_=0)),
+            flag_expr,
+            comp_expr
+        ).first()
+    except Exception:
+        total_fallback = db.query(func.count(Candidate.id)).scalar() or 0
+        stats_query = (total_fallback, 0.0, 0, 0, 0, 0, 0, 0.0)
 
     total = stats_query[0] or 0
     if total == 0:
@@ -148,7 +152,7 @@ def search_candidates(
             query = query.filter(func.json_extract(Candidate.redrob_signals, '$.open_to_work_flag') == flag_val)
         else:
             from sqlalchemy import cast, Integer
-            query = query.filter(cast(Candidate.redrob_signals['open_to_work_flag'], Integer) == flag_val)
+            query = query.filter(cast(Candidate.redrob_signals['open_to_work_flag'].as_string(), Integer) == flag_val)
         
     if skill:
         for s in skill.split(","):
