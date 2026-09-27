@@ -91,7 +91,7 @@ pytest backend/tests/test_backend.py \
 
 - **Remote:** `origin → https://github.com/maitray-agrawal/NIYUKTI.git`
 - **Branch:** `main`
-- **Commit:** Updated and synchronized with origin `main`.
+- **Commit:** `c788969649a065d0bdbb6eebe504e5c9d5394375` (short: `c788969`)
 
 ---
 
