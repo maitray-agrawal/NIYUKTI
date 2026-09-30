@@ -11,6 +11,9 @@ app = FastAPI(
     version="1.0.0"
 )
 
+import os
+from fastapi.staticfiles import StaticFiles
+
 # CORS configuration — supports configured FRONTEND_URL, live Vercel domain, and local dev
 _origins_set = {
     settings.FRONTEND_URL.strip(),
@@ -18,8 +21,12 @@ _origins_set = {
     "https://talentmindai-app.vercel.app",
     "http://localhost:3000",
     "http://localhost:5500",
+    "http://localhost:8000",
+    "http://localhost:8080",
     "http://127.0.0.1:3000",
     "http://127.0.0.1:5500",
+    "http://127.0.0.1:8000",
+    "http://127.0.0.1:8080",
 }
 # Also parse comma-separated FRONTEND_URL if user provided multiple
 if "," in settings.FRONTEND_URL:
@@ -50,8 +57,9 @@ app.include_router(ranking.router, prefix=settings.API_V1_STR)
 app.include_router(copilot.router, prefix=settings.API_V1_STR)
 app.include_router(submission.router, prefix=settings.API_V1_STR)
 
-@app.get("/")
-def root():
+@app.get("/api")
+@app.get("/api/")
+def api_root():
     return {
         "status": "healthy",
         "project": settings.PROJECT_NAME,
@@ -89,3 +97,11 @@ def health(db=Depends(get_db)):
 def api_health(db=Depends(get_db)):
     """Alias for /health under the /api prefix for proxy resilience."""
     return health(db)
+
+# Mount frontend_screens static UI files at root if available
+frontend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend_screens"))
+if not os.path.isdir(frontend_dir):
+    frontend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "frontend_screens"))
+
+if os.path.isdir(frontend_dir):
+    app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")
