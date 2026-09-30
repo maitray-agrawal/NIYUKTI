@@ -1335,7 +1335,7 @@ async function updateCandidateStatus(candId, newStatus) {
 // --- 4. CANDIDATE DETAILS ---
 async function initCandidateDetails() {
     const urlParams = new URLSearchParams(window.location.search);
-    const candId = urlParams.get('id') || '1';
+    const candId = urlParams.get('id') || '7';
 
     try {
         const [cRes, jRes] = await Promise.all([
@@ -1343,8 +1343,22 @@ async function initCandidateDetails() {
             fetch(`${API_BASE}/jobs/`)
         ]);
 
-        if (!cRes.ok || !jRes.ok) {
-            showToast("Candidate not found.", "error");
+        if (!cRes.ok) {
+            // If candidate not found, redirect to a valid candidate ID (7 is the minimum in the dataset)
+            if (cRes.status === 404 && candId !== '7') {
+                showToast("Candidate not found. Redirecting to first profile.", "error");
+                setTimeout(() => { window.location.href = 'candidate_details.html?id=7'; }, 1500);
+            } else {
+                showToast("Candidate not found.", "error");
+                const nameEl = document.querySelector('h2.font-headline-lg') || document.querySelector('h2');
+                if (nameEl) nameEl.textContent = 'Candidate Not Found';
+                const titleEl = document.getElementById('candidate-profile-title');
+                if (titleEl) titleEl.textContent = 'The requested candidate profile does not exist in the database.';
+            }
+            return;
+        }
+        if (!jRes.ok) {
+            showToast("Failed to load jobs.", "error");
             return;
         }
 
@@ -1503,7 +1517,7 @@ async function loadSkillGapSection(candId, jobId) {
 // --- 5. CANDIDATE COMPARISON ---
 async function initCandidateComparison() {
     const urlParams = new URLSearchParams(window.location.search);
-    const candidateIds = urlParams.get('candidates') || '1,2,5';
+    const candidateIds = urlParams.get('candidates') || '7,8,10';
     const jobId = urlParams.get('job_id') || null;
 
     const ids = candidateIds.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
@@ -1511,15 +1525,16 @@ async function initCandidateComparison() {
     if (!container || ids.length === 0) return;
 
     try {
-        // Call the new comparison endpoint
-        const comparisonUrl = `${API_BASE}/candidates/compare?candidate_ids=${ids.join(',')}&job_id=${jobId || ''}`;
+        // Call the comparison endpoint: POST with candidate IDs as JSON array body
+        const comparisonUrl = `${API_BASE}/candidates/compare${jobId ? `?job_id=${jobId}` : ''}`;
         const compRes = await fetch(comparisonUrl, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(ids)
         });
 
         if (!compRes.ok) {
-            console.error("Comparison API failed:", compRes.status);
+            console.error("Comparison API failed:", compRes.status, await compRes.text());
             return;
         }
 
@@ -1748,8 +1763,8 @@ async function initCandidateComparison() {
 // --- 6. SKILL GAP ANALYSIS ---
 async function initSkillGapAnalysis() {
     const urlParams = new URLSearchParams(window.location.search);
-    const candId = urlParams.get('id') || '1';
-    const jobId = urlParams.get('job_id') || '1';
+    const candId = urlParams.get('id') || '7';
+    const jobId = urlParams.get('job_id') || '1'; // job IDs start from 1 in the requisitions table
 
     try {
         const [cRes, jRes, gapRes] = await Promise.all([
