@@ -7,21 +7,24 @@ from playwright.sync_api import sync_playwright
 # Locate the frontend file path dynamically
 FRONTEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend_screens"))
 COPILOT_HTML = os.path.join(FRONTEND_DIR, "recruiter_copilot.html")
-COPILOT_URL = f"file:///{COPILOT_HTML.replace(os.sep, '/')}"
-
 def is_backend_online():
     try:
-        urllib.request.urlopen("http://localhost:8000/api/health", timeout=1)
+        urllib.request.urlopen("http://127.0.0.1:8000/api/health", timeout=1)
         return True
     except Exception:
         return False
+
+def get_copilot_url():
+    if is_backend_online():
+        return "http://127.0.0.1:8000/recruiter_copilot.html"
+    return f"file:///{COPILOT_HTML.replace(os.sep, '/')}"
 
 def test_copilot_page_loads_and_api_check():
     """Verify that the Copilot page loads and displays connected status."""
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
-        page.goto(COPILOT_URL)
+        page.goto(get_copilot_url())
         
         # Check connection badge or connection indicator
         page.wait_for_timeout(2000)
@@ -42,7 +45,7 @@ def test_copilot_left_panel_population():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
-        page.goto(COPILOT_URL)
+        page.goto(get_copilot_url())
         page.wait_for_timeout(3000)  # Wait for API data population
         
         # Select first candidate in dropdown (index 1 since 0 is placeholder)
@@ -82,7 +85,7 @@ def test_copilot_chat_and_roadmaps():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
-        page.goto(COPILOT_URL)
+        page.goto(get_copilot_url())
         page.wait_for_timeout(3000)
         
         # Select a candidate and job first to have full context
@@ -113,7 +116,7 @@ def test_copilot_view_profile_routing():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
-        page.goto(COPILOT_URL)
+        page.goto(get_copilot_url())
         page.wait_for_timeout(3000)
         
         # Select candidate

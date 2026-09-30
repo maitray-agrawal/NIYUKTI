@@ -41,6 +41,12 @@ document.addEventListener('DOMContentLoaded', () => {
         initSettings();
     } else if (path.includes('talent_map')) {
         initTalentMap();
+    } else if (path.includes('workforce_analytics')) {
+        initWorkforceAnalytics();
+    } else if (path.includes('reports')) {
+        // Handled via report export buttons
+    } else if (path.includes('saved')) {
+        if (typeof initSavedPage === 'function') initSavedPage();
     } else {
         if (document.getElementById('recent-activity-list')) {
             initDashboard();
@@ -77,23 +83,49 @@ function updateThemeToggleBtn() {
 }
 
 // ==========================================
+// ==========================================
 // GLOBAL UI SETUP & HELPER FUNCTIONS
 // ==========================================
 
 function setupSidebar() {
-    const aside = document.querySelector('aside');
-    if (!aside) return;
+    let aside = document.querySelector('aside');
+    if (!aside) {
+        aside = document.createElement('aside');
+        document.body.insertBefore(aside, document.body.firstChild);
+    }
 
     // Apply AstraX sidebar surface styling
-    aside.className = 'h-screen w-72 fixed left-0 top-0 bg-[var(--bg-surface)] border-r border-[var(--border-subtle)] flex flex-col h-full py-4 px-3 z-[60] shadow-sm select-none transition-colors duration-200';
+    aside.className = 'h-screen w-72 fixed left-0 top-0 bg-[var(--bg-surface)] border-r border-[var(--border-subtle)] flex flex-col h-full py-4 px-3 z-[60] shadow-sm select-none transition-all duration-200';
 
-    // Master ASTRA X & NIYUKTI Branding Header
-    let brandContainer = aside.querySelector('.brand-container') || aside.querySelector('div.flex.items-center.gap-3');
-    if (brandContainer) {
-        brandContainer.className = 'brand-container px-2 pt-2 pb-4 mb-3 border-b border-[var(--border-subtle)]';
-        brandContainer.innerHTML = `
+    const currentPath = window.location.pathname.split('/').pop() || 'dashboard.html';
+
+    const primaryLinks = [
+        { name: 'Overview', icon: 'dashboard', file: 'dashboard.html' },
+        { name: 'Talent Map', icon: 'map', file: 'talent_map.html' },
+        { name: 'Candidate Search', icon: 'person_search', file: 'candidate_search.html' },
+        { name: 'Skills Intelligence', icon: 'psychology', file: 'skill_gap_analysis.html' },
+        { name: 'Opportunity Match', icon: 'fact_check', file: 'candidate_ranking.html' },
+        { name: 'Candidate Details', icon: 'badge', file: 'candidate_details.html' },
+        { name: 'Candidate Comparison', icon: 'compare_arrows', file: 'candidate_comparison.html' },
+        { name: 'Workforce Analytics', icon: 'analytics', file: 'workforce_analytics.html' },
+        { name: 'Reports', icon: 'description', file: 'reports.html' },
+        { name: 'Saved', icon: 'bookmark', file: 'saved.html' },
+        { name: 'Agent Studio', icon: 'smart_toy', file: 'recruiter_copilot.html' },
+        { name: 'Settings', icon: 'settings', file: 'settings.html' }
+    ];
+
+    const intelligenceLinks = [
+        { name: 'Talent Signals', icon: 'insights', href: 'candidate_search.html?tab=signals' },
+        { name: 'Skill Gaps', icon: 'radar', href: 'skill_gap_analysis.html' },
+        { name: 'Emerging Roles', icon: 'trending_up', href: 'dashboard.html#emerging-roles' },
+        { name: 'Decision Ledger', icon: 'receipt_long', href: 'candidate_ranking.html#decision-ledger' }
+    ];
+
+    aside.innerHTML = `
+        <!-- Brand Header -->
+        <div class="brand-container px-2 pt-1 pb-3 mb-2 border-b border-[var(--border-subtle)]">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-[var(--bg-surface-elevated)] border border-[var(--border-strong)] flex-shrink-0 shadow-sm">
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-[var(--bg-surface-elevated)] border border-[var(--border-strong)] flex-shrink-0 shadow-sm cursor-pointer" onclick="window.location.href='index.html'">
                     <svg viewBox="0 0 100 100" width="28" height="28" aria-label="Niyukti Mark">
                         <line x1="50" y1="8" x2="50" y2="92" stroke="#B87333" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
                         <line x1="8" y1="50" x2="92" y2="50" stroke="#B87333" stroke-width="0.8" stroke-dasharray="2 2" opacity="0.4"/>
@@ -107,13 +139,13 @@ function setupSidebar() {
                         <polygon points="50,43 57,50 50,57 43,50" fill="var(--bg-surface)"/>
                     </svg>
                 </div>
-                <div class="leading-tight">
+                <div class="leading-tight flex-1">
                     <div class="flex items-center gap-1.5">
                         <span class="font-serif font-bold text-xs tracking-[0.2em] text-[var(--text-main)] uppercase">ASTRA<span class="text-[var(--astra-copper)]">X</span></span>
                         <span class="text-[9px] text-[var(--border-strong)]">•</span>
                         <span class="font-sans text-[10px] text-[var(--niyukti-saffron)] font-semibold">नियुक्ति</span>
                     </div>
-                    <h1 class="font-display text-lg font-bold text-[var(--text-main)] tracking-tight">NIYUKTI</h1>
+                    <h1 class="font-display text-lg font-bold text-[var(--text-main)] tracking-tight cursor-pointer" onclick="window.location.href='dashboard.html'">NIYUKTI</h1>
                     <p class="font-mono text-[9px] uppercase tracking-wider text-[var(--text-muted)]">TALENT INTELLIGENCE</p>
                 </div>
             </div>
@@ -123,134 +155,228 @@ function setupSidebar() {
                     <span class="w-1.5 h-1.5 rounded-full bg-[var(--semantic-success)] animate-pulse"></span> READY
                 </span>
             </div>
-        `;
-    }
+        </div>
 
-    const nav = aside.querySelector('nav');
-    if (!nav) return;
+        <!-- Navigation Rail -->
+        <nav class="flex-1 space-y-0.5 overflow-y-auto pr-1 text-xs">
+            ${primaryLinks.map(item => {
+                const isActive = currentPath === item.file || (currentPath === '' && item.file === 'dashboard.html');
+                return `
+                    <a href="${item.file}" class="flex items-center gap-2.5 py-2 px-3 rounded-lg transition-all ${
+                        isActive
+                            ? 'text-[var(--astra-indigo)] dark:text-[var(--text-main)] font-semibold border-l-2 border-[var(--astra-copper)] bg-[var(--astra-copper-subtle)]'
+                            : 'text-[var(--text-muted)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-main)]'
+                    }">
+                        <span class="material-symbols-outlined text-[19px] ${isActive ? 'text-[var(--astra-copper)]' : 'text-[var(--text-muted)]'}" ${isActive ? 'style="font-variation-settings: \'FILL\' 1;"' : ''}>${item.icon}</span>
+                        <span class="font-sans tracking-wide">${item.name}</span>
+                    </a>
+                `;
+            }).join('')}
 
-    // ASTRA X Navigation Rail conforming to Section 10 of Design Architecture
-    const linksMap = [
-        { name: 'Overview', icon: 'dashboard', file: 'dashboard.html' },
-        { name: 'Talent Map', icon: 'map', file: 'talent_map.html' },
-        { name: 'Candidate Search', icon: 'person_search', file: 'candidate_search.html' },
-        { name: 'Skills Intelligence', icon: 'psychology', file: 'skill_gap_analysis.html' },
-        { name: 'Opportunity Match', icon: 'fact_check', file: 'candidate_ranking.html' },
-        { name: 'Candidate Details', icon: 'badge', file: 'candidate_details.html' },
-        { name: 'Candidate Comparison', icon: 'compare_arrows', file: 'candidate_comparison.html' },
-        { name: 'Agent Studio', icon: 'smart_toy', file: 'recruiter_copilot.html' },
-        { name: 'Settings', icon: 'settings', file: 'settings.html' }
-    ];
+            <!-- Intelligence Group Header -->
+            <div class="pt-3 pb-1 px-3">
+                <span class="font-mono text-[8.5px] uppercase tracking-widest text-[var(--text-faint)]">INTELLIGENCE SIGNALS</span>
+            </div>
+            ${intelligenceLinks.map(item => `
+                <a href="${item.href}" class="flex items-center gap-2.5 py-1.5 px-3 rounded-lg text-[var(--text-muted)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-main)] transition-all">
+                    <span class="material-symbols-outlined text-[17px] text-[var(--text-faint)]">${item.icon}</span>
+                    <span class="font-sans text-[11px] tracking-wide">${item.name}</span>
+                </a>
+            `).join('')}
+        </nav>
 
-    nav.className = 'flex-1 space-y-1 overflow-y-auto pr-1';
-    nav.innerHTML = '';
-    const currentPath = window.location.pathname.split('/').pop() || 'dashboard.html';
-
-    linksMap.forEach(item => {
-        const a = document.createElement('a');
-        const isActive = currentPath === item.file || (currentPath === '' && item.file === 'dashboard.html');
-
-        a.href = item.file;
-        a.className = isActive
-            ? 'flex items-center gap-3 py-2.5 px-3 rounded-lg text-[var(--astra-indigo)] dark:text-[var(--text-main)] font-semibold border-l-2 border-[var(--astra-copper)] bg-[var(--astra-copper-subtle)] transition-all'
-            : 'flex items-center gap-3 py-2.5 px-3 rounded-lg text-[var(--text-muted)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-main)] transition-all';
-
-        a.innerHTML = `
-            <span class="material-symbols-outlined text-[20px] ${isActive ? 'text-[var(--astra-copper)]' : 'text-[var(--text-muted)]'}" ${isActive ? 'style="font-variation-settings: \'FILL\' 1;"' : ''}>${item.icon}</span>
-            <span class="font-sans text-xs tracking-wide">${item.name}</span>
-        `;
-        nav.appendChild(a);
-    });
-
-    // Quick Action: Explore Talent Search
-    let bottomBtn = aside.querySelector('button.mt-auto');
-    if (!bottomBtn) {
-        bottomBtn = document.createElement('button');
-        bottomBtn.className = 'mt-auto w-full py-2.5 px-3 rounded-lg astra-btn astra-btn-primary text-xs font-semibold shadow-sm flex items-center justify-center gap-2';
-        aside.appendChild(bottomBtn);
-    }
-    bottomBtn.className = 'mt-auto w-full py-2.5 px-3 rounded-lg astra-btn astra-btn-primary text-xs font-semibold shadow-sm flex items-center justify-center gap-2';
-    bottomBtn.innerHTML = `
-        <span class="material-symbols-outlined text-sm">person_search</span>
-        <span>Explore Talent</span>
+        <!-- Bottom Institutional Signature & Explore CTA -->
+        <div class="mt-auto pt-3 border-t border-[var(--border-subtle)] px-1">
+            <div class="text-[8.5px] font-mono uppercase tracking-wider text-[var(--text-faint)] text-center mb-0.5">
+                FROM TALENT TO OPPORTUNITY
+            </div>
+            <div class="text-[8px] font-mono uppercase tracking-widest text-[var(--astra-copper)] text-center mb-2.5">
+                PART OF ASTRAX
+            </div>
+            <button class="w-full py-2 px-3 rounded-lg astra-btn astra-btn-primary text-xs font-semibold shadow-sm flex items-center justify-center gap-2" onclick="window.location.href='candidate_search.html'">
+                <span class="material-symbols-outlined text-sm">person_search</span>
+                <span>Explore Talent</span>
+            </button>
+        </div>
     `;
-    bottomBtn.onclick = () => { window.location.href = 'candidate_search.html'; };
 }
 
 function setupHeader() {
-    const header = document.querySelector('header');
-    if (!header) return;
+    let header = document.querySelector('header');
+    if (!header) {
+        header = document.createElement('header');
+        document.body.appendChild(header);
+    }
 
     header.className = 'fixed top-0 right-0 w-[calc(100%-18rem)] h-16 z-50 bg-[var(--bg-surface)]/90 backdrop-blur-md border-b border-[var(--border-subtle)] flex justify-between items-center px-6 transition-colors duration-200';
 
-    // Global Search Container
-    const searchContainer = header.querySelector('.flex.items-center.flex-1') || header.querySelector('div');
-    if (searchContainer) {
-        searchContainer.className = 'flex items-center flex-1 max-w-md';
-        const input = searchContainer.querySelector('input');
-        if (input) {
-            input.className = 'astra-input !py-1.5 !pl-9 !pr-3 text-xs placeholder:text-[var(--text-faint)]';
-            input.placeholder = 'Search candidates, skills, or requisition signals...';
-            input.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && input.value.trim()) {
-                    window.location.href = `candidate_search.html?query=${encodeURIComponent(input.value.trim())}`;
-                }
-            });
-        }
-    }
+    const currentPath = window.location.pathname.split('/').pop() || 'dashboard.html';
+    const pageTitleMap = {
+        'dashboard.html': 'Overview',
+        'talent_map.html': 'Talent Map',
+        'candidate_search.html': 'Candidate Search',
+        'skill_gap_analysis.html': 'Skills Intelligence',
+        'candidate_ranking.html': 'Opportunity Match',
+        'candidate_details.html': 'Candidate Details',
+        'candidate_comparison.html': 'Candidate Comparison',
+        'workforce_analytics.html': 'Workforce Analytics',
+        'reports.html': 'Reports',
+        'saved.html': 'Saved',
+        'recruiter_copilot.html': 'Agent Studio',
+        'settings.html': 'Settings',
+        '404.html': '404 Signal Not Found'
+    };
+    const currentPageTitle = pageTitleMap[currentPath] || 'Workspace';
 
-    // Right Controls
-    let rightControls = header.querySelector('.header-controls') || header.querySelector('.flex.items-center.gap-6') || header.querySelector('.flex.items-center.gap-4');
-    if (!rightControls) {
-        rightControls = document.createElement('div');
-        header.appendChild(rightControls);
-    }
-    rightControls.className = 'header-controls flex items-center gap-3.5';
-
-    // Ensure Telemetry Badge & Theme Toggle & User Badge
-    if (!document.getElementById('astrax-telemetry-badge')) {
-        const badge = document.createElement('div');
-        badge.id = 'astrax-telemetry-badge';
-        badge.className = 'hidden md:flex items-center gap-2 px-2.5 py-1 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[11px] font-mono text-[var(--text-muted)]';
-        badge.innerHTML = `
-            <span class="astra-bindu astra-bindu-saffron !w-1.5 !h-1.5"></span>
-            <span>100,001 CANDIDATES</span>
-        `;
-        rightControls.appendChild(badge);
-    }
-
-    if (!document.getElementById('api-status-badge')) {
-        const apiBadge = document.createElement('div');
-        apiBadge.id = 'api-status-badge';
-        apiBadge.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[var(--text-muted)]';
-        rightControls.appendChild(apiBadge);
-    }
-
-    if (!document.getElementById('theme-toggle-btn')) {
-        const themeBtn = document.createElement('button');
-        themeBtn.id = 'theme-toggle-btn';
-        themeBtn.className = 'astra-btn astra-btn-ghost astra-btn-sm !p-1.5 text-[var(--text-muted)] hover:text-[var(--text-main)]';
-        themeBtn.onclick = toggleTheme;
-        rightControls.appendChild(themeBtn);
-        updateThemeToggleBtn();
-    }
-
-    if (!document.getElementById('user-profile-badge')) {
-        const userBadge = document.createElement('div');
-        userBadge.id = 'user-profile-badge';
-        userBadge.className = 'flex items-center gap-2.5 pl-2.5 border-l border-[var(--border-subtle)]';
-        userBadge.innerHTML = `
-            <div class="w-8 h-8 rounded-md bg-[var(--bg-surface-elevated)] border border-[var(--border-strong)] flex items-center justify-center text-[var(--astra-copper)] font-serif font-bold text-xs">
-                NX
+    header.innerHTML = `
+        <!-- Left: Breadcrumb / Context & Mobile Hamburger -->
+        <div class="flex items-center gap-3">
+            <button id="mobile-menu-btn" class="lg:hidden astra-btn astra-btn-ghost astra-btn-sm !p-1.5" onclick="toggleMobileSidebar()">
+                <span class="material-symbols-outlined text-lg">menu</span>
+            </button>
+            <div class="flex items-center gap-2">
+                <span class="font-serif font-bold text-xs tracking-wider text-[var(--astra-copper)] uppercase">ASTRAX</span>
+                <span class="text-[10px] text-[var(--border-strong)]">/</span>
+                <span class="font-mono text-xs text-[var(--text-faint)] uppercase">NIYUKTI</span>
+                <span class="text-[10px] text-[var(--border-strong)]">/</span>
+                <span class="font-sans font-semibold text-xs text-[var(--text-main)]">${currentPageTitle}</span>
             </div>
-            <div class="hidden lg:block text-left leading-none">
-                <span class="font-sans font-semibold text-xs text-[var(--text-main)] block">Talent Unit</span>
-                <span class="font-mono text-[8.5px] uppercase tracking-wider text-[var(--text-faint)]">ASTRA X OPERATOR</span>
+        </div>
+
+        <!-- Center: Global Search Bar -->
+        <div class="flex-1 max-w-md mx-6 hidden md:block">
+            <div class="relative">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-[var(--text-faint)]">search</span>
+                <input id="global-search-input" type="text" class="astra-input !py-1.5 !pl-9 !pr-10 text-xs placeholder:text-[var(--text-faint)] w-full" placeholder="Search candidates, skills, roles, or locations..." />
+                <kbd class="absolute right-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded border border-[var(--border-strong)] bg-[var(--bg-surface-elevated)] font-mono text-[9px] text-[var(--text-faint)]">↵</kbd>
             </div>
-        `;
-        rightControls.appendChild(userBadge);
+        </div>
+
+        <!-- Right: Telemetry, Notifications, Theme, Profile -->
+        <div class="header-controls flex items-center gap-3">
+            <!-- Node Telemetry Badge -->
+            <div id="astrax-telemetry-badge" class="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[11px] font-mono text-[var(--text-muted)]">
+                <span class="astra-bindu astra-bindu-saffron !w-1.5 !h-1.5"></span>
+                <span>NODE: ONLINE</span>
+            </div>
+
+            <!-- API Status Badge -->
+            <div id="api-status-badge" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[var(--text-muted)]">
+                <span class="w-1.5 h-1.5 rounded-full bg-[var(--semantic-success)] animate-pulse"></span>
+                <span class="hidden sm:inline">100,001 POOL</span>
+            </div>
+
+            <!-- Notifications Drawer Button -->
+            <div class="relative">
+                <button id="notification-btn" class="astra-btn astra-btn-ghost astra-btn-sm !p-1.5 relative text-[var(--text-muted)] hover:text-[var(--text-main)]" onclick="toggleNotificationPanel()">
+                    <span class="material-symbols-outlined text-[19px]">notifications</span>
+                    <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-[var(--astra-copper)]"></span>
+                </button>
+                <!-- Notification Dropdown Panel -->
+                <div id="notification-panel" class="hidden absolute right-0 mt-2 w-80 rounded-xl astra-card astra-card-elevated p-4 z-[100] shadow-xl border border-[var(--border-subtle)]">
+                    <div class="flex items-center justify-between pb-2 border-b border-[var(--border-subtle)] mb-3">
+                        <span class="font-display font-bold text-xs text-[var(--text-main)]">System Notifications</span>
+                        <span class="font-mono text-[9px] text-[var(--astra-copper)]">2 SIGNALS</span>
+                    </div>
+                    <div class="space-y-2.5 text-xs">
+                        <div class="p-2.5 rounded-lg bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)]">
+                            <div class="flex items-center gap-1.5 text-[var(--semantic-success)] font-semibold text-[11px]">
+                                <span class="material-symbols-outlined text-xs">check_circle</span>
+                                <span>Dataset Telemetry Active</span>
+                            </div>
+                            <p class="text-[11px] text-[var(--text-muted)] mt-1">100,001 candidates synchronized with deterministic match engine.</p>
+                        </div>
+                        <div class="p-2.5 rounded-lg bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)]">
+                            <div class="flex items-center gap-1.5 text-[var(--astra-copper)] font-semibold text-[11px]">
+                                <span class="material-symbols-outlined text-xs">radar</span>
+                                <span>Opportunity Match Ready</span>
+                            </div>
+                            <p class="text-[11px] text-[var(--text-muted)] mt-1">Active requisitions available for 6-factor algorithmic scoring.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Theme Toggle -->
+            <button id="theme-toggle-btn" class="astra-btn astra-btn-ghost astra-btn-sm !p-1.5 text-[var(--text-muted)] hover:text-[var(--text-main)]" onclick="toggleTheme()" title="Switch Light/Dark Mode">
+                <span class="material-symbols-outlined text-[19px]">dark_mode</span>
+            </button>
+
+            <!-- User Profile Dropdown -->
+            <div class="relative">
+                <button id="user-profile-btn" class="flex items-center gap-2 pl-2.5 border-l border-[var(--border-subtle)] text-left" onclick="toggleProfileDropdown()">
+                    <div class="w-8 h-8 rounded-md bg-[var(--bg-surface-elevated)] border border-[var(--border-strong)] flex items-center justify-center text-[var(--astra-copper)] font-serif font-bold text-xs">
+                        NX
+                    </div>
+                    <div class="hidden lg:block leading-none">
+                        <span class="font-sans font-semibold text-xs text-[var(--text-main)] block">Talent Unit</span>
+                        <span class="font-mono text-[8.5px] uppercase tracking-wider text-[var(--text-faint)]">ASTRAX OPERATOR</span>
+                    </div>
+                    <span class="material-symbols-outlined text-sm text-[var(--text-faint)]">expand_more</span>
+                </button>
+                <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-52 rounded-xl astra-card astra-card-elevated p-2 z-[100] shadow-xl border border-[var(--border-subtle)] text-xs">
+                    <div class="px-3 py-2 border-b border-[var(--border-subtle)]">
+                        <span class="font-sans font-semibold text-[var(--text-main)] block">Operator 01</span>
+                        <span class="font-mono text-[9px] text-[var(--text-faint)]">niyukti.operator@astrax.ai</span>
+                    </div>
+                    <a href="settings.html" class="flex items-center gap-2 px-3 py-2 rounded-lg text-[var(--text-muted)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-main)] transition-colors mt-1">
+                        <span class="material-symbols-outlined text-base">tune</span>
+                        <span>Model Calibration</span>
+                    </a>
+                    <a href="index.html" class="flex items-center gap-2 px-3 py-2 rounded-lg text-[var(--text-muted)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-main)] transition-colors">
+                        <span class="material-symbols-outlined text-base">hub</span>
+                        <span>ASTRAX Family Hub</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Global Search Keydown Handler
+    const searchInput = document.getElementById('global-search-input');
+    if (searchInput) {
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && searchInput.value.trim()) {
+                window.location.href = `candidate_search.html?query=${encodeURIComponent(searchInput.value.trim())}`;
+            }
+        });
+    }
+
+    updateThemeToggleBtn();
+}
+
+function toggleNotificationPanel() {
+    const p = document.getElementById('notification-panel');
+    if (p) p.classList.toggle('hidden');
+    const u = document.getElementById('profile-dropdown');
+    if (u) u.classList.add('hidden');
+}
+
+function toggleProfileDropdown() {
+    const u = document.getElementById('profile-dropdown');
+    if (u) u.classList.toggle('hidden');
+    const p = document.getElementById('notification-panel');
+    if (p) p.classList.add('hidden');
+}
+
+function toggleMobileSidebar() {
+    const aside = document.querySelector('aside');
+    if (aside) {
+        aside.classList.toggle('-translate-x-full');
     }
 }
+
+// Global click handler to close open dropdowns
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('#notification-btn') && !e.target.closest('#notification-panel')) {
+        const p = document.getElementById('notification-panel');
+        if (p) p.classList.add('hidden');
+    }
+    if (!e.target.closest('#user-profile-btn') && !e.target.closest('#profile-dropdown')) {
+        const u = document.getElementById('profile-dropdown');
+        if (u) u.classList.add('hidden');
+    }
+});
 
 window.apiConnected = null;
 
@@ -468,38 +594,38 @@ async function initDashboard() {
                 }
 
                 const tr = document.createElement('tr');
-                tr.className = 'hover:bg-white/[0.02] transition-colors border-b border-white/5';
+                tr.className = 'hover:bg-[var(--bg-surface-hover)] transition-colors border-b border-[var(--border-subtle)]';
 
-                const priorityColor = job.priority === 'High' ? 'text-error' : 'text-primary';
-                const priorityBg = job.priority === 'High' ? 'bg-error/10' : 'bg-primary/10';
+                const priorityBadge = job.priority === 'High' 
+                    ? '<span class="astra-badge astra-badge-copper">High Priority</span>'
+                    : '<span class="astra-badge astra-badge-teal">Active</span>';
 
                 tr.innerHTML = `
-                    <td class="p-6">
+                    <td class="p-4">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary">
-                                <span class="material-symbols-outlined">work</span>
+                            <div class="w-9 h-9 rounded-lg bg-[var(--bg-surface-elevated)] border border-[var(--border-strong)] flex items-center justify-center text-[var(--astra-indigo)] dark:text-[var(--astra-indigo-light)] flex-shrink-0">
+                                <span class="material-symbols-outlined text-lg">work</span>
                             </div>
                             <div>
-                                <p class="font-bold text-on-surface hover:text-primary transition-colors cursor-pointer" onclick="window.location.href='candidate_ranking.html?job_id=${job.id}'">${job.title}</p>
-                                <p class="text-xs text-on-surface-variant/60">${job.department} • ${job.location} (${job.work_preference})</p>
+                                <p class="font-sans font-bold text-xs text-[var(--text-main)] hover:text-[var(--astra-copper)] transition-colors cursor-pointer" onclick="window.location.href='candidate_ranking.html?job_id=${job.id}'">${job.title}</p>
+                                <p class="font-sans text-[11px] text-[var(--text-muted)]">${job.department} • ${job.location} (${job.work_preference})</p>
                             </div>
                         </div>
                     </td>
-                    <td class="p-6 text-center">
-                        <span class="px-3 py-1 rounded-full text-[10px] font-bold tracking-widest ${priorityBg} ${priorityColor} uppercase">
-                            ${job.priority || 'Medium'}
-                        </span>
+                    <td class="p-4 text-center">
+                        ${priorityBadge}
                     </td>
-                    <td class="p-6 text-center font-bold text-tertiary">
-                        ${topMatchScore ? `<span class="flex items-center justify-center gap-1"><span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span> ${topMatchText} Match</span>` : 'Calculating...'}
+                    <td class="p-4 text-center font-mono text-xs font-bold text-[var(--astra-indigo)] dark:text-[var(--astra-indigo-light)]">
+                        ${topMatchScore ? `<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-[var(--astra-copper-subtle)] border border-[var(--astra-copper)]/30 text-[var(--astra-copper)]"><span class="w-1.5 h-1.5 rounded-full bg-[var(--astra-copper)] animate-pulse"></span> ${topMatchText}</span>` : '<span class="text-[var(--text-faint)]">Pending</span>'}
                     </td>
-                    <td class="p-6 text-center text-on-surface-variant/80 font-mono text-sm">
+                    <td class="p-4 text-center text-[var(--text-muted)] font-mono text-[11px]">
                         ${job.required_skills ? job.required_skills.slice(0, 3).join(', ') : 'None'}
                     </td>
-                    <td class="p-6 text-center">
-                        <button class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-xs font-bold text-on-surface hover:bg-white/10 active:scale-95 transition-all" onclick="window.location.href='candidate_ranking.html?job_id=${job.id}'">
-                            View Rankings
-                        </button>
+                    <td class="p-4 text-center">
+                        <a href="candidate_ranking.html?job_id=${job.id}" class="astra-btn astra-btn-secondary astra-btn-sm text-xs">
+                            <span>Rank Candidates</span>
+                            <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                        </a>
                     </td>
                 `;
                 tableBody.appendChild(tr);
@@ -548,8 +674,8 @@ async function initCandidateSearch() {
             });
         }
 
-        // Connect work preference check boxes inside filter sidebar only
-        document.querySelectorAll('aside input[type="checkbox"]').forEach(box => {
+        // Connect work preference and signal check boxes inside filter sidebar only
+        document.querySelectorAll('#filter-sidebar input[type="checkbox"]').forEach(box => {
             box.addEventListener('change', () => {
                 currentPage = 1;
                 fetchAndRenderCandidates();
@@ -557,9 +683,10 @@ async function initCandidateSearch() {
         });
 
         // Wire Reset button
-        const resetBtn = document.querySelector('aside button');
-        if (resetBtn && resetBtn.textContent.trim() === 'Reset') {
-            resetBtn.addEventListener('click', () => {
+        const resetBtn = document.querySelector('#filter-sidebar button');
+        if (resetBtn) {
+            resetBtn.onclick = (e) => {
+                e.preventDefault();
                 // Clear search input
                 if (searchInput) searchInput.value = '';
                 // Reset experience slider
@@ -568,16 +695,16 @@ async function initCandidateSearch() {
                     if (expDisplay) expDisplay.textContent = '0+ Yrs';
                 }
                 // Uncheck all filter checkboxes
-                document.querySelectorAll('aside input[type="checkbox"]').forEach(cb => {
+                document.querySelectorAll('#filter-sidebar input[type="checkbox"]').forEach(cb => {
                     cb.checked = false;
                 });
                 // Deactivate all skill filter buttons
                 document.querySelectorAll('#skills-filter-container button').forEach(btn => {
-                    btn.classList.remove('bg-primary/20', 'text-primary', 'border-primary/50');
+                    btn.classList.remove('active', 'bg-[var(--astra-copper-subtle)]', 'text-[var(--astra-copper)]', 'border-[var(--astra-copper)]');
                 });
                 currentPage = 1;
                 fetchAndRenderCandidates();
-            });
+            };
         }
 
         // Initial fetch and render
@@ -600,13 +727,11 @@ async function updateCopilotSummary() {
         const stats = await res.json();
         const total = stats.total_candidates?.toLocaleString() || '100,000+';
         const topSkill = stats.top_skills?.[0]?.skill || 'Python';
-        summaryEl.innerHTML = `I've analyzed <span class="text-primary font-bold">${total} profiles</span> in the database. Top in-demand skill: <span class="text-secondary font-bold">${topSkill}</span>. Use filters to narrow down matches.`;
+        summaryEl.innerHTML = `I've analyzed <span class="text-[var(--astra-indigo)] dark:text-[var(--astra-indigo-light)] font-bold">${total} profiles</span> in the database. Top in-demand skill: <span class="text-[var(--astra-copper)] font-bold">${topSkill}</span>. Use filters to narrow down matches.`;
     } catch (e) {
         summaryEl.textContent = 'Candidate database connected. Use the search and filters to find your ideal match.';
     }
 }
-
-
 
 async function setupSkillsFilter() {
     const filterContainer = document.getElementById('skills-filter-container');
@@ -622,12 +747,13 @@ async function setupSkillsFilter() {
             stats.top_skills.forEach(item => {
                 const skill = item.skill;
                 const btn = document.createElement('button');
-                btn.className = 'px-3 py-1 rounded-full text-xs font-medium bg-white/5 border border-white/10 hover:border-primary/40 text-on-surface-variant transition-all';
+                btn.className = 'astra-chip cursor-pointer text-xs transition-all';
                 btn.textContent = skill;
                 btn.addEventListener('click', () => {
-                    btn.classList.toggle('bg-primary/20');
-                    btn.classList.toggle('text-primary');
-                    btn.classList.toggle('border-primary/50');
+                    btn.classList.toggle('active');
+                    btn.classList.toggle('bg-[var(--astra-copper-subtle)]');
+                    btn.classList.toggle('text-[var(--astra-copper)]');
+                    btn.classList.toggle('border-[var(--astra-copper)]');
                     currentPage = 1; // reset page on filter change
                     fetchAndRenderCandidates();
                 });
@@ -644,9 +770,10 @@ async function fetchAndRenderCandidates() {
     if (!container) return;
 
     container.innerHTML = `
-        <div class="col-span-full py-16 text-center text-outline">
-            <span class="material-symbols-outlined animate-spin text-4xl mb-2">sync</span>
-            <p>Searching candidate database...</p>
+        <div class="col-span-full py-16 text-center text-[var(--text-faint)]">
+            <span class="material-symbols-outlined animate-spin text-4xl mb-2 text-[var(--astra-copper)]">sync</span>
+            <p class="font-display font-bold text-sm text-[var(--text-main)]">Searching candidate database...</p>
+            <p class="font-sans text-xs text-[var(--text-muted)] mt-1">Retrieving verified profiles matching query criteria.</p>
         </div>
     `;
 
@@ -657,12 +784,12 @@ async function fetchAndRenderCandidates() {
     const minExp = expSlider ? parseInt(expSlider.value) : 0;
 
     const activeSkills = [];
-    document.querySelectorAll('#skills-filter-container button.text-primary').forEach(btn => {
+    document.querySelectorAll('#skills-filter-container button.active').forEach(btn => {
         activeSkills.push(btn.textContent.trim());
     });
 
     const preferences = [];
-    document.querySelectorAll('aside input[type="checkbox"]:checked').forEach(box => {
+    document.querySelectorAll('#filter-sidebar input[type="checkbox"]:checked').forEach(box => {
         const labelText = box.nextElementSibling?.textContent.toLowerCase() || '';
         if (labelText.includes('remote')) preferences.push('remote');
         if (labelText.includes('hybrid')) preferences.push('hybrid');
@@ -1231,15 +1358,25 @@ async function initCandidateDetails() {
         const titleEl = document.querySelector('main p.text-on-surface-variant') || document.getElementById('candidate-profile-title');
         if (titleEl) titleEl.textContent = `${candidate.title} • ${candidate.location} (${candidate.work_preference})`;
 
-        // Avatar
+        // Avatar & Dynamic Initials
+        const initials = candidate.name
+            ? candidate.name.split(' ').filter(Boolean).map(n => n[0]).join('').substring(0, 2).toUpperCase()
+            : 'NX';
+        const initialsSpan = document.getElementById('candidate-avatar-initials') || document.querySelector('main .font-serif.font-bold span');
+        if (initialsSpan) initialsSpan.textContent = initials;
+
         const avatar = document.querySelector('main img');
-        if (avatar && candidate.avatar_url) avatar.src = candidate.avatar_url;
+        if (avatar && candidate.avatar_url) {
+            avatar.src = candidate.avatar_url;
+            avatar.classList.remove('hidden');
+            if (initialsSpan) initialsSpan.classList.add('hidden');
+        }
 
         // Skills List
         const skillsContainer = document.getElementById('candidate-skills-list') || document.getElementById('skills-container');
         if (skillsContainer) {
             skillsContainer.innerHTML = candidate.skills.map(s => `
-                <span class="bg-primary/10 border border-primary/20 text-primary px-3 py-1 rounded-full text-xs font-medium">${s}</span>
+                <span class="astra-badge astra-badge-indigo text-xs">${s}</span>
             `).join('');
         }
 
@@ -1247,22 +1384,22 @@ async function initCandidateDetails() {
         const infoGrid = document.getElementById('candidate-basic-info');
         if (infoGrid) {
             infoGrid.innerHTML = `
-                <div class="p-4 bg-white/2 rounded-xl">
-                    <p class="text-xs text-outline uppercase tracking-wider">Salary Expectation</p>
-                    <p class="text-lg font-bold text-on-surface mt-1">${candidate.salary_expectation
+                <div class="p-4 rounded-xl astra-card bg-[var(--bg-surface)]">
+                    <p class="font-mono text-[10px] text-[var(--text-faint)] uppercase tracking-wider">Salary Expectation</p>
+                    <p class="font-sans text-base font-bold text-[var(--text-main)] mt-1">${candidate.salary_expectation
                     ? (candidate.salary_expectation < 1000
                         ? `$${(candidate.salary_expectation * 1200).toLocaleString()}`
                         : `$${candidate.salary_expectation.toLocaleString()}`)
-                    : 'N/A'
+                    : 'Competitive'
                 }</p>
                 </div>
-                <div class="p-4 bg-white/2 rounded-xl">
-                    <p class="text-xs text-outline uppercase tracking-wider">Experience Level</p>
-                    <p class="text-lg font-bold text-on-surface mt-1">${candidate.experience_years} Years</p>
+                <div class="p-4 rounded-xl astra-card bg-[var(--bg-surface)]">
+                    <p class="font-mono text-[10px] text-[var(--text-faint)] uppercase tracking-wider">Experience Level</p>
+                    <p class="font-sans text-base font-bold text-[var(--text-main)] mt-1">${candidate.experience_years} Years</p>
                 </div>
-                <div class="p-4 bg-white/2 rounded-xl">
-                    <p class="text-xs text-outline uppercase tracking-wider">Candidate Status</p>
-                    <p class="text-lg font-bold text-primary mt-1">${candidate.status}</p>
+                <div class="p-4 rounded-xl astra-card bg-[var(--bg-surface)]">
+                    <p class="font-mono text-[10px] text-[var(--text-faint)] uppercase tracking-wider">Candidate Status</p>
+                    <p class="font-sans text-base font-bold text-[var(--astra-indigo)] dark:text-[var(--astra-indigo-light)] mt-1">${candidate.status}</p>
                 </div>
             `;
         }
@@ -2740,3 +2877,25 @@ async function initTalentMap() {
     }
 }
 window.initTalentMap = initTalentMap;
+
+async function initWorkforceAnalytics() {
+    try {
+        const [statsRes, jRes] = await Promise.all([
+            fetch(`${API_BASE}/candidates/stats`),
+            fetch(`${API_BASE}/jobs/`)
+        ]);
+        if (statsRes.ok) {
+            const stats = await statsRes.json();
+            const totalEl = document.getElementById('analytics-total-candidates');
+            if (totalEl) totalEl.textContent = stats.total_candidates.toLocaleString();
+        }
+        if (jRes.ok) {
+            const jobs = await jRes.json();
+            const jobsEl = document.getElementById('analytics-total-jobs');
+            if (jobsEl) jobsEl.textContent = jobs.length.toLocaleString();
+        }
+    } catch (e) {
+        console.error("Workforce analytics init failed", e);
+    }
+}
+window.initWorkforceAnalytics = initWorkforceAnalytics;

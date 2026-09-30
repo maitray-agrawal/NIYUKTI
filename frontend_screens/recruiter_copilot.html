@@ -98,6 +98,52 @@
                     </div>
                 </div>
 
+                <!-- Candidate Focus Dossier -->
+                <div class="astra-card astra-card-elevated p-6">
+                    <div class="flex items-center justify-between pb-3 border-b border-[var(--border-subtle)] mb-4">
+                        <div>
+                            <span class="font-mono text-[9px] uppercase tracking-widest text-[var(--astra-copper)]">FOCUS CANDIDATE</span>
+                            <h4 id="copilot-candidate-name" class="font-display font-bold text-base text-[var(--text-main)] mt-0.5">Select a candidate</h4>
+                        </div>
+                        <button id="copilot-view-profile-btn" class="astra-btn astra-btn-ghost astra-btn-sm text-xs" onclick="window.location.href='candidate_details.html?id=' + (document.getElementById('context-candidate')?.value || '1')">
+                            <span>View Full Profile</span>
+                            <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                        </button>
+                    </div>
+
+                    <!-- Candidate Skills -->
+                    <div class="mb-4">
+                        <span class="font-mono text-[10px] text-[var(--text-faint)] uppercase tracking-wider block mb-2">Verified Skills</span>
+                        <div id="copilot-candidate-skills" class="flex flex-wrap gap-1.5">
+                            <span class="astra-chip text-[10px]">Python</span>
+                        </div>
+                    </div>
+
+                    <!-- Resume Summary -->
+                    <div class="mb-4">
+                        <span class="font-mono text-[10px] text-[var(--text-faint)] uppercase tracking-wider block mb-2">Executive Summary & Signals</span>
+                        <ul id="copilot-resume-summary" class="space-y-1.5 text-xs text-[var(--text-muted)]">
+                            <li class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-xs text-[var(--semantic-success)]">check_circle</span>
+                                <span>Select a candidate to view synthesized strengths.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Skill Gap Container -->
+                    <div class="pt-3 border-t border-[var(--border-subtle)]">
+                        <span class="font-mono text-[10px] text-[var(--text-faint)] uppercase tracking-wider block mb-2">Skill Gap Analysis</span>
+                        <div id="copilot-skill-gap-container">
+                            <div class="space-y-1 text-xs">
+                                <div class="flex justify-between font-mono text-[10px] text-[var(--text-faint)]">
+                                    <span>Alignment against target role</span>
+                                    <span class="text-[var(--astra-indigo)] font-bold">88%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Agent Studio: Controlled Agent Lifecycle Monitoring -->
                 <div class="astra-card astra-card-elevated p-6">
                     <div class="flex items-center justify-between pb-3 border-b border-[var(--border-subtle)] mb-4">

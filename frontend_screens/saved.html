@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>NIYUKTI — Saved Talent & Requisitions | ASTRA X</title>
+    <meta name="description" content="Recruiter workspace for shortlisted candidates, bookmarked opportunities, and monitored skills."/>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="stylesheet" href="astrax-niyukti.css"/>
+</head>
+<body class="astra-grid-bg min-h-screen">
+
+    <!-- Global Navigation Sidebar -->
+    <aside></aside>
+
+    <!-- Global Top Header -->
+    <header></header>
+
+    <!-- Main Workspace Canvas -->
+    <main class="ml-72 pt-20 px-8 pb-12 transition-all duration-200">
+
+        <!-- Header Context -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="font-mono text-[10px] text-[var(--astra-copper)] uppercase tracking-widest">ASTRA X / TALENT INTELLIGENCE</span>
+                    <span class="text-[10px] text-[var(--border-strong)]">•</span>
+                    <span class="font-mono text-[10px] text-[var(--text-faint)]">SAVED WORKSPACE</span>
+                </div>
+                <h1 class="font-display text-2xl sm:text-3xl font-bold text-[var(--text-main)]">Saved Candidates & Requisitions</h1>
+                <p class="font-sans text-xs sm:text-sm text-[var(--text-muted)] mt-1">Shortlisted candidates, pinned hiring requisitions, and monitored skill clusters.</p>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a href="candidate_search.html" class="astra-btn astra-btn-primary astra-btn-sm">
+                    <span class="material-symbols-outlined text-sm">person_search</span>
+                    <span>Discover More Talent</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Saved Workspace Navigation Tabs -->
+        <div class="flex items-center gap-2 border-b border-[var(--border-subtle)] mb-6">
+            <button id="tab-candidates-btn" class="py-2.5 px-4 font-sans font-semibold text-xs border-b-2 border-[var(--astra-copper)] text-[var(--text-main)] flex items-center gap-2 transition-all" onclick="switchSavedTab('candidates')">
+                <span class="material-symbols-outlined text-base text-[var(--astra-copper)]">bookmark</span>
+                <span>Saved Candidates</span>
+                <span id="saved-candidates-count" class="px-1.5 py-0.2 rounded-full font-mono text-[10px] bg-[var(--bg-surface-elevated)] border border-[var(--border-strong)]">0</span>
+            </button>
+            <button id="tab-jobs-btn" class="py-2.5 px-4 font-sans font-semibold text-xs border-b-2 border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)] flex items-center gap-2 transition-all" onclick="switchSavedTab('jobs')">
+                <span class="material-symbols-outlined text-base">work</span>
+                <span>Pinned Requisitions</span>
+                <span id="saved-jobs-count" class="px-1.5 py-0.2 rounded-full font-mono text-[10px] bg-[var(--bg-surface-elevated)] border border-[var(--border-strong)]">0</span>
+            </button>
+            <button id="tab-skills-btn" class="py-2.5 px-4 font-sans font-semibold text-xs border-b-2 border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)] flex items-center gap-2 transition-all" onclick="switchSavedTab('skills')">
+                <span class="material-symbols-outlined text-base">radar</span>
+                <span>Monitored Skills</span>
+                <span class="px-1.5 py-0.2 rounded-full font-mono text-[10px] bg-[var(--bg-surface-elevated)] border border-[var(--border-strong)]">4</span>
+            </button>
+        </div>
+
+        <!-- Tab 1: Saved Candidates Container -->
+        <div id="saved-candidates-section">
+            <div id="saved-candidates-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamically populated or fallback -->
+            </div>
+            <!-- Empty State -->
+            <div id="saved-candidates-empty" class="hidden text-center py-16 astra-card astra-card-elevated">
+                <div class="w-12 h-12 rounded-xl bg-[var(--bg-surface-elevated)] border border-[var(--border-strong)] flex items-center justify-center text-[var(--astra-copper)] mx-auto mb-3">
+                    <span class="material-symbols-outlined text-2xl">bookmark_border</span>
+                </div>
+                <h3 class="font-display font-bold text-base text-[var(--text-main)]">No Saved Candidates Yet</h3>
+                <p class="font-sans text-xs text-[var(--text-muted)] mt-1 max-w-sm mx-auto">Shortlist candidates in Candidate Search or Ranking using the save bookmark action to track them here.</p>
+                <a href="candidate_search.html" class="astra-btn astra-btn-primary astra-btn-sm inline-flex items-center gap-1.5 mt-4">
+                    <span class="material-symbols-outlined text-sm">person_search</span>
+                    <span>Explore Candidates</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Tab 2: Pinned Requisitions Container -->
+        <div id="saved-jobs-section" class="hidden">
+            <div id="saved-jobs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamically populated or fallback -->
+            </div>
+            <!-- Empty State -->
+            <div id="saved-jobs-empty" class="hidden text-center py-16 astra-card astra-card-elevated">
+                <div class="w-12 h-12 rounded-xl bg-[var(--bg-surface-elevated)] border border-[var(--border-strong)] flex items-center justify-center text-[var(--niyukti-teal)] mx-auto mb-3">
+                    <span class="material-symbols-outlined text-2xl">work_outline</span>
+                </div>
+                <h3 class="font-display font-bold text-base text-[var(--text-main)]">No Pinned Requisitions</h3>
+                <p class="font-sans text-xs text-[var(--text-muted)] mt-1 max-w-sm mx-auto">Pin hiring requisitions on the Overview dashboard to quickly access candidate matching pipelines.</p>
+                <a href="dashboard.html" class="astra-btn astra-btn-secondary astra-btn-sm inline-flex items-center gap-1.5 mt-4">
+                    <span class="material-symbols-outlined text-sm">dashboard</span>
+                    <span>View Requisitions</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Tab 3: Monitored Skills Container -->
+        <div id="saved-skills-section" class="hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="p-5 rounded-xl astra-card astra-card-elevated">
+                    <div class="flex items-center justify-between pb-3 border-b border-[var(--border-subtle)] mb-3">
+                        <span class="font-sans font-bold text-xs text-[var(--text-main)]">PyTorch & Deep Learning Systems</span>
+                        <span class="astra-badge astra-badge-copper">High Scarcity</span>
+                    </div>
+                    <p class="font-sans text-xs text-[var(--text-muted)] mb-3">Monitoring deficit in candidate pool vs. Senior AI Engineer requisitions.</p>
+                    <div class="flex items-center justify-between pt-2 border-t border-[var(--border-subtle)] font-mono text-[11px]">
+                        <span class="text-[var(--text-faint)]">Equilibrium: -34%</span>
+                        <a href="skill_gap_analysis.html" class="text-[var(--astra-copper)] hover:underline font-sans text-xs">Analyze Gap →</a>
+                    </div>
+                </div>
+
+                <div class="p-5 rounded-xl astra-card astra-card-elevated">
+                    <div class="flex items-center justify-between pb-3 border-b border-[var(--border-subtle)] mb-3">
+                        <span class="font-sans font-bold text-xs text-[var(--text-main)]">Vector Search & RAG Architecture</span>
+                        <span class="astra-badge astra-badge-copper">High Demand</span>
+                    </div>
+                    <p class="font-sans text-xs text-[var(--text-muted)] mb-3">Pinecone, Milvus, Qdrant, embeddings-based retrieval systems.</p>
+                    <div class="flex items-center justify-between pt-2 border-t border-[var(--border-subtle)] font-mono text-[11px]">
+                        <span class="text-[var(--text-faint)]">Equilibrium: -28%</span>
+                        <a href="skill_gap_analysis.html" class="text-[var(--astra-copper)] hover:underline font-sans text-xs">Analyze Gap →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="integration.js"></script>
+    <script>
+        function switchSavedTab(tab) {
+            const tabs = ['candidates', 'jobs', 'skills'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab-${t}-btn`);
+                const sec = document.getElementById(`saved-${t}-section`);
+                if (t === tab) {
+                    btn.className = 'py-2.5 px-4 font-sans font-semibold text-xs border-b-2 border-[var(--astra-copper)] text-[var(--text-main)] flex items-center gap-2 transition-all';
+                    sec.classList.remove('hidden');
+                } else {
+                    btn.className = 'py-2.5 px-4 font-sans font-semibold text-xs border-b-2 border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)] flex items-center gap-2 transition-all';
+                    sec.classList.add('hidden');
+                }
+            });
+        }
+
+        async function initSavedPage() {
+            // Load saved candidates from localStorage or fetch sample
+            let savedIds = JSON.parse(localStorage.getItem('niyukti_saved_candidate_ids') || '[1, 2, 7]');
+            const countEl = document.getElementById('saved-candidates-count');
+            if (countEl) countEl.textContent = savedIds.length;
+
+            const grid = document.getElementById('saved-candidates-grid');
+            const empty = document.getElementById('saved-candidates-empty');
+
+            if (savedIds.length === 0) {
+                grid.classList.add('hidden');
+                empty.classList.remove('hidden');
+                return;
+            }
+
+            try {
+                const candidates = [];
+                for (const id of savedIds.slice(0, 6)) {
+                    const r = await fetch(`${API_BASE}/candidates/${id}`);
+                    if (r.ok) candidates.push(await r.json());
+                }
+
+                if (candidates.length === 0) {
+                    grid.classList.add('hidden');
+                    empty.classList.remove('hidden');
+                    return;
+                }
+
+                grid.innerHTML = candidates.map(c => `
+                    <div class="astra-card astra-card-elevated p-5 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between pb-3 border-b border-[var(--border-subtle)] mb-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-lg bg-[var(--bg-surface-elevated)] border border-[var(--border-strong)] flex items-center justify-center font-serif font-bold text-xs text-[var(--astra-copper)]">
+                                        ${c.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase()}
+                                    </div>
+                                    <div>
+                                        <h4 class="font-sans font-bold text-xs text-[var(--text-main)] hover:text-[var(--astra-copper)] cursor-pointer" onclick="window.location.href='candidate_details.html?id=${c.id}'">${c.name}</h4>
+                                        <p class="font-sans text-[11px] text-[var(--text-muted)]">${c.title} • ${c.location}</p>
+                                    </div>
+                                </div>
+                                <span class="astra-badge astra-badge-indigo text-[9px]">${c.experience_years}y Exp</span>
+                            </div>
+                            <div class="flex flex-wrap gap-1.5 mb-4">
+                                ${(c.skills || []).slice(0, 4).map(s => `<span class="astra-chip text-[10px]">${s}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between pt-3 border-t border-[var(--border-subtle)]">
+                            <button class="astra-btn astra-btn-ghost astra-btn-sm text-[var(--semantic-critical)] !p-1.5" onclick="removeSavedCandidate(${c.id})" title="Remove from Saved">
+                                <span class="material-symbols-outlined text-sm">bookmark_remove</span>
+                            </button>
+                            <a href="candidate_details.html?id=${c.id}" class="astra-btn astra-btn-primary astra-btn-sm text-xs">
+                                <span>View Dossier</span>
+                                <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                            </a>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (err) {
+                console.error("Failed to load saved candidates", err);
+            }
+
+            // Load saved jobs
+            const jobsCountEl = document.getElementById('saved-jobs-count');
+            const jobsGrid = document.getElementById('saved-jobs-grid');
+            try {
+                const jRes = await fetch(`${API_BASE}/jobs/`);
+                if (jRes.ok) {
+                    const jobs = await jRes.json();
+                    if (jobsCountEl) jobsCountEl.textContent = jobs.length;
+                    jobsGrid.innerHTML = jobs.map(j => `
+                        <div class="astra-card astra-card-elevated p-5 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between pb-3 border-b border-[var(--border-subtle)] mb-3">
+                                    <h4 class="font-sans font-bold text-xs text-[var(--text-main)] hover:text-[var(--astra-copper)] cursor-pointer" onclick="window.location.href='candidate_ranking.html?job_id=${j.id}'">${j.title}</h4>
+                                    <span class="astra-badge astra-badge-copper text-[9px]">${j.priority || 'High'}</span>
+                                </div>
+                                <p class="font-sans text-[11px] text-[var(--text-muted)] mb-3">${j.department} • ${j.location}</p>
+                                <div class="flex flex-wrap gap-1 mb-4">
+                                    ${(j.required_skills || []).slice(0, 3).map(s => `<span class="astra-chip text-[10px]">${s}</span>`).join('')}
+                                </div>
+                            </div>
+                            <div class="pt-3 border-t border-[var(--border-subtle)]">
+                                <a href="candidate_ranking.html?job_id=${j.id}" class="astra-btn astra-btn-secondary astra-btn-sm w-full text-xs">
+                                    <span>Rank Candidates</span>
+                                    <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                                </a>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error("Failed to load saved jobs", err);
+            }
+        }
+
+        function removeSavedCandidate(id) {
+            let savedIds = JSON.parse(localStorage.getItem('niyukti_saved_candidate_ids') || '[1, 2, 7]');
+            savedIds = savedIds.filter(x => x !== id);
+            localStorage.setItem('niyukti_saved_candidate_ids', JSON.stringify(savedIds));
+            showToast("Candidate removed from saved list.");
+            initSavedPage();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initSavedPage();
+        });
+    </script>
+</body>
+</html>

@@ -122,56 +122,112 @@
                 </div>
 
                 <!-- Comparison Distribution Bars -->
-                <div class="space-y-4">
-                    <div>
-                        <div class="flex justify-between text-xs mb-1">
+                <div class="space-y-3">
+                    <div class="p-3 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+                        <div class="flex items-center justify-between text-xs mb-2">
                             <span class="font-sans font-semibold text-[var(--text-main)]">Python & MLOps Architecture</span>
-                            <span class="font-mono text-[var(--text-muted)]">Demand: 88% • Supply: 65% (Gap: 23%)</span>
+                            <span class="font-mono text-[10px] text-[var(--semantic-warning)] bg-[var(--semantic-warning-subtle)] px-2 py-0.5 rounded font-semibold">Gap: 23%</span>
                         </div>
-                        <div class="w-full bg-[var(--bg-surface-elevated)] h-2 rounded-full overflow-hidden flex">
-                            <div class="bg-[var(--astra-indigo)] h-full" style="width: 88%"></div>
-                        </div>
-                        <div class="w-full bg-[var(--bg-surface-elevated)] h-1.5 rounded-full overflow-hidden flex mt-1">
-                            <div class="bg-[var(--niyukti-teal)] h-full" style="width: 65%"></div>
+                        <div class="grid grid-cols-2 gap-3 text-[11px] font-mono">
+                            <div>
+                                <div class="flex justify-between text-[10px] text-[var(--text-faint)] mb-0.5">
+                                    <span>DEMAND</span>
+                                    <span class="text-[var(--astra-indigo)] font-bold">88%</span>
+                                </div>
+                                <div class="w-full bg-[var(--bg-surface-elevated)] h-2 rounded-full overflow-hidden">
+                                    <div class="bg-[var(--astra-indigo)] h-full rounded-full" style="width: 88%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] text-[var(--text-faint)] mb-0.5">
+                                    <span>SUPPLY</span>
+                                    <span class="text-[var(--niyukti-teal)] font-bold">65%</span>
+                                </div>
+                                <div class="w-full bg-[var(--bg-surface-elevated)] h-2 rounded-full overflow-hidden">
+                                    <div class="bg-[var(--niyukti-teal)] h-full rounded-full" style="width: 65%"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div>
-                        <div class="flex justify-between text-xs mb-1">
+                    <div class="p-3 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+                        <div class="flex items-center justify-between text-xs mb-2">
                             <span class="font-sans font-semibold text-[var(--text-main)]">FastAPI & Distributed Microservices</span>
-                            <span class="font-mono text-[var(--text-muted)]">Demand: 76% • Supply: 72% (Balanced)</span>
+                            <span class="font-mono text-[10px] text-[var(--semantic-success)] bg-[var(--semantic-success-subtle)] px-2 py-0.5 rounded font-semibold">Balanced (-4%)</span>
                         </div>
-                        <div class="w-full bg-[var(--bg-surface-elevated)] h-2 rounded-full overflow-hidden flex">
-                            <div class="bg-[var(--astra-indigo)] h-full" style="width: 76%"></div>
-                        </div>
-                        <div class="w-full bg-[var(--bg-surface-elevated)] h-1.5 rounded-full overflow-hidden flex mt-1">
-                            <div class="bg-[var(--niyukti-teal)] h-full" style="width: 72%"></div>
+                        <div class="grid grid-cols-2 gap-3 text-[11px] font-mono">
+                            <div>
+                                <div class="flex justify-between text-[10px] text-[var(--text-faint)] mb-0.5">
+                                    <span>DEMAND</span>
+                                    <span class="text-[var(--astra-indigo)] font-bold">76%</span>
+                                </div>
+                                <div class="w-full bg-[var(--bg-surface-elevated)] h-2 rounded-full overflow-hidden">
+                                    <div class="bg-[var(--astra-indigo)] h-full rounded-full" style="width: 76%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] text-[var(--text-faint)] mb-0.5">
+                                    <span>SUPPLY</span>
+                                    <span class="text-[var(--niyukti-teal)] font-bold">72%</span>
+                                </div>
+                                <div class="w-full bg-[var(--bg-surface-elevated)] h-2 rounded-full overflow-hidden">
+                                    <div class="bg-[var(--niyukti-teal)] h-full rounded-full" style="width: 72%"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div>
-                        <div class="flex justify-between text-xs mb-1">
+                    <div class="p-3 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+                        <div class="flex items-center justify-between text-xs mb-2">
                             <span class="font-sans font-semibold text-[var(--text-main)]">PyTorch & Deep Learning Systems</span>
-                            <span class="font-mono text-[var(--text-muted)]">Demand: 82% • Supply: 48% (High Scarcity)</span>
+                            <span class="font-mono text-[10px] text-[var(--semantic-warning)] bg-[var(--semantic-warning-subtle)] px-2 py-0.5 rounded font-semibold">High Scarcity (-34%)</span>
                         </div>
-                        <div class="w-full bg-[var(--bg-surface-elevated)] h-2 rounded-full overflow-hidden flex">
-                            <div class="bg-[var(--astra-indigo)] h-full" style="width: 82%"></div>
-                        </div>
-                        <div class="w-full bg-[var(--bg-surface-elevated)] h-1.5 rounded-full overflow-hidden flex mt-1">
-                            <div class="bg-[var(--niyukti-saffron)] h-full" style="width: 48%"></div>
+                        <div class="grid grid-cols-2 gap-3 text-[11px] font-mono">
+                            <div>
+                                <div class="flex justify-between text-[10px] text-[var(--text-faint)] mb-0.5">
+                                    <span>DEMAND</span>
+                                    <span class="text-[var(--astra-indigo)] font-bold">82%</span>
+                                </div>
+                                <div class="w-full bg-[var(--bg-surface-elevated)] h-2 rounded-full overflow-hidden">
+                                    <div class="bg-[var(--astra-indigo)] h-full rounded-full" style="width: 82%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] text-[var(--text-faint)] mb-0.5">
+                                    <span>SUPPLY</span>
+                                    <span class="text-[var(--niyukti-saffron)] font-bold">48%</span>
+                                </div>
+                                <div class="w-full bg-[var(--bg-surface-elevated)] h-2 rounded-full overflow-hidden">
+                                    <div class="bg-[var(--niyukti-saffron)] h-full rounded-full" style="width: 48%"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div>
-                        <div class="flex justify-between text-xs mb-1">
+                    <div class="p-3 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+                        <div class="flex items-center justify-between text-xs mb-2">
                             <span class="font-sans font-semibold text-[var(--text-main)]">Cloud (AWS/GCP) & Docker/K8s</span>
-                            <span class="font-mono text-[var(--text-muted)]">Demand: 70% • Supply: 68% (Healthy)</span>
+                            <span class="font-mono text-[10px] text-[var(--semantic-success)] bg-[var(--semantic-success-subtle)] px-2 py-0.5 rounded font-semibold">Healthy (-2%)</span>
                         </div>
-                        <div class="w-full bg-[var(--bg-surface-elevated)] h-2 rounded-full overflow-hidden flex">
-                            <div class="bg-[var(--astra-indigo)] h-full" style="width: 70%"></div>
-                        </div>
-                        <div class="w-full bg-[var(--bg-surface-elevated)] h-1.5 rounded-full overflow-hidden flex mt-1">
-                            <div class="bg-[var(--niyukti-teal)] h-full" style="width: 68%"></div>
+                        <div class="grid grid-cols-2 gap-3 text-[11px] font-mono">
+                            <div>
+                                <div class="flex justify-between text-[10px] text-[var(--text-faint)] mb-0.5">
+                                    <span>DEMAND</span>
+                                    <span class="text-[var(--astra-indigo)] font-bold">70%</span>
+                                </div>
+                                <div class="w-full bg-[var(--bg-surface-elevated)] h-2 rounded-full overflow-hidden">
+                                    <div class="bg-[var(--astra-indigo)] h-full rounded-full" style="width: 70%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] text-[var(--text-faint)] mb-0.5">
+                                    <span>SUPPLY</span>
+                                    <span class="text-[var(--niyukti-teal)] font-bold">68%</span>
+                                </div>
+                                <div class="w-full bg-[var(--bg-surface-elevated)] h-2 rounded-full overflow-hidden">
+                                    <div class="bg-[var(--niyukti-teal)] h-full rounded-full" style="width: 68%"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

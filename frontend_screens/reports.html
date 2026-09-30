@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>NIYUKTI — Intelligence Reports | ASTRA X</title>
+    <meta name="description" content="Structured intelligence dossiers, talent audits, and workforce distribution reports."/>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="stylesheet" href="astrax-niyukti.css"/>
+</head>
+<body class="astra-grid-bg min-h-screen">
+
+    <!-- Global Navigation Sidebar -->
+    <aside></aside>
+
+    <!-- Global Top Header -->
+    <header></header>
+
+    <!-- Main Workspace Canvas -->
+    <main class="ml-72 pt-20 px-8 pb-12 transition-all duration-200">
+
+        <!-- Header Context -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="font-mono text-[10px] text-[var(--astra-copper)] uppercase tracking-widest">ASTRA X / TALENT INTELLIGENCE</span>
+                    <span class="text-[10px] text-[var(--border-strong)]">•</span>
+                    <span class="font-mono text-[10px] text-[var(--text-faint)]">INTELLIGENCE REPORTS</span>
+                </div>
+                <h1 class="font-display text-2xl sm:text-3xl font-bold text-[var(--text-main)]">Formal Intelligence Dossiers & Reports</h1>
+                <p class="font-sans text-xs sm:text-sm text-[var(--text-muted)] mt-1">Exportable audit logs, talent distributions, and algorithmic matching summaries.</p>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button class="astra-btn astra-btn-primary astra-btn-sm" onclick="exportFullIntelligenceBundle()">
+                    <span class="material-symbols-outlined text-sm">inventory_2</span>
+                    <span>Download Complete Bundle</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Reports Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <!-- Report 1: Talent Pool Census -->
+            <div class="p-6 rounded-xl astra-card astra-card-elevated flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between pb-3 border-b border-[var(--border-subtle)] mb-4">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-lg bg-[var(--bg-surface-elevated)] border border-[var(--border-strong)] flex items-center justify-center text-[var(--astra-indigo)] dark:text-[var(--astra-indigo-light)]">
+                                <span class="material-symbols-outlined text-lg">groups</span>
+                            </div>
+                            <div>
+                                <h3 class="font-display font-bold text-sm text-[var(--text-main)]">Talent Pool Census & Cohorts</h3>
+                                <p class="font-mono text-[9px] text-[var(--text-faint)] uppercase">DOC-NIYUKTI-2026-01</p>
+                            </div>
+                        </div>
+                        <span class="astra-badge astra-badge-teal">Ready</span>
+                    </div>
+                    <p class="font-sans text-xs text-[var(--text-muted)] leading-relaxed mb-4">
+                        Comprehensive census of the 100,001 candidate population, including experience distributions, regional clusters, and salary expectation bands.
+                    </p>
+                    <div class="grid grid-cols-3 gap-2 font-mono text-[10px] text-[var(--text-faint)] mb-4 p-2.5 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+                        <div>RECORDS: <span class="text-[var(--text-main)] font-bold">100,001</span></div>
+                        <div>HUBS: <span class="text-[var(--text-main)] font-bold">6 Major</span></div>
+                        <div>FORMAT: <span class="text-[var(--text-main)] font-bold">CSV / JSON</span></div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-3 border-t border-[var(--border-subtle)]">
+                    <span class="font-mono text-[10px] text-[var(--text-faint)]">UPDATED: LIVE DATABASE</span>
+                    <button class="astra-btn astra-btn-secondary astra-btn-sm" onclick="exportCensusReport()">
+                        <span class="material-symbols-outlined text-sm">download</span>
+                        <span>Download CSV</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Report 2: Skill Gap & Demand Matrix -->
+            <div class="p-6 rounded-xl astra-card astra-card-elevated flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between pb-3 border-b border-[var(--border-subtle)] mb-4">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-lg bg-[var(--bg-surface-elevated)] border border-[var(--border-strong)] flex items-center justify-center text-[var(--astra-copper)]">
+                                <span class="material-symbols-outlined text-lg">radar</span>
+                            </div>
+                            <div>
+                                <h3 class="font-display font-bold text-sm text-[var(--text-main)]">Skill Gap & Scarcity Index</h3>
+                                <p class="font-mono text-[9px] text-[var(--text-faint)] uppercase">DOC-NIYUKTI-2026-02</p>
+                            </div>
+                        </div>
+                        <span class="astra-badge astra-badge-copper">High Priority</span>
+                    </div>
+                    <p class="font-sans text-xs text-[var(--text-muted)] leading-relaxed mb-4">
+                        Detailed supply-vs-demand analysis for technical competencies, identifying severe shortages in PyTorch, LoRA, and Vector Search systems.
+                    </p>
+                    <div class="grid grid-cols-3 gap-2 font-mono text-[10px] text-[var(--text-faint)] mb-4 p-2.5 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+                        <div>DEFICIT: <span class="text-[var(--semantic-warning)] font-bold">-34% AI/ML</span></div>
+                        <div>EQUILIBRIUM: <span class="text-[var(--semantic-success)] font-bold">Backend</span></div>
+                        <div>FORMAT: <span class="text-[var(--text-main)] font-bold">JSON</span></div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-3 border-t border-[var(--border-subtle)]">
+                    <span class="font-mono text-[10px] text-[var(--text-faint)]">UPDATED: REAL-TIME</span>
+                    <button class="astra-btn astra-btn-secondary astra-btn-sm" onclick="exportSkillGapReport()">
+                        <span class="material-symbols-outlined text-sm">download</span>
+                        <span>Download JSON</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Report 3: Decision Ledger Audit Log -->
+            <div class="p-6 rounded-xl astra-card astra-card-elevated flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between pb-3 border-b border-[var(--border-subtle)] mb-4">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-lg bg-[var(--bg-surface-elevated)] border border-[var(--border-strong)] flex items-center justify-center text-[var(--niyukti-saffron)]">
+                                <span class="material-symbols-outlined text-lg">receipt_long</span>
+                            </div>
+                            <div>
+                                <h3 class="font-display font-bold text-sm text-[var(--text-main)]">Decision Ledger Audit Log</h3>
+                                <p class="font-mono text-[9px] text-[var(--text-faint)] uppercase">DOC-NIYUKTI-2026-03</p>
+                            </div>
+                        </div>
+                        <span class="astra-badge astra-badge-indigo">Audit Trail</span>
+                    </div>
+                    <p class="font-sans text-xs text-[var(--text-muted)] leading-relaxed mb-4">
+                        Full trace of deterministic match scores, cognitive rerankings, human override recommendations, and model versioning logs.
+                    </p>
+                    <div class="grid grid-cols-3 gap-2 font-mono text-[10px] text-[var(--text-faint)] mb-4 p-2.5 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+                        <div>ENGINE: <span class="text-[var(--text-main)] font-bold">v2.1 Hybrid</span></div>
+                        <div>WEIGHTS: <span class="text-[var(--text-main)] font-bold">6-Factor</span></div>
+                        <div>STATUS: <span class="text-[var(--semantic-success)] font-bold">Audited</span></div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-3 border-t border-[var(--border-subtle)]">
+                    <span class="font-mono text-[10px] text-[var(--text-faint)]">DL-2026-0912-001</span>
+                    <button class="astra-btn astra-btn-secondary astra-btn-sm" onclick="exportDecisionLedgerReport()">
+                        <span class="material-symbols-outlined text-sm">download</span>
+                        <span>Download Audit Log</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Report 4: Active Requisition Compatibility Dossier -->
+            <div class="p-6 rounded-xl astra-card astra-card-elevated flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between pb-3 border-b border-[var(--border-subtle)] mb-4">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-lg bg-[var(--bg-surface-elevated)] border border-[var(--border-strong)] flex items-center justify-center text-[var(--niyukti-teal)]">
+                                <span class="material-symbols-outlined text-lg">fact_check</span>
+                            </div>
+                            <div>
+                                <h3 class="font-display font-bold text-sm text-[var(--text-main)]">Requisition Compatibility Dossier</h3>
+                                <p class="font-mono text-[9px] text-[var(--text-faint)] uppercase">DOC-NIYUKTI-2026-04</p>
+                            </div>
+                        </div>
+                        <span class="astra-badge astra-badge-teal">Active</span>
+                    </div>
+                    <p class="font-sans text-xs text-[var(--text-muted)] leading-relaxed mb-4">
+                        Current active hiring requisitions mapped against qualified candidate tiers, pipeline velocity, and candidate interview readiness scores.
+                    </p>
+                    <div class="grid grid-cols-3 gap-2 font-mono text-[10px] text-[var(--text-faint)] mb-4 p-2.5 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+                        <div>REQUISITIONS: <span class="text-[var(--text-main)] font-bold">6 Roles</span></div>
+                        <div>AVG MATCH: <span class="text-[var(--astra-indigo)] font-bold">84.5%</span></div>
+                        <div>STATUS: <span class="text-[var(--text-main)] font-bold">Synced</span></div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-3 border-t border-[var(--border-subtle)]">
+                    <span class="font-mono text-[10px] text-[var(--text-faint)]">FASTAPI SQLALCHEMY</span>
+                    <button class="astra-btn astra-btn-secondary astra-btn-sm" onclick="exportRequisitionReport()">
+                        <span class="material-symbols-outlined text-sm">download</span>
+                        <span>Download Dossier</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="integration.js"></script>
+    <script>
+        function downloadFile(content, fileName, contentType) {
+            const a = document.createElement("a");
+            const file = new Blob([content], { type: contentType });
+            a.href = URL.createObjectURL(file);
+            a.download = fileName;
+            a.click();
+            showToast(`Report '${fileName}' exported successfully!`);
+        }
+
+        function exportCensusReport() {
+            const csv = "Cohort,Candidate_Count,Percentage,Top_Skills\nEarly Career (0-3 Yrs),34120,34.1%,\"Python, SQL, HTML\"\nMid Professional (3-7 Yrs),42880,42.9%,\"FastAPI, Docker, PyTorch\"\nSenior Specialist (7-12 Yrs),16500,16.5%,\"MLOps, Kubernetes, RAG\"\nStaff / Principal (12+ Yrs),6501,6.5%,\"System Design, Cloud Arch\"";
+            downloadFile(csv, "niyukti_talent_census.csv", "text/csv");
+        }
+
+        function exportSkillGapReport() {
+            const data = {
+                report: "Skill Gap & Scarcity Index",
+                skills: [
+                    { skill: "Python & MLOps Architecture", demand: 0.88, supply: 0.65, gap: -0.23 },
+                    { skill: "FastAPI & Microservices", demand: 0.76, supply: 0.72, gap: -0.04 },
+                    { skill: "PyTorch & Deep Learning Systems", demand: 0.82, supply: 0.48, gap: -0.34 },
+                    { skill: "Cloud (AWS/GCP)", demand: 0.70, supply: 0.68, gap: -0.02 }
+                ]
+            };
+            downloadFile(JSON.stringify(data, null, 2), "niyukti_skill_gap_index.json", "application/json");
+        }
+
+        function exportDecisionLedgerReport() {
+            const data = {
+                ledger_id: "DL-2026-0912-001",
+                engine: "Niyukti Match Engine v2.1",
+                weights: { skills: 0.30, experience: 0.20, semantic: 0.15, education: 0.15, behavioral: 0.10, location: 0.10 },
+                status: "Audited",
+                decisions_logged: 668
+            };
+            downloadFile(JSON.stringify(data, null, 2), "niyukti_decision_ledger_audit.json", "application/json");
+        }
+
+        function exportRequisitionReport() {
+            const data = {
+                report: "Active Requisitions Summary",
+                total_active: 6,
+                generated_at: new Date().toISOString()
+            };
+            downloadFile(JSON.stringify(data, null, 2), "niyukti_requisitions_dossier.json", "application/json");
+        }
+
+        function exportFullIntelligenceBundle() {
+            exportCensusReport();
+            setTimeout(exportSkillGapReport, 500);
+            setTimeout(exportDecisionLedgerReport, 1000);
+        }
+    </script>
+</body>
+</html>

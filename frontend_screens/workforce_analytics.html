@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>NIYUKTI — Workforce Analytics | ASTRA X</title>
+    <meta name="description" content="Holistic talent supply, skill demand dynamics, and workforce distribution intelligence."/>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+
+    <!-- Google Fonts: Fraunces & Inter & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="stylesheet" href="astrax-niyukti.css"/>
+</head>
+<body class="astra-grid-bg min-h-screen">
+
+    <!-- Global Navigation Sidebar -->
+    <aside></aside>
+
+    <!-- Global Top Header -->
+    <header></header>
+
+    <!-- Main Workspace Canvas -->
+    <main class="ml-72 pt-20 px-8 pb-12 transition-all duration-200">
+
+        <!-- Header Context -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="font-mono text-[10px] text-[var(--astra-copper)] uppercase tracking-widest">ASTRA X / TALENT INTELLIGENCE</span>
+                    <span class="text-[10px] text-[var(--border-strong)]">•</span>
+                    <span class="font-mono text-[10px] text-[var(--text-faint)]">WORKFORCE ANALYTICS</span>
+                </div>
+                <h1 class="font-display text-2xl sm:text-3xl font-bold text-[var(--text-main)]">Workforce Dynamics & Talent Pool Analytics</h1>
+                <p class="font-sans text-xs sm:text-sm text-[var(--text-muted)] mt-1">Cross-sectional analysis of 100,001 candidate signals, experience cohorts, and domain capacity.</p>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button class="astra-btn astra-btn-secondary astra-btn-sm" onclick="exportAnalyticsReport()">
+                    <span class="material-symbols-outlined text-sm">download</span>
+                    <span>Export Analytics Dossier</span>
+                </button>
+                <a href="talent_map.html" class="astra-btn astra-btn-primary astra-btn-sm">
+                    <span class="material-symbols-outlined text-sm">map</span>
+                    <span>Talent Map</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- 4 Core Metric Panels -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="p-4 rounded-xl astra-card bg-[var(--bg-surface)]">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="font-mono text-[10px] uppercase text-[var(--text-faint)] tracking-wider">Candidate Cohort</span>
+                    <span class="astra-bindu astra-bindu-saffron !w-1.5 !h-1.5"></span>
+                </div>
+                <p id="analytics-total-candidates" class="font-display text-2xl sm:text-3xl font-bold text-[var(--text-main)]">100,001</p>
+                <span class="font-sans text-[11px] text-[var(--semantic-success)] flex items-center gap-1 mt-1">
+                    <span class="material-symbols-outlined text-xs">verified</span> Live Indexed Pool
+                </span>
+            </div>
+
+            <div class="p-4 rounded-xl astra-card bg-[var(--bg-surface)]">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="font-mono text-[10px] uppercase text-[var(--text-faint)] tracking-wider">Open Requisitions</span>
+                    <span class="astra-bindu astra-bindu-teal !w-1.5 !h-1.5"></span>
+                </div>
+                <p id="analytics-total-jobs" class="font-display text-2xl sm:text-3xl font-bold text-[var(--text-main)]">6</p>
+                <span class="font-sans text-[11px] text-[var(--text-muted)] mt-1 block">Active Engineering Roles</span>
+            </div>
+
+            <div class="p-4 rounded-xl astra-card bg-[var(--bg-surface)]">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="font-mono text-[10px] uppercase text-[var(--text-faint)] tracking-wider">Skill Equilibrium</span>
+                    <span class="astra-bindu astra-bindu-copper !w-1.5 !h-1.5"></span>
+                </div>
+                <p class="font-display text-2xl sm:text-3xl font-bold text-[var(--astra-indigo)] dark:text-[var(--astra-indigo-light)]">74.2%</p>
+                <span class="font-sans text-[11px] text-[var(--astra-copper)] mt-1 block">Cross-Domain Match Index</span>
+            </div>
+
+            <div class="p-4 rounded-xl astra-card bg-[var(--bg-surface)]">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="font-mono text-[10px] uppercase text-[var(--text-faint)] tracking-wider">High-Velocity Hubs</span>
+                    <span class="astra-bindu !w-1.5 !h-1.5"></span>
+                </div>
+                <p class="font-display text-2xl sm:text-3xl font-bold text-[var(--text-main)]">6 Clusters</p>
+                <span class="font-sans text-[11px] text-[var(--semantic-success)] mt-1 block">Bengaluru, Hyd, Pune, NCR...</span>
+            </div>
+        </div>
+
+        <!-- Analytical Breakdown Grid (12-Col Astra Grid) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+            <!-- Experience Cohort Distribution (7 Cols) -->
+            <div class="lg:col-span-7 astra-card astra-card-elevated p-6">
+                <div class="flex items-center justify-between pb-3 border-b border-[var(--border-subtle)] mb-5">
+                    <div>
+                        <h3 class="font-display text-base font-bold text-[var(--text-main)]">Experience Cohort Breakdown</h3>
+                        <p class="font-sans text-xs text-[var(--text-muted)]">Seniority level distribution across the 100k candidate pool.</p>
+                    </div>
+                    <span class="astra-badge astra-badge-indigo">Normal Curve</span>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-xs font-sans mb-1">
+                            <span class="font-semibold text-[var(--text-main)]">Early Career (0–3 Years)</span>
+                            <span class="font-mono text-[var(--text-muted)]">34,120 (34.1%)</span>
+                        </div>
+                        <div class="w-full bg-[var(--bg-surface-elevated)] h-2.5 rounded-full overflow-hidden">
+                            <div class="bg-[var(--astra-indigo)] h-full rounded-full" style="width: 34.1%"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-xs font-sans mb-1">
+                            <span class="font-semibold text-[var(--text-main)]">Mid-Career Professional (3–7 Years)</span>
+                            <span class="font-mono text-[var(--astra-indigo)] font-bold">42,880 (42.9%)</span>
+                        </div>
+                        <div class="w-full bg-[var(--bg-surface-elevated)] h-2.5 rounded-full overflow-hidden">
+                            <div class="bg-[var(--astra-indigo-light)] h-full rounded-full" style="width: 42.9%"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-xs font-sans mb-1">
+                            <span class="font-semibold text-[var(--text-main)]">Senior Specialist (7–12 Years)</span>
+                            <span class="font-mono text-[var(--text-muted)]">16,500 (16.5%)</span>
+                        </div>
+                        <div class="w-full bg-[var(--bg-surface-elevated)] h-2.5 rounded-full overflow-hidden">
+                            <div class="bg-[var(--niyukti-saffron)] h-full rounded-full" style="width: 16.5%"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-xs font-sans mb-1">
+                            <span class="font-semibold text-[var(--text-main)]">Principal / Staff Lead (12+ Years)</span>
+                            <span class="font-mono text-[var(--text-muted)]">6,501 (6.5%)</span>
+                        </div>
+                        <div class="w-full bg-[var(--bg-surface-elevated)] h-2.5 rounded-full overflow-hidden">
+                            <div class="bg-[var(--astra-copper)] h-full rounded-full" style="width: 6.5%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-[var(--border-subtle)] flex items-center justify-between text-xs text-[var(--text-faint)] font-mono">
+                    <span>INDEXED FROM SQLITE DATASET</span>
+                    <a href="candidate_search.html" class="text-[var(--astra-copper)] hover:underline font-sans">Query Cohort in Search →</a>
+                </div>
+            </div>
+
+            <!-- Regional Talent Density (5 Cols) -->
+            <div class="lg:col-span-5 astra-card astra-card-elevated p-6 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between pb-3 border-b border-[var(--border-subtle)] mb-4">
+                        <h3 class="font-display text-base font-bold text-[var(--text-main)]">Key Regional Hubs</h3>
+                        <span class="astra-badge astra-badge-copper">India Density</span>
+                    </div>
+
+                    <div class="space-y-3 font-sans text-xs">
+                        <div class="flex items-center justify-between p-2.5 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm text-[var(--astra-copper)]">location_on</span>
+                                <span class="font-semibold text-[var(--text-main)]">Bengaluru</span>
+                            </div>
+                            <span class="font-mono font-bold text-[var(--astra-indigo)]">28,000 (28%)</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2.5 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm text-[var(--astra-copper)]">location_on</span>
+                                <span class="font-semibold text-[var(--text-main)]">Hyderabad</span>
+                            </div>
+                            <span class="font-mono font-bold text-[var(--text-muted)]">22,000 (22%)</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2.5 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm text-[var(--astra-copper)]">location_on</span>
+                                <span class="font-semibold text-[var(--text-main)]">Pune</span>
+                            </div>
+                            <span class="font-mono font-bold text-[var(--text-muted)]">18,000 (18%)</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2.5 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm text-[var(--astra-copper)]">location_on</span>
+                                <span class="font-semibold text-[var(--text-main)]">Delhi-NCR</span>
+                            </div>
+                            <span class="font-mono font-bold text-[var(--text-muted)]">16,000 (16%)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-[var(--border-subtle)]">
+                    <a href="talent_map.html" class="astra-btn astra-btn-secondary astra-btn-sm w-full">
+                        <span class="material-symbols-outlined text-sm">explore</span>
+                        <span>Open Interactive Talent Map</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Domain Skills Equilibrium Matrix -->
+        <div class="astra-card astra-card-elevated p-6 mb-8">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border-subtle)] mb-5">
+                <div>
+                    <h3 class="font-display text-lg font-bold text-[var(--text-main)]">Skill Domain Supply vs Demand Matrix</h3>
+                    <p class="font-sans text-xs text-[var(--text-muted)]">Equilibrium ratios indicating talent surplus, balance, or deficit across key competencies.</p>
+                </div>
+                <a href="skill_gap_analysis.html" class="astra-btn astra-btn-secondary astra-btn-sm">
+                    <span class="material-symbols-outlined text-sm">psychology</span>
+                    <span>Full Skill Gap Radar</span>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="p-4 rounded-xl astra-card bg-[var(--bg-surface)]">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-sans font-bold text-xs text-[var(--text-main)]">AI & LLM Systems</span>
+                        <span class="astra-badge astra-badge-copper text-[10px]">Deficit (-34%)</span>
+                    </div>
+                    <p class="font-sans text-xs text-[var(--text-muted)] mb-3">RAG, PyTorch, LoRA, Vector Search</p>
+                    <div class="space-y-1.5 font-mono text-[11px]">
+                        <div class="flex justify-between"><span>Demand</span><span class="text-[var(--astra-indigo)] font-bold">88%</span></div>
+                        <div class="flex justify-between"><span>Supply</span><span class="text-[var(--niyukti-saffron)] font-bold">54%</span></div>
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-xl astra-card bg-[var(--bg-surface)]">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-sans font-bold text-xs text-[var(--text-main)]">Data & Distributed Infra</span>
+                        <span class="astra-badge astra-badge-teal text-[10px]">Equilibrium (-6%)</span>
+                    </div>
+                    <p class="font-sans text-xs text-[var(--text-muted)] mb-3">Python, Spark, Kafka, SQL, Airflow</p>
+                    <div class="space-y-1.5 font-mono text-[11px]">
+                        <div class="flex justify-between"><span>Demand</span><span class="text-[var(--astra-indigo)] font-bold">94%</span></div>
+                        <div class="flex justify-between"><span>Supply</span><span class="text-[var(--niyukti-teal)] font-bold">88%</span></div>
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-xl astra-card bg-[var(--bg-surface)]">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-sans font-bold text-xs text-[var(--text-main)]">Cloud & MLOps Infrastructure</span>
+                        <span class="astra-badge astra-badge-teal text-[10px]">Healthy (-2%)</span>
+                    </div>
+                    <p class="font-sans text-xs text-[var(--text-muted)] mb-3">AWS, GCP, Docker, Kubernetes, CI/CD</p>
+                    <div class="space-y-1.5 font-mono text-[11px]">
+                        <div class="flex justify-between"><span>Demand</span><span class="text-[var(--astra-indigo)] font-bold">70%</span></div>
+                        <div class="flex justify-between"><span>Supply</span><span class="text-[var(--niyukti-teal)] font-bold">68%</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="integration.js"></script>
+    <script>
+        function exportAnalyticsReport() {
+            const reportData = {
+                title: "ASTRA X — NIYUKTI Workforce Analytics Dossier",
+                generated_at: new Date().toISOString(),
+                total_candidates: 100001,
+                cohorts: {
+                    early_career: 34120,
+                    mid_career: 42880,
+                    senior_specialist: 16500,
+                    principal_lead: 6501
+                },
+                top_clusters: ["Bengaluru (28%)", "Hyderabad (22%)", "Pune (18%)", "Delhi-NCR (16%)", "Mumbai (11%)", "Chennai (5%)"]
+            };
+            const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `niyukti_workforce_analytics_${Date.now()}.json`;
+            a.click();
+            showToast("Workforce Analytics Dossier downloaded successfully!");
+        }
+    </script>
+</body>
+</html>
