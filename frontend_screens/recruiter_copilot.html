@@ -1,381 +1,193 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>NIYUKTI — Agent Studio & Recruiter Copilot | ASTRA X</title>
+    <meta name="description" content="AI recruiter conversational co-pilot and controlled agentic workflows with candidate-in-the-loop context and outreach drafting."/>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
 
-<html class="dark" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>NIYUKTI Copilot — AI Recruitment Assistant</title>
-<meta name="description" content="Recruiter conversational AI co-pilot with candidate-in-the-loop context, interview roadmaps, and personalized outreach drafts."/>
-<meta property="og:title" content="NIYUKTI Copilot"/>
-<meta property="og:description" content="Intelligent candidate matching, explainable ranking, and recruiter decision support."/>
-<meta property="og:type" content="website"/>
-<link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Geist:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<style>
-        :root {
-            --obsidian-base: #020617;
-            --glass-bg: rgba(30, 41, 59, 0.5);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --violet-glow: rgba(124, 58, 237, 0.2);
-        }
-        body {
-            background-color: var(--obsidian-base);
-            color: #dae2fd;
-            overflow: hidden;
-        }
-        .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        }
-        .ai-active-border {
-            border: 1px solid #00a2e6;
-            box-shadow: 0 0 15px rgba(0, 162, 230, 0.2);
-        }
-        .violet-glow-button {
-            box-shadow: 0 0 20px var(--violet-glow);
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.02);
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(210, 187, 255, 0.2);
-            border-radius: 10px;
-        }
-    </style>
-<!-- Tailwind Configuration -->
-<script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                    "on-secondary-fixed-variant": "#004c6e",
-                    "secondary-fixed": "#c9e6ff",
-                    "surface-container-high": "#222a3d",
-                    "secondary-fixed-dim": "#89ceff",
-                    "on-error": "#690005",
-                    "tertiary-container": "#007650",
-                    "on-primary-container": "#ede0ff",
-                    "primary-fixed": "#eaddff",
-                    "tertiary": "#4edea3",
-                    "on-secondary": "#00344d",
-                    "outline": "#958da1",
-                    "on-surface": "#dae2fd",
-                    "on-secondary-container": "#00344e",
-                    "surface-container-highest": "#2d3449",
-                    "secondary": "#89ceff",
-                    "on-background": "#dae2fd",
-                    "on-tertiary-fixed-variant": "#005236",
-                    "surface-dim": "#0b1326",
-                    "tertiary-fixed-dim": "#4edea3",
-                    "on-tertiary-container": "#76ffc2",
-                    "error": "#ffb4ab",
-                    "primary-fixed-dim": "#d2bbff",
-                    "background": "#0b1326",
-                    "primary": "#d2bbff",
-                    "surface-variant": "#2d3449",
-                    "primary-container": "#7c3aed",
-                    "on-primary": "#3f008e",
-                    "on-surface-variant": "#ccc3d8",
-                    "outline-variant": "#4a4455",
-                    "inverse-surface": "#dae2fd",
-                    "inverse-primary": "#732ee4",
-                    "on-error-container": "#ffdad6",
-                    "inverse-on-surface": "#283044",
-                    "secondary-container": "#00a2e6",
-                    "surface-container": "#171f33",
-                    "surface": "#0b1326",
-                    "error-container": "#93000a",
-                    "on-secondary-fixed": "#001e2f",
-                    "on-primary-fixed": "#25005a",
-                    "on-tertiary-fixed": "#002113",
-                    "surface-container-low": "#131b2e",
-                    "on-tertiary": "#003824",
-                    "surface-bright": "#31394d",
-                    "tertiary-fixed": "#6ffbbe",
-                    "on-primary-fixed-variant": "#5a00c6",
-                    "surface-tint": "#d2bbff",
-                    "surface-container-lowest": "#060e20"
-            },
-            "borderRadius": {
-                    "DEFAULT": "0.25rem",
-                    "lg": "0.5rem",
-                    "xl": "0.75rem",
-                    "full": "9999px"
-            },
-            "spacing": {
-                    "unit": "4px",
-                    "gutter": "24px",
-                    "margin-mobile": "16px",
-                    "container-max": "1440px",
-                    "margin-desktop": "40px"
-            },
-            "fontFamily": {
-                    "body-lg": ["Inter"],
-                    "headline-lg": ["Geist"],
-                    "label-sm": ["Geist"],
-                    "headline-lg-mobile": ["Geist"],
-                    "headline-xl": ["Geist"],
-                    "mono-data": ["Geist"],
-                    "headline-md": ["Geist"],
-                    "body-md": ["Inter"]
-            },
-            "fontSize": {
-                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
-                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
-                    "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
-                    "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "600"}],
-                    "headline-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700"}],
-                    "mono-data": ["14px", {"lineHeight": "1.4", "fontWeight": "400"}],
-                    "headline-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
-                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}]
-            }
-          },
-        },
-      }
-    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="stylesheet" href="astrax-niyukti.css"/>
 </head>
-<body class="font-body-md text-on-surface">
-<!-- Sidebar (Shared Component Anchor) -->
-<aside class="h-screen w-80 fixed left-0 top-0 bg-surface/50 dark:bg-surface-container/50 backdrop-blur-xl border-r border-white/10 shadow-2xl shadow-primary/10 flex flex-col py-gutter px-4 z-50">
-<div class="flex items-center gap-3 px-2 mb-10">
-<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center shadow-lg shadow-primary-container/20">
-<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">psychology</span>
-</div>
-<div>
-<span class="text-[10px] font-bold tracking-widest text-primary/80 uppercase block">ASTRA</span>
-<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed leading-none">NIYUKTI</h1>
-<p class="font-label-sm text-[11px] text-on-surface-variant/70 tracking-tight mt-0.5">AI Talent Intelligence</p>
-</div>
-</div>
-<nav class="flex-1 space-y-1">
-<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant/70 dark:text-on-surface-variant hover:bg-primary/10 hover:text-primary transition-all duration-300" href="index.html">
-<span class="material-symbols-outlined">dashboard</span>
-<span class="font-body-md">Dashboard</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant/70 dark:text-on-surface-variant hover:bg-primary/10 hover:text-primary transition-all duration-300" href="candidate_search.html">
-<span class="material-symbols-outlined">person_search</span>
-<span class="font-body-md">Candidate Search</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant/70 dark:text-on-surface-variant hover:bg-primary/10 hover:text-primary transition-all duration-300" href="candidate_ranking.html">
-<span class="material-symbols-outlined">leaderboard</span>
-<span class="font-body-md">Ranking</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-primary dark:text-primary-fixed font-bold border-r-2 border-primary bg-primary/5" href="recruiter_copilot.html">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
-<span class="font-body-md">Recruiter Copilot</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant/70 dark:text-on-surface-variant hover:bg-primary/10 hover:text-primary transition-all duration-300" href="candidate_comparison.html">
-<span class="material-symbols-outlined">description</span>
-<span class="font-body-md">Comparison</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant/70 dark:text-on-surface-variant hover:bg-primary/10 hover:text-primary transition-all duration-300" href="skill_gap_analysis.html">
-<span class="material-symbols-outlined">settings</span>
-<span class="font-body-md">Skill Gap</span>
-</a>
-</nav>
-<div class="mt-auto">
-<button class="w-full py-4 rounded-xl bg-primary-container text-on-primary-container font-headline-md violet-glow-button flex items-center justify-center gap-2 active:scale-95 transition-transform">
-<span class="material-symbols-outlined">add</span>
-                New Search
-            </button>
-</div>
-</aside>
-<!-- Main Content Area -->
-<main class="ml-80 pt-16 h-screen flex flex-col relative overflow-hidden">
-<!-- Top Navigation Bar (Shared Component Anchor) -->
-<header class="fixed top-0 right-0 w-[calc(100%-320px)] h-16 z-40 bg-surface/30 dark:bg-surface-container-high/30 backdrop-blur-xl border-b border-white/10 flex justify-between items-center px-margin-desktop shadow-sm">
-<div class="flex items-center gap-6">
-<div class="relative w-96">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-<input class="w-full bg-surface-container-lowest border-none rounded-full py-2 pl-10 pr-4 text-label-sm focus:ring-1 focus:ring-primary" placeholder="Search candidates, roles, or files..." type="text"/>
-</div>
-</div>
-<div class="flex items-center gap-4">
-<button class="hover:bg-surface-bright/50 dark:hover:bg-surface-container-highest/50 rounded-full p-2 transition-colors">
-<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
-</button>
-<button class="hover:bg-surface-bright/50 dark:hover:bg-surface-container-highest/50 rounded-full p-2 transition-colors">
-<span class="material-symbols-outlined text-on-surface-variant">history</span>
-</button>
-<div class="h-8 w-[1px] bg-white/10"></div>
-<div class="flex items-center gap-3">
-<img alt="Recruiter Profile" class="w-10 h-10 rounded-full border border-primary/20 object-cover" data-alt="A professional portrait of a senior recruiter in a modern office environment. He is wearing a tailored navy suit and has a confident, approachable expression. The lighting is crisp and cool-toned, echoing a high-end corporate obsidian aesthetic with subtle violet light leaks in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuByFRK_oz8tMVp_JojHTAlGJWXtc7JrtvEEEBHRbHrTX0RYWxa3BCVGOsUfo-QDYn7vF7w-MC6q3x63ohyZ2EtrWEVFVo34OOYbDs9cWZoYDJVPcioi-M1P_cj5oKj3LPWkjUN17mxaYovbUR1GgiOywuMsolR_6l5BkY91hOPjtNV_E2xIPAEYMKWBRlSTt6QEwC69DtJ-XfjlN8m7Xy4Po2-1TDcyOf4tFqh2lCxtK7i7wjh_1BVIiveijWaCDgtm8I9hoqKPREaT"/>
-<div class="hidden lg:block">
-<p class="font-label-sm text-white font-bold">Marcus Chen</p>
-<p class="text-[10px] text-on-surface-variant">Lead Technical Recruiter</p>
-</div>
-</div>
-</div>
-</header>
-<!-- Split Screen Layout -->
-<div class="flex-1 flex overflow-hidden">
-<!-- Context Panel (Left) -->
-<section class="w-1/2 h-full p-gutter overflow-y-auto custom-scrollbar">
-<div class="space-y-6">
-<!-- Context Dropdowns -->
-<div class="grid grid-cols-2 gap-4 bg-surface-container/30 p-4 rounded-2xl border border-white/5">
-    <div class="flex flex-col gap-1.5">
-        <label for="context-candidate" class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Select Candidate</label>
-        <select id="context-candidate" class="w-full bg-surface-container border border-white/10 rounded-xl px-4 py-2.5 text-sm text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none">
-            <option value="">-- Loading Candidates --</option>
-        </select>
-    </div>
-    <div class="flex flex-col gap-1.5">
-        <label for="context-job" class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Target Job Role</label>
-        <select id="context-job" class="w-full bg-surface-container border border-white/10 rounded-xl px-4 py-2.5 text-sm text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none">
-            <option value="">-- Loading Jobs --</option>
-        </select>
-    </div>
-</div>
-<!-- Section Header -->
-<div class="flex justify-between items-start">
-<div>
-<span class="inline-block px-3 py-1 rounded-full bg-surface-container-highest text-on-surface-variant text-label-sm mb-2 border border-white/10">Candidate Context</span>
-<h2 id="copilot-candidate-name" class="font-headline-lg text-headline-lg text-white">
-  <div class="h-8 w-48 bg-surface-container-highest animate-pulse rounded-md mt-1"></div>
-</h2>
-<div id="copilot-candidate-title-exp" class="text-on-surface-variant font-body-md mt-2">
-  <div class="h-4 w-32 bg-surface-container-highest animate-pulse rounded-md"></div>
-</div>
-</div>
-<button id="copilot-view-profile-btn" class="glass-panel px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-white/5 transition-colors hidden">
-<span class="material-symbols-outlined text-primary">open_in_new</span>
-<span class="font-label-sm">View Full Profile</span>
-</button>
-</div>
-<!-- Bento Grid Info Cards -->
-<div class="grid grid-cols-2 gap-4">
-<div class="glass-panel p-6 rounded-2xl col-span-2 flex items-center gap-6">
-<div id="copilot-candidate-avatar" class="w-24 h-24 rounded-2xl bg-surface-container-highest animate-pulse border border-white/5 shadow-lg shadow-black/40"></div>
-<div class="flex-1 space-y-3">
-<div id="copilot-candidate-skills" class="flex flex-wrap gap-2 mb-3">
-<div class="h-6 w-16 bg-surface-container-highest animate-pulse rounded-md"></div>
-<div class="h-6 w-20 bg-surface-container-highest animate-pulse rounded-md"></div>
-<div class="h-6 w-14 bg-surface-container-highest animate-pulse rounded-md"></div>
-</div>
-<div id="copilot-candidate-bio" class="space-y-2">
-  <div class="h-4 w-full bg-surface-container-highest animate-pulse rounded-md"></div>
-  <div class="h-4 w-2/3 bg-surface-container-highest animate-pulse rounded-md"></div>
-</div>
-</div>
-</div>
-<div class="glass-panel p-6 rounded-2xl">
-<h3 class="font-label-sm text-on-surface-variant mb-4 flex items-center gap-2">
-<span class="material-symbols-outlined text-primary text-sm">psychology</span>
-                                SKILL GAP ANALYSIS
-                            </h3>
-<div id="copilot-skill-gap-container" class="space-y-4">
-  <div class="h-4 w-full bg-surface-container-highest animate-pulse rounded-md"></div>
-  <div class="h-4 w-3/4 bg-surface-container-highest animate-pulse rounded-md"></div>
-</div>
-</div>
-<div class="glass-panel p-6 rounded-2xl">
-<h3 class="font-label-sm text-on-surface-variant mb-4 flex items-center gap-2">
-<span class="material-symbols-outlined text-primary text-sm">monitoring</span>
-                                MARKET BENCHMARK
-                            </h3>
-<div class="space-y-2">
-  <div class="flex items-end gap-2">
-    <div id="copilot-salary-expectation" class="h-8 w-24 bg-surface-container-highest animate-pulse rounded-md"></div>
-    <div id="copilot-salary-vs-market" class="h-4 w-20 bg-surface-container-highest animate-pulse rounded-md mb-1"></div>
-  </div>
-  <div id="copilot-location" class="h-3 w-32 bg-surface-container-highest animate-pulse rounded-md mt-2"></div>
-</div>
-</div>
-<!-- Resume Summary Card -->
-<div class="glass-panel p-6 rounded-2xl col-span-2">
-<h3 class="font-label-sm text-on-surface-variant mb-4 flex items-center gap-2">
-<span class="material-symbols-outlined text-primary text-sm">auto_awesome</span>
-                                AI RESUME SUMMARY
-                            </h3>
-<ul id="copilot-resume-summary" class="space-y-3">
-  <div class="h-4 w-full bg-surface-container-highest animate-pulse rounded-md"></div>
-  <div class="h-4 w-5/6 bg-surface-container-highest animate-pulse rounded-md"></div>
-  <div class="h-4 w-4/6 bg-surface-container-highest animate-pulse rounded-md"></div>
-</ul>
-</div>
-</div>
-</div>
-</section>
-<!-- AI Chat / Copilot (Right) -->
-<section class="w-1/2 h-full flex flex-col ai-active-border bg-surface-container-low/40 backdrop-blur-md relative">
-<!-- Chat Header -->
-<div class="p-6 border-b border-white/5 flex items-center justify-between">
-<div class="flex items-center gap-3">
-<div class="w-8 h-8 rounded-lg bg-secondary/20 flex items-center justify-center">
-<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
-</div>
-<h3 class="font-headline-md text-headline-md">Recruiter Copilot</h3>
-</div>
-<div id="copilot-active-analysis" class="flex items-center gap-2 opacity-0 transition-opacity duration-300">
-<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse shadow-[0_0_8px_rgba(78,222,163,0.6)]"></span>
-<span class="font-label-sm text-tertiary">Active Analysis</span>
-</div>
-</div>
-<!-- Chat Messages - populated dynamically by initRecruiterCopilot() -->
-<div id="chat-stream" class="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
-<div class="text-xs text-on-surface-variant/50 text-center py-4">Initializing Copilot...</div>
-</div>
-<!-- Input Area -->
-<div class="p-6 bg-surface-container-lowest/80 border-t border-white/10">
-<div class="relative">
-<textarea id="copilot-input" class="w-full bg-surface-container-highest/50 border border-white/5 rounded-2xl p-4 pr-16 text-body-md focus:ring-1 focus:ring-primary min-h-[100px] resize-none" placeholder="Ask Copilot anything about the candidate or job..."></textarea>
-<div class="absolute right-4 bottom-4 flex gap-2">
-<button class="p-2 hover:bg-white/5 rounded-lg transition-colors text-on-surface-variant">
-<span class="material-symbols-outlined">attach_file</span>
-</button>
-<button id="copilot-send-btn" class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-on-primary shadow-lg shadow-primary/30 active:scale-90 transition-transform">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
-</button>
-</div>
-</div>
-<div class="mt-4 flex items-center justify-between">
-<div class="flex gap-4">
-<button class="text-on-surface-variant text-label-sm flex items-center gap-1 hover:text-primary transition-colors">
-<span class="material-symbols-outlined text-sm">history</span>
-                                Chat History
+<body class="astra-grid-bg min-h-screen">
+
+    <!-- Global Navigation Sidebar -->
+    <aside></aside>
+
+    <!-- Global Top Header -->
+    <header>
+        <div class="flex items-center flex-1 max-w-md">
+            <input type="text" />
+        </div>
+        <div class="flex items-center gap-4"></div>
+    </header>
+
+    <!-- Main Agent Studio Workspace -->
+    <main class="ml-72 pt-20 px-8 pb-12 transition-all duration-200">
+        <!-- Breadcrumb & Top Bar -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="font-mono text-[10px] text-[var(--astra-copper)] uppercase tracking-widest">ASTRA X / AGENT STUDIO</span>
+                    <span class="text-[10px] text-[var(--border-strong)]">•</span>
+                    <span class="font-mono text-[10px] text-[var(--text-faint)]">RECRUITER COPILOT UNIT</span>
+                </div>
+                <h1 class="font-display text-2xl sm:text-3xl font-bold text-[var(--text-main)]">Recruiter Copilot & Agent Studio</h1>
+                <p class="font-sans text-xs text-[var(--text-muted)] mt-1">Contextual recruitment assistant, controlled agentic workflows, and explainable communication generation.</p>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div class="px-3 py-1.5 rounded-full bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)] text-[11px] font-mono text-[var(--text-muted)] flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[var(--semantic-success)] animate-pulse"></span>
+                    <span>GROQ LLM ACTIVE</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+            <!-- Left Column: Context Requisition & Agent Workflows (5 Cols) -->
+            <div class="lg:col-span-5 space-y-6">
+
+                <!-- Active Candidate & Requisition Context Panel -->
+                <div class="astra-card astra-card-elevated p-6">
+                    <div class="flex items-center justify-between pb-3 border-b border-[var(--border-subtle)] mb-4">
+                        <div class="flex items-center gap-2">
+                            <span class="astra-bindu astra-bindu-copper"></span>
+                            <h3 class="font-display text-sm font-bold text-[var(--text-main)]">Session Context</h3>
+                        </div>
+                        <span class="font-mono text-[10px] text-[var(--text-faint)]">DYNAMIC INGESTION</span>
+                    </div>
+
+                    <div class="space-y-4 font-sans text-xs">
+                        <div>
+                            <label class="font-mono text-[10px] text-[var(--text-faint)] uppercase tracking-wider block mb-1">Focus Candidate</label>
+                            <select id="context-candidate" class="astra-select">
+                                <option value="">Loading Candidates...</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="font-mono text-[10px] text-[var(--text-faint)] uppercase tracking-wider block mb-1">Target Requisition</label>
+                            <select id="context-job" class="astra-select">
+                                <option value="">Loading Roles...</option>
+                            </select>
+                        </div>
+
+                        <!-- Quick Prompts / Controlled Workflows -->
+                        <div class="pt-3 border-t border-[var(--border-subtle)] space-y-2">
+                            <span class="font-mono text-[10px] text-[var(--text-faint)] uppercase tracking-wider block mb-2">Controlled Workflows</span>
+                            <button class="w-full astra-btn astra-btn-secondary astra-btn-sm !justify-between" onclick="triggerTemplatePrompt('outreach')">
+                                <span>Draft Personalized Outreach Email</span>
+                                <span class="material-symbols-outlined text-xs">mail</span>
                             </button>
-<button class="text-on-surface-variant text-label-sm flex items-center gap-1 hover:text-primary transition-colors">
-<span class="material-symbols-outlined text-sm">bolt</span>
-                                Quick Prompts
+                            <button class="w-full astra-btn astra-btn-secondary astra-btn-sm !justify-between" onclick="triggerTemplatePrompt('roadmap')">
+                                <span>Generate Technical Upskilling Roadmap</span>
+                                <span class="material-symbols-outlined text-xs">trending_up</span>
                             </button>
-</div>
-<p class="text-[10px] text-on-surface-variant/50">Powered by NIYUKTI Intelligence Engine • ASTRA Ecosystem</p>
-</div>
-</div>
-<!-- Ambient Glow Elements -->
-<div class="absolute -bottom-24 -right-24 w-64 h-64 bg-primary/10 blur-[100px] rounded-full pointer-events-none"></div>
-<div class="absolute top-1/4 -left-12 w-32 h-32 bg-secondary/5 blur-[60px] rounded-full pointer-events-none"></div>
-</section>
-</div>
-</main>
-<!-- Background Decorative Elements -->
-<div class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none">
-<div class="absolute top-1/4 left-1/4 w-[800px] h-[800px] bg-primary/5 blur-[150px] rounded-full opacity-30"></div>
-<div class="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-secondary/5 blur-[120px] rounded-full opacity-20"></div>
-</div>
-<script>
-        // Simple Micro-interactions
-        document.querySelectorAll('.glass-panel').forEach(panel => {
-            panel.addEventListener('mouseenter', () => {
-                panel.style.transition = 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
-                panel.style.transform = 'translateY(-2px)';
-                panel.style.borderColor = 'rgba(210, 187, 255, 0.2)';
-            });
-            panel.addEventListener('mouseleave', () => {
-                panel.style.transform = 'translateY(0)';
-                panel.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-            });
-        });
+                            <button class="w-full astra-btn astra-btn-secondary astra-btn-sm !justify-between" onclick="triggerTemplatePrompt('interview')">
+                                <span>Prepare Behavioral Interview Questions</span>
+                                <span class="material-symbols-outlined text-xs">quiz</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Agent Studio: Controlled Agent Lifecycle Monitoring -->
+                <div class="astra-card astra-card-elevated p-6">
+                    <div class="flex items-center justify-between pb-3 border-b border-[var(--border-subtle)] mb-4">
+                        <div class="flex items-center gap-2">
+                            <span class="astra-bindu astra-bindu-saffron"></span>
+                            <h3 class="font-display text-sm font-bold text-[var(--text-main)]">Agent Studio Pipelines</h3>
+                        </div>
+                        <span class="astra-badge astra-badge-saffron text-[9px]">LIFECYCLE</span>
+                    </div>
+
+                    <div class="space-y-3 font-sans text-xs">
+                        <div class="p-2.5 rounded bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)] flex items-center justify-between">
+                            <div>
+                                <span class="font-semibold text-[var(--text-main)] block">Resume Ingestion Agent</span>
+                                <span class="font-mono text-[9px] text-[var(--text-faint)]">Parser v1.4 • Latency: 120ms</span>
+                            </div>
+                            <span class="astra-badge astra-badge-success text-[9px]">AUDITED</span>
+                        </div>
+
+                        <div class="p-2.5 rounded bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)] flex items-center justify-between">
+                            <div>
+                                <span class="font-semibold text-[var(--text-main)] block">Skill Taxonomy Normalizer</span>
+                                <span class="font-mono text-[9px] text-[var(--text-faint)]">Ontology v2.0 • 8,420 mapped</span>
+                            </div>
+                            <span class="astra-badge astra-badge-success text-[9px]">COMPLETED</span>
+                        </div>
+
+                        <div class="p-2.5 rounded bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)] flex items-center justify-between">
+                            <div>
+                                <span class="font-semibold text-[var(--text-main)] block">Role Compatibility Evaluator</span>
+                                <span class="font-mono text-[9px] text-[var(--text-faint)]">Deterministic 6-Factor Engine</span>
+                            </div>
+                            <span class="astra-badge astra-badge-indigo text-[9px]">ACTIVE</span>
+                        </div>
+
+                        <div class="p-2.5 rounded bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)] flex items-center justify-between">
+                            <div>
+                                <span class="font-semibold text-[var(--text-main)] block">Decision Ledger Auditing</span>
+                                <span class="font-mono text-[9px] text-[var(--text-faint)]">Trace DL-2026 • Verified</span>
+                            </div>
+                            <span class="astra-badge astra-badge-copper text-[9px]">SECURE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Conversational Copilot Stream (7 Cols) -->
+            <div class="lg:col-span-7 astra-card astra-card-elevated p-6 flex flex-col justify-between h-[640px]">
+                <div class="flex items-center justify-between pb-3 border-b border-[var(--border-subtle)] mb-4">
+                    <div class="flex items-center gap-2">
+                        <span class="astra-bindu astra-bindu-teal"></span>
+                        <h3 class="font-display text-base font-bold text-[var(--text-main)]">Recruiter Intelligence Stream</h3>
+                    </div>
+                    <span class="font-mono text-xs text-[var(--text-faint)]">CONVERSATIONAL ASSISTANT</span>
+                </div>
+
+                <!-- Chat Stream Container -->
+                <div id="chat-stream" class="flex-1 overflow-y-auto pr-2 space-y-4 font-sans text-xs">
+                    <!-- Populated dynamically via initRecruiterCopilot() -->
+                </div>
+
+                <!-- Chat Input Controls -->
+                <div class="mt-4 pt-3 border-t border-[var(--border-subtle)] flex items-center gap-3">
+                    <input id="copilot-input" type="text" class="astra-input text-xs" placeholder="Ask Copilot about candidate fit, skill gaps, or outreach strategy..." />
+                    <button id="copilot-send-btn" class="astra-btn astra-btn-primary shadow-sm flex items-center gap-1.5 flex-shrink-0">
+                        <span>Send</span>
+                        <span class="material-symbols-outlined text-sm">send</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Master Scripts -->
+    <script src="integration.js"></script>
+    <script>
+        function triggerTemplatePrompt(type) {
+            const input = document.getElementById('copilot-input');
+            const candSelect = document.getElementById('context-candidate');
+            const candName = candSelect && candSelect.options[candSelect.selectedIndex] ? candSelect.options[candSelect.selectedIndex].text : 'the candidate';
+
+            if (type === 'outreach') {
+                input.value = `Draft a personalized outreach email for ${candName} regarding this role highlighting their matching skills.`;
+            } else if (type === 'roadmap') {
+                input.value = `Generate a technical upskilling roadmap for ${candName} to address their missing skills.`;
+            } else if (type === 'interview') {
+                input.value = `Prepare 3 technical and 2 behavioral interview questions tailored to ${candName}'s background.`;
+            }
+            document.getElementById('copilot-send-btn').click();
+        }
     </script>
-<script src="integration.js"></script>
-</body></html>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>NIYUKTI — 404 Page Not Found | ASTRA X</title>
+    <meta name="description" content="The opportunity you're looking for doesn't exist, but a better direction may."/>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="stylesheet" href="astrax-niyukti.css"/>
+</head>
+<body class="astra-grid-bg min-h-screen flex flex-col justify-between selection:bg-[var(--astra-copper-subtle)]">
+
+    <!-- Top Navigation Header -->
+    <header class="w-full border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]/90 backdrop-blur-md sticky top-0 z-50 transition-colors duration-200">
+        <div class="max-w-7xl mx-auto px-6 h-18 flex items-center justify-between py-4">
+            <div class="flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-[var(--bg-surface-elevated)] border border-[var(--border-strong)] shadow-sm">
+                    <svg viewBox="0 0 100 100" width="28" height="28" aria-label="Niyukti Mark">
+                        <line x1="50" y1="8" x2="50" y2="92" stroke="#B87333" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+                        <line x1="8" y1="50" x2="92" y2="50" stroke="#B87333" stroke-width="0.8" stroke-dasharray="2 2" opacity="0.4"/>
+                        <line x1="50" y1="12" x2="50" y2="40" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round"/>
+                        <polygon points="50,6 55,14 50,11 45,14" fill="#F59E0B"/>
+                        <path d="M 50,42 C 34,26 22,22 14,16 C 24,30 36,40 44,46" fill="#1E3A8A" opacity="0.9"/>
+                        <path d="M 50,42 C 66,26 78,22 86,16 C 76,30 64,40 56,46" fill="#0F766E" opacity="0.9"/>
+                        <path d="M 44,54 C 36,60 24,70 14,84 C 22,78 34,74 50,58" fill="#B87333" opacity="0.85"/>
+                        <path d="M 56,54 C 64,60 76,70 86,84 C 78,78 66,74 50,58" fill="#F59E0B" opacity="0.85"/>
+                        <polygon points="50,38 62,50 50,62 38,50" fill="#B87333"/>
+                        <polygon points="50,43 57,50 50,57 43,50" fill="var(--bg-surface)"/>
+                    </svg>
+                </div>
+                <div class="leading-tight">
+                    <div class="flex items-center gap-1.5">
+                        <span class="font-serif font-bold text-xs tracking-[0.2em] text-[var(--text-main)] uppercase">ASTRA<span class="text-[var(--astra-copper)]">X</span></span>
+                        <span class="text-[10px] text-[var(--border-strong)]">•</span>
+                        <span class="font-sans text-[10px] text-[var(--niyukti-saffron)] font-semibold">नियुक्ति</span>
+                    </div>
+                    <h1 class="font-display text-xl font-bold tracking-tight text-[var(--text-main)]">NIYUKTI</h1>
+                </div>
+            </div>
+
+            <button id="theme-toggle-btn" class="astra-btn astra-btn-ghost astra-btn-sm !p-2" onclick="toggleTheme()" title="Toggle Theme">
+                <span class="material-symbols-outlined text-[20px]">dark_mode</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main 404 Canvas -->
+    <main class="max-w-2xl mx-auto px-6 py-16 text-center flex-1 flex flex-col items-center justify-center">
+        <!-- Telemetry Geometry -->
+        <div class="relative w-28 h-28 mx-auto mb-6 flex items-center justify-center">
+            <!-- Background Decorative Guidance Circle -->
+            <svg viewBox="0 0 200 200" class="w-full h-full" aria-hidden="true">
+                <circle cx="100" cy="100" r="75" fill="none" stroke="var(--astra-copper)" stroke-width="1" stroke-dasharray="4 4" opacity="0.4" />
+                <line x1="100" y1="12" x2="100" y2="188" stroke="var(--astra-copper)" stroke-width="0.8" opacity="0.4" />
+                <line x1="12" y1="100" x2="188" y2="100" stroke="var(--astra-copper)" stroke-width="0.8" opacity="0.4" />
+                <polygon points="100,12 105,17 100,22 95,17" fill="var(--astra-copper)" />
+                <polygon points="100,178 105,183 100,188 95,183" fill="var(--astra-copper)" />
+                <polygon points="12,100 17,95 22,100 17,105" fill="var(--astra-copper)" />
+                <polygon points="178,100 183,95 188,100 183,105" fill="var(--astra-copper)" />
+            </svg>
+
+            <!-- Center Niyukti Mark -->
+            <div class="absolute inset-0 flex items-center justify-center">
+                <div class="w-14 h-14 rounded-xl bg-[var(--bg-surface-elevated)] border border-[var(--border-strong)] flex items-center justify-center shadow-md">
+                    <svg viewBox="0 0 100 100" width="36" height="36" aria-label="Niyukti Mark">
+                        <line x1="50" y1="12" x2="50" y2="40" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round"/>
+                        <polygon points="50,6 55,14 50,11 45,14" fill="#F59E0B"/>
+                        <path d="M 50,42 C 34,26 22,22 14,16 C 24,30 36,40 44,46" fill="#1E3A8A" opacity="0.9"/>
+                        <path d="M 50,42 C 66,26 78,22 86,16 C 76,30 64,40 56,46" fill="#0F766E" opacity="0.9"/>
+                        <polygon points="50,38 62,50 50,62 38,50" fill="#B87333"/>
+                        <polygon points="50,43 57,50 50,57 43,50" fill="var(--bg-surface)"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--astra-copper-subtle)] border border-[var(--border-accent)] mb-4">
+            <span class="font-mono text-[10px] font-semibold tracking-widest text-[var(--astra-copper)] uppercase">ERROR 404 • UNMAPPED REQUISITION</span>
+        </div>
+
+        <h1 class="font-display text-4xl sm:text-5xl font-bold text-[var(--text-main)] mb-3">
+            Opportunity Not Found
+        </h1>
+
+        <p class="font-sans text-sm sm:text-base text-[var(--text-muted)] max-w-md mx-auto mb-8 leading-relaxed">
+            "The opportunity you're looking for doesn't exist, but a better direction may."
+        </p>
+
+        <!-- Sutra Line -->
+        <div class="astra-sutra-line w-48 mx-auto !my-6"></div>
+
+        <div class="flex flex-wrap items-center justify-center gap-4">
+            <a href="index.html" class="astra-btn astra-btn-primary astra-btn-md">
+                <span class="material-symbols-outlined text-sm">home</span>
+                <span>Go to Home</span>
+            </a>
+            <a href="candidate_ranking.html" class="astra-btn astra-btn-secondary astra-btn-md">
+                <span class="material-symbols-outlined text-sm">fact_check</span>
+                <span>Explore Opportunities</span>
+            </a>
+            <a href="candidate_search.html" class="astra-btn astra-btn-ghost astra-btn-md">
+                <span class="material-symbols-outlined text-sm">person_search</span>
+                <span>Search Candidates</span>
+            </a>
+        </div>
+    </main>
+
+    <!-- Master Footer -->
+    <footer class="w-full border-t border-[var(--border-subtle)] bg-[var(--bg-surface)] py-6 text-center transition-colors duration-200">
+        <span class="font-mono text-[10px] text-[var(--text-faint)] uppercase tracking-wider">ASTRA X INTELLIGENCE SYSTEMS • NIYUKTI TALENT INTELLIGENCE</span>
+    </footer>
+
+    <!-- Master Scripts -->
+    <script src="integration.js"></script>
+</body>
+</html>

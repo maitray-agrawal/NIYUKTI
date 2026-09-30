@@ -1,379 +1,146 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>NIYUKTI — Candidate Intelligence & Discovery | ASTRA X</title>
+    <meta name="description" content="Discover candidates using multi-attribute structured filters, verified skill taxonomy, and explainable intelligence."/>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
 
-<html class="dark" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>NIYUKTI — Candidate Search | AI Talent Intelligence</title>
-<meta name="description" content="Search and discover candidates matching your hiring requirements using AI-powered skill matching and experience filtering."/>
-<meta property="og:title" content="NIYUKTI — Candidate Search"/>
-<meta property="og:description" content="Find candidates matching your hiring requirements across 100,001+ profiles."/>
-<meta property="og:type" content="website"/>
-<link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Geist:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                    "on-secondary-fixed-variant": "#004c6e",
-                    "secondary-fixed": "#c9e6ff",
-                    "surface-container-high": "#222a3d",
-                    "secondary-fixed-dim": "#89ceff",
-                    "on-error": "#690005",
-                    "tertiary-container": "#007650",
-                    "on-primary-container": "#ede0ff",
-                    "primary-fixed": "#eaddff",
-                    "tertiary": "#4edea3",
-                    "on-secondary": "#00344d",
-                    "outline": "#958da1",
-                    "on-surface": "#dae2fd",
-                    "on-secondary-container": "#00344e",
-                    "surface-container-highest": "#2d3449",
-                    "secondary": "#89ceff",
-                    "on-background": "#dae2fd",
-                    "on-tertiary-fixed-variant": "#005236",
-                    "surface-dim": "#0b1326",
-                    "tertiary-fixed-dim": "#4edea3",
-                    "on-tertiary-container": "#76ffc2",
-                    "error": "#ffb4ab",
-                    "primary-fixed-dim": "#d2bbff",
-                    "background": "#0b1326",
-                    "primary": "#d2bbff",
-                    "surface-variant": "#2d3449",
-                    "primary-container": "#7c3aed",
-                    "on-primary": "#3f008e",
-                    "on-surface-variant": "#ccc3d8",
-                    "outline-variant": "#4a4455",
-                    "inverse-surface": "#dae2fd",
-                    "inverse-primary": "#732ee4",
-                    "on-error-container": "#ffdad6",
-                    "inverse-on-surface": "#283044",
-                    "secondary-container": "#00a2e6",
-                    "surface-container": "#171f33",
-                    "surface": "#0b1326",
-                    "error-container": "#93000a",
-                    "on-secondary-fixed": "#001e2f",
-                    "on-primary-fixed": "#25005a",
-                    "on-tertiary-fixed": "#002113",
-                    "surface-container-low": "#131b2e",
-                    "on-tertiary": "#003824",
-                    "surface-bright": "#31394d",
-                    "tertiary-fixed": "#6ffbbe",
-                    "on-primary-fixed-variant": "#5a00c6",
-                    "surface-tint": "#d2bbff",
-                    "surface-container-lowest": "#060e20"
-            },
-            "borderRadius": {
-                    "DEFAULT": "0.25rem",
-                    "lg": "0.5rem",
-                    "xl": "0.75rem",
-                    "full": "9999px"
-            },
-            "spacing": {
-                    "unit": "4px",
-                    "gutter": "24px",
-                    "margin-mobile": "16px",
-                    "container-max": "1440px",
-                    "margin-desktop": "40px"
-            },
-            "fontFamily": {
-                    "body-lg": ["Inter"],
-                    "headline-lg": ["Geist"],
-                    "label-sm": ["Geist"],
-                    "headline-lg-mobile": ["Geist"],
-                    "headline-xl": ["Geist"],
-                    "mono-data": ["Geist"],
-                    "headline-md": ["Geist"],
-                    "body-md": ["Inter"]
-            },
-            "fontSize": {
-                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
-                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
-                    "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
-                    "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "600"}],
-                    "headline-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700"}],
-                    "mono-data": ["14px", {"lineHeight": "1.4", "fontWeight": "400"}],
-                    "headline-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
-                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}]
-            }
-          },
-        },
-      }
-    </script>
-<style>
-        body {
-            background-color: #0b1326;
-            color: #dae2fd;
-            overflow-x: hidden;
-        }
-        .glass-card {
-            background: rgba(30, 41, 59, 0.4);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
-            border-left: 1px solid rgba(255, 255, 255, 0.15);
-        }
-        .ai-glow {
-            box-shadow: 0 0 20px rgba(124, 58, 237, 0.15);
-        }
-        .cyber-border {
-            border: 1px solid rgba(0, 162, 230, 0.3);
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.02);
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(210, 187, 255, 0.2);
-            border-radius: 10px;
-        }
-        .match-ring {
-            background: conic-gradient(from 0deg, #7c3aed var(--percentage), transparent var(--percentage));
-        }
-    </style>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="stylesheet" href="astrax-niyukti.css"/>
 </head>
-<body class="font-body-md text-body-md selection:bg-primary-container selection:text-on-primary-container">
-<!-- SIDE NAVIGATION SHELL -->
-<aside class="h-screen w-80 fixed left-0 top-0 bg-surface/50 dark:bg-surface-container/50 backdrop-blur-xl border-r border-white/10 shadow-2xl shadow-primary/10 flex flex-col h-full py-gutter px-4 z-[60]">
-<div class="flex items-center gap-3 px-2 mb-10">
-<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center shadow-lg shadow-primary-container/20">
-<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">psychology</span>
-</div>
-<div>
-<span class="text-[10px] font-bold tracking-widest text-primary/80 uppercase block">ASTRA</span>
-<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed leading-none">NIYUKTI</h1>
-<p class="font-label-sm text-[11px] text-on-surface-variant/70 tracking-tight mt-0.5">AI Talent Intelligence</p>
-</div>
-</div>
-<nav class="flex-1 space-y-1 overflow-y-auto custom-scrollbar">
-<!-- Navigation Items Mapping from JSON -->
-<a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-primary/10 hover:text-primary transition-all duration-300 text-on-surface-variant/70" href="#">
-<span class="material-symbols-outlined">dashboard</span>
-<span class="font-body-md">Dashboard</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-primary dark:text-primary-fixed font-bold border-r-2 border-primary bg-primary/5" href="#">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person_search</span>
-<span class="font-body-md">Candidate Search</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-primary/10 hover:text-primary transition-all duration-300 text-on-surface-variant/70" href="#">
-<span class="material-symbols-outlined">leaderboard</span>
-<span class="font-body-md">Ranking</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-primary/10 hover:text-primary transition-all duration-300 text-on-surface-variant/70" href="#">
-<span class="material-symbols-outlined">description</span>
-<span class="font-body-md">Details</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-primary/10 hover:text-primary transition-all duration-300 text-on-surface-variant/70" href="#">
-<span class="material-symbols-outlined">compare_arrows</span>
-<span class="font-body-md">Comparison</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-primary/10 hover:text-primary transition-all duration-300 text-on-surface-variant/70" href="#">
-<span class="material-symbols-outlined">trending_up</span>
-<span class="font-body-md">Skill Gap</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-primary/10 hover:text-primary transition-all duration-300 text-on-surface-variant/70" href="#">
-<span class="material-symbols-outlined">smart_toy</span>
-<span class="font-body-md">Recruiter Copilot</span>
-</a>
-<div class="pt-6 mt-6 border-t border-white/5">
-<a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-primary/10 hover:text-primary transition-all duration-300 text-on-surface-variant/70" href="#">
-<span class="material-symbols-outlined">settings</span>
-<span class="font-body-md">Settings</span>
-</a>
-</div>
-</nav>
-<button class="mt-auto w-full py-4 bg-primary text-on-primary font-bold rounded-xl active:scale-95 transition-transform flex items-center justify-center gap-2 ai-glow">
-<span class="material-symbols-outlined">add</span>
-            New Search
-        </button>
-</aside>
-<!-- TOP NAVIGATION SHELL -->
-<header class="fixed top-0 right-0 w-[calc(100%-320px)] h-16 z-50 bg-surface/30 dark:bg-surface-container-high/30 backdrop-blur-xl border-b border-white/10 flex justify-between items-center px-margin-desktop shadow-sm">
-<div class="flex items-center gap-4 flex-1">
-<div class="relative w-full max-w-md group">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50 group-focus-within:text-primary transition-colors">search</span>
-<input class="w-full bg-white/5 border border-white/10 rounded-full py-2 pl-10 pr-4 text-on-surface focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all font-body-md" placeholder="Search by name, role, or talent ID..." type="text"/>
-</div>
-</div>
-<div class="flex items-center gap-4">
-<button class="hover:bg-surface-bright/50 dark:hover:bg-surface-container-highest/50 rounded-full p-2 transition-colors active:opacity-80">
-<span class="material-symbols-outlined text-primary">notifications</span>
-</button>
-<button class="hover:bg-surface-bright/50 dark:hover:bg-surface-container-highest/50 rounded-full p-2 transition-colors active:opacity-80">
-<span class="material-symbols-outlined text-on-surface-variant">history</span>
-</button>
-<button class="hover:bg-surface-bright/50 dark:hover:bg-surface-container-highest/50 rounded-full p-2 transition-colors active:opacity-80">
-<span class="material-symbols-outlined text-on-surface-variant">help</span>
-</button>
-<div class="h-8 w-[1px] bg-white/10 mx-2"></div>
-<div class="flex items-center gap-3 group cursor-pointer">
-<div class="text-right">
-<p class="font-label-sm text-label-sm text-on-surface font-bold">Alex Chen</p>
-<p class="font-label-sm text-[10px] text-on-surface-variant/60">Lead Recruiter</p>
-</div>
-<img alt="Recruiter Profile" class="w-8 h-8 rounded-full border border-primary/30" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3eO05ZqcLmdcXWf7foPo9JlPTpdy9I6J2Fkr7uVysgjzgs3OYNVViwFnzP5EHIRPKgXniSuCoRt8KYMic_ZPOf18a46w02XVZhnvbieJhngCVLmach5Sd6rUCNM7UFNZaCnyaojnA_AKuN2kqUAIrUfvRacSGPuuzisgRfggPZ5VWI_D8qOFE2DekMX3SV3oJylbZcU5Pi7-ARU0MjWDl7-McpFrRh7T6EX3vdsh9ubf9wf0Ya_5-6BBvcA0Re6QJXmKEIYZ7a7mS"/>
-</div>
-</div>
-</header>
-<!-- MAIN CANVAS -->
-<main class="ml-80 pt-16 min-h-screen">
-<div class="p-margin-desktop">
-<!-- Hero Title / Filter Bar Section -->
-<div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-6">
-<div>
-<h2 class="font-headline-lg text-headline-lg text-primary tracking-tight">Search Candidates</h2>
-<p class="text-on-surface-variant/70 font-body-md mt-1">Find candidates matching your hiring requirements.</p>
-</div>
-<div class="flex items-center gap-3">
-<button class="flex items-center gap-2 px-4 py-2 glass-card rounded-lg text-on-surface hover:bg-white/10 transition-colors">
-<span class="material-symbols-outlined">sort</span>
-<span class="font-label-sm">Match Rank</span>
-</button>
-<button class="flex items-center gap-2 px-4 py-2 glass-card rounded-lg text-on-surface hover:bg-white/10 transition-colors">
-<span class="material-symbols-outlined">grid_view</span>
-</button>
-</div>
-</div>
-<div class="grid grid-cols-12 gap-gutter">
-<!-- LEFT SIDEBAR: FILTERS -->
-<aside class="col-span-3">
-<div class="glass-card rounded-2xl p-6 sticky top-24">
-<div class="flex items-center justify-between mb-6">
-<h3 class="font-headline-md text-headline-md text-primary">Advanced Filters</h3>
-<button class="text-secondary font-label-sm hover:underline">Reset</button>
-</div>
-<div class="space-y-8">
-<!-- Skill Filter -->
-<div class="space-y-3">
-<label class="font-label-sm text-on-surface-variant uppercase tracking-widest text-[10px] block">Top Required Skills</label>
-<div class="flex flex-wrap gap-2" id="skills-filter-container">
-<span class="px-3 py-1 bg-primary-container/20 border border-primary/30 text-primary rounded-full font-label-sm cursor-pointer hover:bg-primary/30">React Native</span>
-<span class="px-3 py-1 bg-surface-container-highest border border-white/10 text-on-surface-variant rounded-full font-label-sm cursor-pointer hover:border-primary/50">TypeScript</span>
-<span class="px-3 py-1 bg-surface-container-highest border border-white/10 text-on-surface-variant rounded-full font-label-sm cursor-pointer hover:border-primary/50">PostgreSQL</span>
-<span class="px-3 py-1 bg-surface-container-highest border border-white/10 text-on-surface-variant rounded-full font-label-sm cursor-pointer hover:border-primary/50">AWS Lamba</span>
-</div>
-</div>
-<!-- Experience Range -->
-<div class="space-y-4">
-<label class="font-label-sm text-on-surface-variant uppercase tracking-widest text-[10px] block">Experience (Years)</label>
-<input class="w-full h-1.5 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary" max="20" min="0" type="range" value="8"/>
-<div class="flex justify-between font-mono-data text-on-surface-variant text-xs">
-<span>0yr</span>
-<span>10yr</span>
-<span>20yr+</span>
-</div>
-</div>
-<!-- AI Fit Score -->
-<div class="space-y-3">
-<label class="font-label-sm text-on-surface-variant uppercase tracking-widest text-[10px] block">Minimum AI Fit Score</label>
-<div class="flex items-center gap-2">
-<div class="flex-1 bg-surface-container-highest h-8 rounded-md flex items-center px-3 gap-2 cyber-border">
-<span class="material-symbols-outlined text-secondary text-sm">bolt</span>
-<span class="font-mono-data text-secondary">85% + Match</span>
-</div>
-</div>
-</div>
-<!-- Location -->
-<div class="space-y-3">
-<label class="font-label-sm text-on-surface-variant uppercase tracking-widest text-[10px] block">Location Type</label>
-<div class="space-y-2">
-<label class="flex items-center gap-3 cursor-pointer group">
-<input class="rounded border-white/20 bg-transparent text-primary focus:ring-primary" type="checkbox"/>
-<span class="font-body-md text-on-surface group-hover:text-primary transition-colors">Remote</span>
-</label>
-<label class="flex items-center gap-3 cursor-pointer group">
-<input class="rounded border-white/20 bg-transparent text-primary focus:ring-primary" type="checkbox"/>
-<span class="font-body-md text-on-surface group-hover:text-primary transition-colors">Hybrid</span>
-</label>
-<label class="flex items-center gap-3 cursor-pointer group">
-<input class="rounded border-white/20 bg-transparent text-primary focus:ring-primary" type="checkbox"/>
-<span class="font-body-md text-on-surface group-hover:text-primary transition-colors">Onsite</span>
-</label>
-</div>
-</div>
-</div>
-<!-- AI Insight Card -->
-<div class="mt-8 p-4 rounded-xl bg-secondary-container/10 border border-secondary/20 relative overflow-hidden">
-<div class="absolute top-0 right-0 p-2">
-<span class="material-symbols-outlined text-secondary opacity-20 text-4xl">auto_awesome</span>
-</div>
-<p class="font-label-sm text-secondary mb-1">AI Recommendation</p>
-<p class="text-xs text-on-surface-variant leading-relaxed">Lowering the experience threshold to <span class="text-secondary">6 years</span> expands your pool by <span class="text-secondary">42%</span> without compromising skill fit.</p>
-</div>
-</div>
-</aside>
-<!-- RIGHT CONTENT: CANDIDATE GRID -->
-<section class="col-span-9">
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter" id="candidates-grid">
-<div class="col-span-full py-16 text-center text-outline">
-<span class="material-symbols-outlined animate-spin text-4xl mb-2">sync</span>
-<p>Searching candidate database...</p>
-</div>
-</div>
-<!-- Pagination -->
-<div class="mt-12 flex items-center justify-center gap-4" id="pagination-container"></div>
-</section>
-</div>
-</div>
-</main>
-<!-- FLOATING AI ASSISTANT PANEL (RELEVANT TO SEARCH) -->
-<div class="fixed bottom-8 right-8 w-80 glass-card rounded-2xl shadow-2xl z-50 transform translate-y-0 transition-transform duration-500 cyber-border" id="ai-assistant">
-<div class="p-4 border-b border-white/10 flex items-center justify-between bg-primary/5">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-primary text-xl" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
-<h5 class="font-headline-md text-sm text-primary">Recruiter Copilot</h5>
-</div>
-<button class="text-on-surface-variant/50 hover:text-on-surface" onclick="toggleAI()">
-<span class="material-symbols-outlined">close</span>
-</button>
-</div>
-<div class="p-5 max-h-96 overflow-y-auto custom-scrollbar space-y-4" id="copilot-panel-body">
-<div class="bg-surface-container/50 p-3 rounded-lg border border-white/5">
-<p class="text-xs leading-relaxed" id="copilot-summary-text"><span class="inline-block w-3 h-3 rounded-full bg-primary animate-pulse mr-1"></span>Loading candidate intelligence...</p>
-</div>
-<div class="space-y-2">
-<p class="font-label-sm text-[10px] text-on-surface-variant uppercase">Suggested Actions</p>
-<button class="w-full text-left p-2 rounded bg-white/5 hover:bg-white/10 text-xs border border-white/5 transition-colors flex items-center justify-between" onclick="window.location.href='candidate_ranking.html'">
-<span>View ranked candidates</span>
-<span class="material-symbols-outlined text-sm">leaderboard</span>
-</button>
-<button class="w-full text-left p-2 rounded bg-white/5 hover:bg-white/10 text-xs border border-white/5 transition-colors flex items-center justify-between" onclick="window.location.href='candidate_comparison.html'">
-<span>Compare top candidates</span>
-<span class="material-symbols-outlined text-sm">compare</span>
-</button>
-</div>
-</div>
-<div class="p-4 bg-surface-container">
-<div class="relative">
-<input class="w-full bg-white/5 border border-white/10 rounded-lg py-2 px-3 text-xs focus:outline-none focus:border-primary/50" placeholder="Ask Copilot anything..." type="text"/>
-<button class="absolute right-2 top-1/2 -translate-y-1/2 text-primary">
-<span class="material-symbols-outlined text-sm">send</span>
-</button>
-</div>
-</div>
-</div>
-<script>
-        function toggleAI() {
-            const panel = document.getElementById('ai-assistant');
-            panel.classList.toggle('translate-y-[calc(100%+32px)]');
-        }
+<body class="astra-grid-bg min-h-screen">
 
-        // Add a subtle interaction to card hover
-        document.querySelectorAll('.glass-card').forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                card.style.setProperty('--mouse-x', `${x}px`);
-                card.style.setProperty('--mouse-y', `${y}px`);
-            });
-        });
-    </script>
-<script src="integration.js"></script>
-</body></html>
+    <!-- Global Navigation Sidebar -->
+    <aside></aside>
+
+    <!-- Global Top Header -->
+    <header>
+        <div class="flex items-center flex-1 max-w-md">
+            <input type="text" />
+        </div>
+        <div class="flex items-center gap-4"></div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="ml-72 pt-20 px-8 pb-12 transition-all duration-200">
+        <!-- Breadcrumb & Header -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="font-mono text-[10px] text-[var(--astra-copper)] uppercase tracking-widest">ASTRA X / TALENT INTELLIGENCE</span>
+                    <span class="text-[10px] text-[var(--border-strong)]">•</span>
+                    <span class="font-mono text-[10px] text-[var(--text-faint)]">CANDIDATE DISCOVERY</span>
+                </div>
+                <h1 class="font-display text-2xl sm:text-3xl font-bold text-[var(--text-main)]">Candidate Intelligence Workspace</h1>
+                <p class="font-sans text-xs text-[var(--text-muted)] mt-1">Structured search across 100,001 candidate profiles with multi-attribute signals and verified skill evidence.</p>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a href="talent_map.html" class="astra-btn astra-btn-secondary astra-btn-sm">
+                    <span class="material-symbols-outlined text-sm">map</span>
+                    <span>Talent Map</span>
+                </a>
+                <a href="candidate_ranking.html" class="astra-btn astra-btn-primary astra-btn-sm">
+                    <span class="material-symbols-outlined text-sm">fact_check</span>
+                    <span>Match Candidates</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-12 gap-6">
+            <!-- Left Filter Sidebar -->
+            <div id="filter-sidebar" class="col-span-12 lg:col-span-3 space-y-5">
+                <div class="astra-card astra-card-elevated p-5 sticky top-24">
+                    <div class="flex items-center justify-between pb-3 border-b border-[var(--border-subtle)] mb-4">
+                        <div class="flex items-center gap-2">
+                            <span class="astra-bindu astra-bindu-copper"></span>
+                            <h3 class="font-display text-sm font-bold text-[var(--text-main)]">Structured Filters</h3>
+                        </div>
+                        <button class="font-sans text-xs text-[var(--astra-copper)] hover:underline" onclick="window.location.reload()">Reset</button>
+                    </div>
+
+                    <div class="space-y-5 font-sans text-xs">
+                        <!-- Top Skills Filter -->
+                        <div>
+                            <label class="font-mono text-[10px] text-[var(--text-faint)] uppercase tracking-wider block mb-2">Canonical Skills</label>
+                            <div class="flex flex-wrap gap-1.5" id="skills-filter-container">
+                                <span class="astra-skill-chip cursor-pointer hover:border-[var(--astra-copper)]">Python</span>
+                                <span class="astra-skill-chip cursor-pointer hover:border-[var(--astra-copper)]">FastAPI</span>
+                                <span class="astra-skill-chip cursor-pointer hover:border-[var(--astra-copper)]">AWS</span>
+                                <span class="astra-skill-chip cursor-pointer hover:border-[var(--astra-copper)]">Machine Learning</span>
+                            </div>
+                        </div>
+
+                        <!-- Experience Range -->
+                        <div>
+                            <div class="flex justify-between font-mono text-[10px] text-[var(--text-faint)] uppercase tracking-wider mb-2">
+                                <span>Min Experience</span>
+                                <span id="exp-display-val" class="font-bold text-[var(--text-main)]">0+ Yrs</span>
+                            </div>
+                            <input class="w-full h-1.5 bg-[var(--bg-surface-elevated)] rounded-lg appearance-none cursor-pointer accent-[var(--astra-copper)]" max="15" min="0" type="range" value="0"/>
+                            <div class="flex justify-between font-mono text-[9px] text-[var(--text-faint)] mt-1">
+                                <span>0yr</span>
+                                <span>7yr</span>
+                                <span>15yr+</span>
+                            </div>
+                        </div>
+
+                        <!-- Work Preference -->
+                        <div>
+                            <label class="font-mono text-[10px] text-[var(--text-faint)] uppercase tracking-wider block mb-2">Work Preference</label>
+                            <div class="space-y-1.5">
+                                <label class="flex items-center gap-2 cursor-pointer text-[var(--text-main)]">
+                                    <input class="rounded border-[var(--border-strong)] text-[var(--astra-indigo)] focus:ring-[var(--astra-indigo)]" type="checkbox" value="Remote"/>
+                                    <span>Remote</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer text-[var(--text-main)]">
+                                    <input class="rounded border-[var(--border-strong)] text-[var(--astra-indigo)] focus:ring-[var(--astra-indigo)]" type="checkbox" value="Hybrid"/>
+                                    <span>Hybrid</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer text-[var(--text-main)]">
+                                    <input class="rounded border-[var(--border-strong)] text-[var(--astra-indigo)] focus:ring-[var(--astra-indigo)]" type="checkbox" value="Onsite"/>
+                                    <span>Onsite</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Redrob Verification Signals -->
+                        <div class="pt-3 border-t border-[var(--border-subtle)]">
+                            <label class="font-mono text-[10px] text-[var(--text-faint)] uppercase tracking-wider block mb-2">Candidate Signals</label>
+                            <label class="flex items-center gap-2 cursor-pointer text-[var(--text-main)]">
+                                <input id="filter-open-to-work" class="rounded border-[var(--border-strong)] text-[var(--semantic-success)] focus:ring-[var(--semantic-success)]" type="checkbox"/>
+                                <span class="font-medium text-[var(--semantic-success)]">Open to Work Only</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Content: Candidate Grid & Pagination -->
+            <div class="col-span-12 lg:col-span-9">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="candidates-grid">
+                    <div class="col-span-full py-16 text-center astra-card p-8">
+                        <span class="material-symbols-outlined animate-spin text-3xl mb-2 text-[var(--astra-copper)]">sync</span>
+                        <p class="font-display font-bold text-sm text-[var(--text-main)]">Querying Candidate Database...</p>
+                        <p class="font-sans text-xs text-[var(--text-muted)] mt-1">Retrieving candidate profiles matching criteria.</p>
+                    </div>
+                </div>
+
+                <!-- Pagination Container -->
+                <div class="mt-8 flex items-center justify-center gap-3 font-mono text-xs" id="pagination-container">
+                    <!-- Populated dynamically via integration.js -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Master Scripts -->
+    <script src="integration.js"></script>
+</body>
+</html>

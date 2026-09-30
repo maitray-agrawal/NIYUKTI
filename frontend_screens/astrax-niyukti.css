@@ -1,0 +1,577 @@
+/* ============================================================
+   ASTRA X — NIYUKTI: TALENT INTELLIGENCE
+   Master Design System & CSS Design Tokens
+   Philosophy: "Right People. Right Skills. Real Opportunities."
+   Visual Foundations: Ivory, Sandstone, Ink, Indigo, Saffron, Copper, Teal
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* Foundation Colors (Light Theme — Ivory / Sandstone) */
+  --astra-ivory: #FDF7EC;
+  --astra-sandstone: #EADDCB;
+  --astra-sandstone-light: #F7EFE2;
+  --astra-sandstone-subtle: #F3E9DA;
+  --astra-sandstone-border: #D8CEB8;
+
+  --astra-ink: #1F2A37;
+  --astra-ink-muted: #5C5449;
+  --astra-ink-faint: #8A8175;
+
+  --astra-indigo: #1E3A8A;
+  --astra-indigo-light: #3B82F6;
+  --astra-indigo-subtle: rgba(30, 58, 138, 0.08);
+
+  --astra-copper: #B87333;
+  --astra-copper-light: #D48946;
+  --astra-copper-dark: #8A5222;
+  --astra-copper-subtle: rgba(184, 115, 51, 0.12);
+
+  --niyukti-saffron: #F59E0B;
+  --niyukti-saffron-light: #FCD34D;
+  --niyukti-saffron-dark: #B45309;
+  --niyukti-saffron-subtle: rgba(245, 158, 11, 0.10);
+
+  --niyukti-teal: #0F766E;
+  --niyukti-teal-light: #14B8A6;
+  --niyukti-teal-dark: #0D5C56;
+  --niyukti-teal-subtle: rgba(15, 118, 110, 0.10);
+
+  /* Semantic State Colors */
+  --semantic-success: #166534;
+  --semantic-success-subtle: #DCFCE7;
+  --semantic-warning: #B4552D;
+  --semantic-warning-subtle: #FFEDD5;
+  --semantic-critical: #DC2626;
+  --semantic-critical-subtle: #FEE2E2;
+  --semantic-info: #2563EB;
+  --semantic-info-subtle: #EFF6FF;
+  --semantic-neutral: #64748B;
+  --semantic-neutral-subtle: #F1F5F9;
+
+  /* Surfaces & Canvas (Light Theme) */
+  --bg-base: #FDF7EC;
+  --bg-surface: #FFFFFF;
+  --bg-surface-elevated: #F7EFE2;
+  --bg-surface-hover: #F3E9DA;
+  --border-subtle: #EADDCB;
+  --border-strong: #D8CEB8;
+  --border-accent: rgba(184, 115, 51, 0.35);
+
+  --text-main: #1F2A37;
+  --text-muted: #5C5449;
+  --text-faint: #8A8175;
+  --text-inverse: #FDF7EC;
+
+  /* Geometry & Spacing Grid */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-full: 9999px;
+
+  --shadow-subtle: 0 1px 3px rgba(31, 42, 55, 0.04), 0 1px 2px rgba(31, 42, 55, 0.02);
+  --shadow-card: 0 2px 6px rgba(31, 42, 55, 0.05), 0 1px 2px rgba(31, 42, 55, 0.03);
+  --shadow-elevated: 0 10px 25px -5px rgba(31, 42, 55, 0.08), 0 8px 10px -6px rgba(31, 42, 55, 0.04);
+
+  /* Typography */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Geist Mono', monospace;
+
+  color-scheme: light;
+}
+
+/* ============================================================
+   DARK THEME ("ASTRA X AT NIGHT")
+   Surfaces: Deep Ink, Charcoal, Muted Copper, Saffron, Teal
+   ============================================================ */
+
+.dark, html.dark {
+  --bg-base: #0F1720;
+  --bg-surface: #17212B;
+  --bg-surface-elevated: #1D2935;
+  --bg-surface-hover: #243342;
+  --border-subtle: #253342;
+  --border-strong: #334457;
+  --border-accent: rgba(200, 138, 82, 0.4);
+
+  --text-main: #F8F1E5;
+  --text-muted: #CBD5E1;
+  --text-faint: #94A3B8;
+  --text-inverse: #0F1720;
+
+  --astra-indigo: #5B7CCB;
+  --astra-indigo-light: #93C5FD;
+  --astra-indigo-subtle: rgba(91, 124, 203, 0.16);
+
+  --astra-copper: #C88A52;
+  --astra-copper-light: #E0A976;
+  --astra-copper-dark: #A66835;
+  --astra-copper-subtle: rgba(200, 138, 82, 0.16);
+
+  --niyukti-saffron: #F3A52F;
+  --niyukti-saffron-light: #FCD34D;
+  --niyukti-saffron-subtle: rgba(243, 165, 47, 0.14);
+
+  --niyukti-teal: #38A39B;
+  --niyukti-teal-light: #5EEAD4;
+  --niyukti-teal-subtle: rgba(56, 163, 155, 0.14);
+
+  --semantic-success: #22C55E;
+  --semantic-success-subtle: rgba(34, 197, 94, 0.15);
+  --semantic-warning: #F59E0B;
+  --semantic-warning-subtle: rgba(245, 158, 11, 0.15);
+  --semantic-critical: #EF4444;
+  --semantic-critical-subtle: rgba(239, 68, 68, 0.15);
+  --semantic-info: #60A5FA;
+  --semantic-info-subtle: rgba(96, 165, 250, 0.15);
+
+  --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-card: 0 3px 8px rgba(0, 0, 0, 0.4);
+  --shadow-elevated: 0 12px 30px rgba(0, 0, 0, 0.55);
+
+  color-scheme: dark;
+}
+
+/* ============================================================
+   GLOBAL RESET & FOUNDATIONS
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-base);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Typography Classes */
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-serif {
+  font-family: var(--font-display);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* ============================================================
+   ASTRA GEOMETRY & ARCHITECTURAL MOTIFS (Low Opacity: 3-8%)
+   ============================================================ */
+
+/* Fine 32px Cartesian Grid */
+.astra-grid-bg {
+  background-image: 
+    linear-gradient(to right, rgba(184, 115, 51, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(184, 115, 51, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.dark .astra-grid-bg {
+  background-image: 
+    linear-gradient(to right, rgba(200, 138, 82, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(200, 138, 82, 0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Subtle Jaali Lattice (Architectural Screen) */
+.astra-jaali-bg {
+  background-image: 
+    radial-gradient(circle at center, rgba(184, 115, 51, 0.06) 1.5px, transparent 1.5px),
+    radial-gradient(circle at 16px 16px, rgba(30, 58, 138, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.dark .astra-jaali-bg {
+  background-image: 
+    radial-gradient(circle at center, rgba(200, 138, 82, 0.08) 1.5px, transparent 1.5px),
+    radial-gradient(circle at 16px 16px, rgba(91, 124, 203, 0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Astra Sutra Line (Telemetry Divider with Centered Bindu Diamond) */
+.astra-sutra-line {
+  position: relative;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--border-strong) 20%, var(--border-strong) 80%, transparent 100%);
+  margin: 1.5rem 0;
+}
+
+.astra-sutra-line::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  width: 7px;
+  height: 7px;
+  background-color: var(--astra-copper);
+  border: 1.5px solid var(--bg-surface);
+}
+
+/* Bindu Diamond Marker */
+.astra-bindu {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: var(--astra-copper);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+.astra-bindu-saffron {
+  background-color: var(--niyukti-saffron);
+}
+
+.astra-bindu-teal {
+  background-color: var(--niyukti-teal);
+}
+
+/* ============================================================
+   SURFACE CONTAINERS & CARDS (Tamrapatra Philosophy)
+   ============================================================ */
+
+.astra-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-subtle);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.astra-card:hover {
+  border-color: var(--border-strong);
+}
+
+.astra-card-interactive:hover {
+  border-color: var(--astra-copper);
+  box-shadow: var(--shadow-card);
+  transform: translateY(-1px);
+}
+
+.astra-card-elevated {
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.astra-card-accent {
+  border-left: 3px solid var(--astra-copper);
+}
+
+.astra-card-saffron {
+  border-left: 3px solid var(--niyukti-saffron);
+}
+
+.astra-card-teal {
+  border-left: 3px solid var(--niyukti-teal);
+}
+
+/* ============================================================
+   BUTTONS & ACTION ELEMENTS
+   ============================================================ */
+
+.astra-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.15rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  user-select: none;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.astra-btn-primary {
+  background-color: var(--astra-indigo);
+  color: #FFFFFF;
+  border-color: var(--astra-indigo);
+  box-shadow: 0 1px 2px rgba(30, 58, 138, 0.2);
+}
+
+.astra-btn-primary:hover {
+  background-color: #172554;
+  border-color: #172554;
+  box-shadow: 0 3px 6px rgba(30, 58, 138, 0.3);
+}
+
+.dark .astra-btn-primary {
+  background-color: var(--astra-indigo);
+  color: #F8F1E5;
+  border-color: var(--astra-indigo);
+}
+
+.dark .astra-btn-primary:hover {
+  background-color: #4364B4;
+  border-color: #4364B4;
+}
+
+.astra-btn-copper {
+  background-color: var(--astra-copper);
+  color: #FFFFFF;
+  border-color: var(--astra-copper);
+}
+
+.astra-btn-copper:hover {
+  background-color: var(--astra-copper-dark);
+  border-color: var(--astra-copper-dark);
+}
+
+.astra-btn-saffron {
+  background-color: var(--niyukti-saffron);
+  color: #1F2A37;
+  border-color: var(--niyukti-saffron);
+  font-weight: 600;
+}
+
+.astra-btn-saffron:hover {
+  background-color: #D97706;
+  color: #FFFFFF;
+}
+
+.astra-btn-secondary {
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+  border-color: var(--border-strong);
+}
+
+.astra-btn-secondary:hover {
+  background-color: var(--bg-surface-hover);
+  border-color: var(--text-muted);
+}
+
+.astra-btn-ghost {
+  background-color: transparent;
+  color: var(--text-muted);
+  border-color: transparent;
+}
+
+.astra-btn-ghost:hover {
+  background-color: var(--bg-surface-hover);
+  color: var(--text-main);
+}
+
+.astra-btn-sm {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.775rem;
+  border-radius: var(--radius-sm);
+}
+
+.astra-btn-lg {
+  padding: 0.75rem 1.6rem;
+  font-size: 1rem;
+  border-radius: var(--radius-md);
+}
+
+/* ============================================================
+   BADGES, TAGS & STATUS PILLS
+   ============================================================ */
+
+.astra-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.725rem;
+  font-weight: 500;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-subtle);
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-muted);
+  line-height: 1.2;
+}
+
+.astra-badge-indigo {
+  background-color: var(--astra-indigo-subtle);
+  border-color: rgba(30, 58, 138, 0.25);
+  color: var(--astra-indigo);
+}
+
+.astra-badge-copper {
+  background-color: var(--astra-copper-subtle);
+  border-color: rgba(184, 115, 51, 0.3);
+  color: var(--astra-copper);
+}
+
+.astra-badge-saffron {
+  background-color: var(--niyukti-saffron-subtle);
+  border-color: rgba(245, 158, 11, 0.35);
+  color: var(--niyukti-saffron-dark);
+}
+
+.dark .astra-badge-saffron {
+  color: var(--niyukti-saffron);
+}
+
+.astra-badge-teal {
+  background-color: var(--niyukti-teal-subtle);
+  border-color: rgba(15, 118, 110, 0.3);
+  color: var(--niyukti-teal);
+}
+
+.astra-badge-success {
+  background-color: var(--semantic-success-subtle);
+  border-color: rgba(22, 101, 52, 0.25);
+  color: var(--semantic-success);
+}
+
+.astra-badge-critical {
+  background-color: var(--semantic-critical-subtle);
+  border-color: rgba(220, 38, 38, 0.25);
+  color: var(--semantic-critical);
+}
+
+/* Skill Chip */
+.astra-skill-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  font-family: var(--font-sans);
+  font-size: 0.775rem;
+  font-weight: 500;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  transition: all 0.15s ease;
+}
+
+.astra-skill-chip:hover {
+  border-color: var(--astra-copper);
+  background-color: var(--bg-surface-hover);
+}
+
+.astra-skill-matched {
+  background-color: var(--semantic-success-subtle);
+  border-color: rgba(22, 101, 52, 0.3);
+  color: var(--semantic-success);
+}
+
+.astra-skill-missing {
+  background-color: var(--semantic-critical-subtle);
+  border-color: rgba(220, 38, 38, 0.3);
+  color: var(--semantic-critical);
+}
+
+/* ============================================================
+   FORM INPUTS & SELECTS
+   ============================================================ */
+
+.astra-input, .astra-select, .astra-textarea {
+  width: 100%;
+  padding: 0.55rem 0.85rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--text-main);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.astra-input:focus, .astra-select:focus, .astra-textarea:focus {
+  border-color: var(--astra-copper);
+  box-shadow: 0 0 0 3px rgba(184, 115, 51, 0.15);
+}
+
+.dark .astra-input:focus, .dark .astra-select:focus, .dark .astra-textarea:focus {
+  box-shadow: 0 0 0 3px rgba(200, 138, 82, 0.2);
+}
+
+/* ============================================================
+   TABLES & DATA MATRICES
+   ============================================================ */
+
+.astra-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.875rem;
+}
+
+.astra-table th {
+  padding: 0.75rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.725rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  background-color: var(--bg-surface-elevated);
+  border-bottom: 1px solid var(--border-strong);
+  text-align: left;
+}
+
+.astra-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-main);
+  vertical-align: middle;
+}
+
+.astra-table tr:hover td {
+  background-color: var(--bg-surface-hover);
+}
+
+/* ============================================================
+   ACCESSIBILITY & SCROLLBARS
+   ============================================================ */
+
+:focus-visible {
+  outline: 2px solid var(--astra-copper);
+  outline-offset: 2px;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--astra-copper);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

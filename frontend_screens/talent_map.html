@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>NIYUKTI — Talent Map & Geospatial Intelligence | ASTRA X</title>
+    <meta name="description" content="Geospatial talent distribution, skill clusters, and opportunity concentration across India."/>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="stylesheet" href="astrax-niyukti.css"/>
+</head>
+<body class="astra-grid-bg min-h-screen">
+
+    <!-- Global Navigation Sidebar -->
+    <aside></aside>
+
+    <!-- Global Top Header -->
+    <header>
+        <div class="flex items-center flex-1 max-w-md">
+            <input type="text" />
+        </div>
+        <div class="flex items-center gap-4"></div>
+    </header>
+
+    <!-- Main Geospatial Workspace -->
+    <main class="ml-72 pt-20 px-8 pb-12 transition-all duration-200">
+        <!-- Breadcrumb & Header -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="font-mono text-[10px] text-[var(--astra-copper)] uppercase tracking-widest">ASTRA X / TALENT MAP</span>
+                    <span class="text-[10px] text-[var(--border-strong)]">•</span>
+                    <span class="font-mono text-[10px] text-[var(--text-faint)]">REGIONAL DENSITY & OPPORTUNITY</span>
+                </div>
+                <h1 class="font-display text-2xl sm:text-3xl font-bold text-[var(--text-main)]">National Talent Intelligence</h1>
+                <p class="font-sans text-xs text-[var(--text-muted)] mt-1">Geographic density, regional skill clusters, and candidate mobility across India.</p>
+            </div>
+
+            <!-- Total Talent Metric -->
+            <div class="flex items-center gap-4">
+                <div class="px-4 py-2 rounded-lg astra-card bg-[var(--bg-surface-elevated)] text-right">
+                    <span class="font-mono text-[9px] uppercase text-[var(--text-faint)] tracking-wider block">Mapped Talent</span>
+                    <span id="map-total-talent" class="font-display text-xl font-bold text-[var(--text-main)]">100,001</span>
+                </div>
+                <button class="astra-btn astra-btn-primary astra-btn-sm" onclick="window.location.href='candidate_search.html'">
+                    <span class="material-symbols-outlined text-sm">filter_alt</span>
+                    <span>Filter Candidates</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Geospatial Grid Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+            <!-- Interactive Map Panel (7 Cols) -->
+            <div class="lg:col-span-7 astra-card astra-card-elevated p-6 flex flex-col justify-between relative overflow-hidden">
+                <div class="flex items-center justify-between mb-4 border-b border-[var(--border-subtle)] pb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="astra-bindu astra-bindu-saffron"></span>
+                        <h3 class="font-display text-sm font-bold text-[var(--text-main)]">Indian Regional Cluster Map</h3>
+                    </div>
+                    <div class="flex items-center gap-2 text-[10px] font-mono">
+                        <span class="inline-flex items-center gap-1 text-[var(--astra-indigo)]"><span class="w-2 h-2 rounded-full bg-[var(--astra-indigo)]"></span> Tier-1 Hubs</span>
+                        <span class="inline-flex items-center gap-1 text-[var(--niyukti-saffron)]"><span class="w-2 h-2 rounded-full bg-[var(--niyukti-saffron)]"></span> Emerging Hubs</span>
+                    </div>
+                </div>
+
+                <!-- Stylized Indian Map Graphic Representation -->
+                <div id="talent-map-container" class="relative w-full h-[460px] bg-[var(--bg-surface)] rounded-lg border border-[var(--border-subtle)] flex items-center justify-center p-4">
+                    <svg viewBox="0 0 500 550" class="w-full h-full max-h-[440px]" aria-label="India Talent Map">
+                        <!-- Stylized Indian Subcontinent Outline -->
+                        <path d="M 200,40 L 260,35 L 290,60 L 320,50 L 340,90 L 310,120 L 330,150 L 380,160 L 420,150 L 440,180 L 410,210 L 360,220 L 330,240 L 330,280 L 300,320 L 280,380 L 260,440 L 250,500 L 240,520 L 230,500 L 210,440 L 190,380 L 170,340 L 150,300 L 140,260 L 160,220 L 140,180 L 160,140 L 180,100 Z"
+                              fill="var(--bg-surface-elevated)" stroke="var(--border-strong)" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6"/>
+
+                        <!-- Cardinal Coordinate Rays -->
+                        <line x1="250" y1="20" x2="250" y2="520" stroke="var(--astra-copper)" stroke-width="0.5" stroke-opacity="0.3" stroke-dasharray="2 2" />
+                        <line x1="100" y1="275" x2="420" y2="275" stroke="var(--astra-copper)" stroke-width="0.5" stroke-opacity="0.3" stroke-dasharray="2 2" />
+
+                        <!-- Bengaluru Node (12.97° N, 77.59° E) -->
+                        <g class="cursor-pointer group" onclick="window.location.href='candidate_search.html?location=Bengaluru'">
+                            <circle cx="240" cy="420" r="24" fill="var(--astra-indigo)" fill-opacity="0.15" class="animate-pulse" />
+                            <circle cx="240" cy="420" r="10" fill="var(--astra-indigo)" />
+                            <circle cx="240" cy="420" r="4" fill="#FFFFFF" />
+                            <text x="255" y="425" font-family="Inter" font-size="11" font-weight="600" fill="var(--text-main)">Bengaluru (28k)</text>
+                        </g>
+
+                        <!-- Hyderabad Node (17.38° N, 78.48° E) -->
+                        <g class="cursor-pointer group" onclick="window.location.href='candidate_search.html?location=Hyderabad'">
+                            <circle cx="245" cy="350" r="20" fill="var(--astra-indigo)" fill-opacity="0.15" class="animate-pulse" />
+                            <circle cx="245" cy="350" r="8" fill="var(--astra-indigo)" />
+                            <circle cx="245" cy="350" r="3" fill="#FFFFFF" />
+                            <text x="260" y="355" font-family="Inter" font-size="11" font-weight="600" fill="var(--text-main)">Hyderabad (22k)</text>
+                        </g>
+
+                        <!-- Pune Node (18.52° N, 73.85° E) -->
+                        <g class="cursor-pointer group" onclick="window.location.href='candidate_search.html?location=Pune'">
+                            <circle cx="190" cy="340" r="18" fill="var(--niyukti-saffron)" fill-opacity="0.2" class="animate-pulse" />
+                            <circle cx="190" cy="340" r="8" fill="var(--niyukti-saffron)" />
+                            <circle cx="190" cy="340" r="3" fill="#FFFFFF" />
+                            <text x="125" y="345" font-family="Inter" font-size="11" font-weight="600" fill="var(--text-main)">Pune (18k)</text>
+                        </g>
+
+                        <!-- Mumbai Node (19.07° N, 72.87° E) -->
+                        <g class="cursor-pointer group" onclick="window.location.href='candidate_search.html?location=Mumbai'">
+                            <circle cx="175" cy="320" r="14" fill="var(--astra-indigo)" fill-opacity="0.15" />
+                            <circle cx="175" cy="320" r="7" fill="var(--astra-indigo)" />
+                            <text x="110" y="318" font-family="Inter" font-size="10" font-weight="500" fill="var(--text-muted)">Mumbai (11k)</text>
+                        </g>
+
+                        <!-- Delhi-NCR Node (28.61° N, 77.20° E) -->
+                        <g class="cursor-pointer group" onclick="window.location.href='candidate_search.html?location=Delhi'">
+                            <circle cx="230" cy="180" r="16" fill="var(--niyukti-teal)" fill-opacity="0.2" class="animate-pulse" />
+                            <circle cx="230" cy="180" r="8" fill="var(--niyukti-teal)" />
+                            <circle cx="230" cy="180" r="3" fill="#FFFFFF" />
+                            <text x="245" y="185" font-family="Inter" font-size="11" font-weight="600" fill="var(--text-main)">Delhi-NCR (16k)</text>
+                        </g>
+
+                        <!-- Chennai Node (13.08° N, 80.27° E) -->
+                        <g class="cursor-pointer group" onclick="window.location.href='candidate_search.html?location=Chennai'">
+                            <circle cx="260" cy="430" r="12" fill="var(--astra-copper)" fill-opacity="0.2" />
+                            <circle cx="260" cy="430" r="6" fill="var(--astra-copper)" />
+                            <text x="275" y="435" font-family="Inter" font-size="10" font-weight="500" fill="var(--text-muted)">Chennai (5k)</text>
+                        </g>
+                    </svg>
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-[var(--border-subtle)] flex items-center justify-between text-xs text-[var(--text-faint)] font-mono">
+                    <span>COORDINATE DATUM: WGS84 • REGIONAL GRANULARITY</span>
+                    <span class="text-[var(--astra-copper)]">CLICK ANY HUB TO FILTER CANDIDATES</span>
+                </div>
+            </div>
+
+            <!-- Regional Talent Distribution & Clusters (5 Cols) -->
+            <div class="lg:col-span-5 space-y-4">
+                <div class="astra-card astra-card-elevated p-5">
+                    <div class="flex items-center justify-between mb-4 pb-2 border-b border-[var(--border-subtle)]">
+                        <div class="flex items-center gap-2">
+                            <span class="astra-bindu astra-bindu-teal"></span>
+                            <h3 class="font-display text-sm font-bold text-[var(--text-main)]">Major Talent Clusters</h3>
+                        </div>
+                        <span class="font-mono text-[10px] text-[var(--text-faint)]">6 HUBS RANKED</span>
+                    </div>
+
+                    <div id="cluster-distribution-list" class="space-y-3">
+                        <!-- Populated dynamically via initTalentMap() -->
+                    </div>
+                </div>
+
+                <!-- Skill Distribution by Geography -->
+                <div class="astra-card p-5">
+                    <h3 class="font-display text-sm font-bold text-[var(--text-main)] mb-3">Key Geospatial Insights</h3>
+                    <ul class="space-y-2 text-xs text-[var(--text-muted)] font-sans">
+                        <li class="flex items-start gap-2">
+                            <span class="astra-bindu astra-bindu-copper !w-1.5 !h-1.5 mt-1.5"></span>
+                            <span><strong>Bengaluru & Hyderabad</strong> account for 50% of active candidates, with primary density in Python, AWS Cloud, and MLOps.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="astra-bindu astra-bindu-teal !w-1.5 !h-1.5 mt-1.5"></span>
+                            <span><strong>Pune</strong> demonstrates the highest specialization in Applied Data Science and Automotive AI engineering.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="astra-bindu astra-bindu-saffron !w-1.5 !h-1.5 mt-1.5"></span>
+                            <span><strong>Delhi-NCR</strong> exhibits rapid emergence in NLP, Full-Stack Architecture, and Enterprise AI systems.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Master Scripts -->
+    <script src="integration.js"></script>
+</body>
+</html>
