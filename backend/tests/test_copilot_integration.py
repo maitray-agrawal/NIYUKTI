@@ -1,4 +1,5 @@
 import os
+import urllib.request
 import pytest
 import time
 from playwright.sync_api import sync_playwright
@@ -8,6 +9,13 @@ FRONTEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..
 COPILOT_HTML = os.path.join(FRONTEND_DIR, "recruiter_copilot.html")
 COPILOT_URL = f"file:///{COPILOT_HTML.replace(os.sep, '/')}"
 
+def is_backend_online():
+    try:
+        urllib.request.urlopen("http://localhost:8000/api/health", timeout=1)
+        return True
+    except Exception:
+        return False
+
 def test_copilot_page_loads_and_api_check():
     """Verify that the Copilot page loads and displays connected status."""
     with sync_playwright() as p:
@@ -16,8 +24,6 @@ def test_copilot_page_loads_and_api_check():
         page.goto(COPILOT_URL)
         
         # Check connection badge or connection indicator
-        # The connection badge has classes like 'bg-success/20 text-success' or similar
-        # Let's wait for the connection check to run
         page.wait_for_timeout(2000)
         
         # Verify title
@@ -31,6 +37,8 @@ def test_copilot_page_loads_and_api_check():
 
 def test_copilot_left_panel_population():
     """Select candidate & job, and verify left panel details are loaded from API."""
+    if not is_backend_online():
+        pytest.skip("Local backend server (http://localhost:8000) is not running for integration test")
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
@@ -69,6 +77,8 @@ def test_copilot_left_panel_population():
 
 def test_copilot_chat_and_roadmaps():
     """Verify chat input, response rendering, and upskilling roadmaps."""
+    if not is_backend_online():
+        pytest.skip("Local backend server (http://localhost:8000) is not running for integration test")
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
@@ -98,6 +108,8 @@ def test_copilot_chat_and_roadmaps():
 
 def test_copilot_view_profile_routing():
     """Verify that clicking 'View Full Profile' routes correctly with query parameters."""
+    if not is_backend_online():
+        pytest.skip("Local backend server (http://localhost:8000) is not running for integration test")
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
