@@ -53,6 +53,30 @@
             </div>
         </div>
 
+        <!-- Dynamic Candidate & Target Role Selector Bar -->
+        <div class="astra-card astra-card-elevated p-4 mb-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="flex flex-wrap items-center gap-4 flex-1">
+                    <div class="flex items-center gap-2">
+                        <label class="font-mono text-[10px] text-[var(--text-faint)] uppercase tracking-wider">Candidate:</label>
+                        <select id="gap-candidate-selector" class="astra-select !py-1.5 text-xs font-semibold">
+                            <!-- Populated dynamically via initSkillGapAnalysis() -->
+                        </select>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <label class="font-mono text-[10px] text-[var(--text-faint)] uppercase tracking-wider">Target Requisition:</label>
+                        <select id="gap-job-selector" class="astra-select !py-1.5 text-xs font-semibold">
+                            <!-- Populated dynamically via initSkillGapAnalysis() -->
+                        </select>
+                    </div>
+                </div>
+                <div class="font-mono text-[10px] text-[var(--text-faint)] flex items-center gap-1.5">
+                    <span class="astra-bindu astra-bindu-teal !w-1.5 !h-1.5"></span>
+                    <span>REAL-TIME COGNITIVE GAP CALCULATION</span>
+                </div>
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
             <!-- Overall Match & Gap Summary (5 Cols) -->
             <div class="lg:col-span-5 astra-card astra-card-elevated p-6 flex flex-col justify-between">

@@ -6,7 +6,7 @@ from app.models.job import Job
 class CopilotService:
     @staticmethod
     def generate_outreach_email(candidate: Candidate, job: Job) -> str:
-        return f"""Subject: Exciting Opportunity: {job.title} at Obsidian Network - Let's Connect!
+        return f"""Subject: Exciting Opportunity: {job.title} at AstraX / NIYUKTI - Let's Connect!
 
 Hi {candidate.name},
 
@@ -14,7 +14,7 @@ I hope this email finds you well.
 
 I came across your profile on our NIYUKTI platform and was incredibly impressed by your background. Specifically, your expertise in {", ".join((candidate.skills or [])[:3])} is a strong match for a critical role we are hiring for: {job.title} in our {job.department or "Engineering"} department.
 
-At Obsidian Network, we are pioneering the next generation of intelligent tools, and we believe your {candidate.experience_years or 0.0} years of experience—especially your work as a {candidate.title or "specialist"}—would make you a stellar fit. 
+At AstraX, we are pioneering the next generation of intelligent tools, and we believe your {candidate.experience_years or 0.0} years of experience—especially your work as a {candidate.title or "specialist"}—would make you a stellar fit. 
 
 This role is a {job.work_preference} position based out of {job.location}, offering you the chance to work alongside world-class engineers.
 
@@ -22,9 +22,8 @@ Would you be open to a brief 15-minute chat this week to discuss how your goals 
 
 Best regards,
 
-Alex Chen
-Senior Recruiter, Obsidian Network
-alex.chen@obsidian.network
+AstraX Talent Intelligence Unit
+alex.chen@astrax.ai
 """
 
     @staticmethod

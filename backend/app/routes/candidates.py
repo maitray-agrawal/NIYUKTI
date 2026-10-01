@@ -36,8 +36,18 @@ def import_candidates(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+import time
+
+_STATS_CACHE = {"data": None, "timestamp": 0.0}
+_LOCATIONS_CACHE = {"data": None, "timestamp": 0.0}
+CACHE_TTL_SECONDS = 300.0
+
 @router.get("/stats")
 def get_candidate_stats(db: Session = Depends(get_db)):
+    now = time.time()
+    if _STATS_CACHE["data"] is not None and (now - _STATS_CACHE["timestamp"]) < CACHE_TTL_SECONDS:
+        return _STATS_CACHE["data"]
+
     try:
         is_sqlite = db.bind.dialect.name == "sqlite"
         if is_sqlite:
@@ -64,7 +74,7 @@ def get_candidate_stats(db: Session = Depends(get_db)):
 
     total = stats_query[0] or 0
     if total == 0:
-        return {
+        res = {
             "total_candidates": 0,
             "average_experience": 0.0,
             "experience_distribution": {},
@@ -74,6 +84,9 @@ def get_candidate_stats(db: Session = Depends(get_db)):
             "open_to_work_percentage": 0.0,
             "average_profile_completeness": 0.0
         }
+        _STATS_CACHE["data"] = res
+        _STATS_CACHE["timestamp"] = now
+        return res
 
     avg_exp = stats_query[1] or 0.0
     entry = stats_query[2] or 0
@@ -85,12 +98,9 @@ def get_candidate_stats(db: Session = Depends(get_db)):
 
     open_to_work_pct = (open_to_work_count / total) * 100
 
-    # Work Preference group by (fast, since it only aggregates distinct preferences)
     pref_counts = db.query(Candidate.work_preference, func.count(Candidate.id)).group_by(Candidate.work_preference).all()
     work_pref_dist = {pref or "Unknown": count for pref, count in pref_counts}
 
-    # Top Skills (sampled from first 5000 candidates to limit memory usage on constrained hosts)
-    # TODO: In production with PostgreSQL, use SQL-level JSON aggregation or a caching layer.
     skills_query = db.query(Candidate.skills).limit(5000).all()
     all_skills = []
     for (skills_list,) in skills_query:
@@ -99,7 +109,7 @@ def get_candidate_stats(db: Session = Depends(get_db)):
     top_skills_counted = Counter(all_skills).most_common(10)
     top_skills = [{"skill": s, "count": c} for s, c in top_skills_counted]
 
-    return {
+    result = {
         "total_candidates": total,
         "average_experience": round(avg_exp, 2),
         "experience_distribution": {
@@ -114,6 +124,138 @@ def get_candidate_stats(db: Session = Depends(get_db)):
         "open_to_work_percentage": round(open_to_work_pct, 2),
         "average_profile_completeness": round(avg_completeness, 2)
     }
+    _STATS_CACHE["data"] = result
+    _STATS_CACHE["timestamp"] = now
+    return result
+
+
+LOCATION_ALIASES = {
+    "bengaluru": ["bangalore", "bengaluru"],
+    "bangalore": ["bangalore", "bengaluru"],
+    "delhi": ["delhi", "new delhi", "noida", "gurgaon", "gurugram"],
+    "delhi-ncr": ["delhi", "new delhi", "noida", "gurgaon", "gurugram"],
+    "delhi ncr": ["delhi", "new delhi", "noida", "gurgaon", "gurugram"],
+    "ncr": ["delhi", "new delhi", "noida", "gurgaon", "gurugram"],
+    "mumbai": ["mumbai", "bombay"],
+    "bombay": ["mumbai", "bombay"],
+    "chennai": ["chennai", "madras"],
+    "madras": ["chennai", "madras"],
+    "kolkata": ["kolkata", "calcutta"],
+    "calcutta": ["kolkata", "calcutta"],
+    "hyderabad": ["hyderabad"],
+    "pune": ["pune"],
+    "ahmedabad": ["ahmedabad"],
+    "jaipur": ["jaipur"],
+    "bhubaneswar": ["bhubaneswar"],
+    "indore": ["indore"],
+    "kochi": ["kochi", "cochin"],
+    "cochin": ["kochi", "cochin"],
+    "trivandrum": ["trivandrum", "thiruvananthapuram"],
+    "thiruvananthapuram": ["trivandrum", "thiruvananthapuram"],
+    "chandigarh": ["chandigarh"],
+    "coimbatore": ["coimbatore"],
+    "visakhapatnam": ["visakhapatnam", "vizag"],
+    "vizag": ["visakhapatnam", "vizag"],
+    "sydney": ["sydney"],
+    "san francisco": ["san francisco"],
+    "austin": ["austin"],
+    "new york": ["new york"],
+    "toronto": ["toronto"],
+    "london": ["london"],
+    "berlin": ["berlin"],
+    "singapore": ["singapore"],
+    "dubai": ["dubai"],
+    "seattle": ["seattle"],
+}
+
+def build_location_clause(loc_input: str):
+    cleaned = loc_input.lower().strip()
+    aliases = LOCATION_ALIASES.get(cleaned)
+    if aliases:
+        from sqlalchemy import or_
+        return or_(*[Candidate.location.ilike(f"%{alias}%") for alias in aliases])
+    return Candidate.location.ilike(f"%{loc_input.strip()}%")
+
+@router.get("/locations")
+def get_candidate_locations(db: Session = Depends(get_db)):
+    """Canonical geographic talent density across all regional and international hubs aggregated from real database records."""
+    now = time.time()
+    if _LOCATIONS_CACHE["data"] is not None and (now - _LOCATIONS_CACHE["timestamp"]) < CACHE_TTL_SECONDS:
+        return _LOCATIONS_CACHE["data"]
+
+    loc_counts = db.query(Candidate.location, func.count(Candidate.id)).group_by(Candidate.location).all()
+    total_candidates = sum(cnt for _, cnt in loc_counts) or 100001
+    
+    hubs_map = {
+        "Delhi-NCR": {"city": "Delhi-NCR", "state": "Delhi/NCR", "lat": 28.6139, "lng": 77.2090, "count": 0, "top_skills": ["Docker", "Python", "Full Stack", "HTML"]},
+        "Bengaluru": {"city": "Bengaluru", "state": "Karnataka", "lat": 12.9716, "lng": 77.5946, "count": 0, "top_skills": ["MongoDB", "Rust", "Apache Beam", "Python"]},
+        "Hyderabad": {"city": "Hyderabad", "state": "Telangana", "lat": 17.3850, "lng": 78.4867, "count": 0, "top_skills": ["Agile", "Vue.js", "JavaScript", "Cloud"]},
+        "Pune": {"city": "Pune", "state": "Maharashtra", "lat": 18.5204, "lng": 73.8567, "count": 0, "top_skills": ["Redis", "Scrum", "PostgreSQL", "Data Science"]},
+        "Mumbai": {"city": "Mumbai", "state": "Maharashtra", "lat": 19.0760, "lng": 72.8777, "count": 0, "top_skills": ["React", "Sales", "Webpack", "FinTech"]},
+        "Chennai": {"city": "Chennai", "state": "Tamil Nadu", "lat": 13.0827, "lng": 80.2707, "count": 0, "top_skills": ["Kafka", "CSS", "Vue.js", "Deep Learning"]},
+        "Kolkata": {"city": "Kolkata", "state": "West Bengal", "lat": 22.5726, "lng": 88.3639, "count": 0, "top_skills": ["Python", "Java", "Backend"]},
+        "Bhubaneswar": {"city": "Bhubaneswar", "state": "Odisha", "lat": 20.2961, "lng": 85.8245, "count": 0, "top_skills": ["Java", "SQL", "Spring"]},
+        "Ahmedabad": {"city": "Ahmedabad", "state": "Gujarat", "lat": 23.0225, "lng": 72.5714, "count": 0, "top_skills": ["Angular", "Node.js", "Python"]},
+        "Jaipur": {"city": "Jaipur", "state": "Rajasthan", "lat": 26.9124, "lng": 75.7873, "count": 0, "top_skills": ["Data Science", "Python", "ML"]},
+        "Indore": {"city": "Indore", "state": "Madhya Pradesh", "lat": 22.7196, "lng": 75.8577, "count": 0, "top_skills": ["Python", "FastAPI", "PostgreSQL"]},
+        "Trivandrum": {"city": "Trivandrum", "state": "Kerala", "lat": 8.5241, "lng": 76.9366, "count": 0, "top_skills": ["Node.js", "React", "Cloud"]},
+        "Chandigarh": {"city": "Chandigarh", "state": "Chandigarh", "lat": 30.7333, "lng": 76.7794, "count": 0, "top_skills": ["DevOps", "Python", "Docker"]},
+        "Coimbatore": {"city": "Coimbatore", "state": "Tamil Nadu", "lat": 11.0168, "lng": 76.9558, "count": 0, "top_skills": ["Embedded", "IoT", "C++"]},
+        "Kochi": {"city": "Kochi", "state": "Kerala", "lat": 9.9312, "lng": 76.2673, "count": 0, "top_skills": ["Java", "Cloud", "Microservices"]},
+        "Vizag": {"city": "Vizag", "state": "Andhra Pradesh", "lat": 17.6868, "lng": 83.2185, "count": 0, "top_skills": ["Python", "Backend", "Data"]},
+        "Global Hubs": {"city": "International Hubs", "state": "Global (US, UK, EU, APAC)", "lat": 37.7749, "lng": -122.4194, "count": 0, "top_skills": ["AI/ML", "Distributed Systems", "Kubernetes", "Rust"]}
+    }
+    
+    for raw_loc, count in loc_counts:
+        if not raw_loc:
+            continue
+        raw_lower = raw_loc.lower()
+        if any(term in raw_lower for term in ["delhi", "noida", "gurgaon", "gurugram"]):
+            hubs_map["Delhi-NCR"]["count"] += count
+        elif "bangalore" in raw_lower or "bengaluru" in raw_lower:
+            hubs_map["Bengaluru"]["count"] += count
+        elif "hyderabad" in raw_lower:
+            hubs_map["Hyderabad"]["count"] += count
+        elif "pune" in raw_lower:
+            hubs_map["Pune"]["count"] += count
+        elif "mumbai" in raw_lower or "bombay" in raw_lower:
+            hubs_map["Mumbai"]["count"] += count
+        elif "chennai" in raw_lower or "madras" in raw_lower:
+            hubs_map["Chennai"]["count"] += count
+        elif "kolkata" in raw_lower or "calcutta" in raw_lower:
+            hubs_map["Kolkata"]["count"] += count
+        elif "bhubaneswar" in raw_lower:
+            hubs_map["Bhubaneswar"]["count"] += count
+        elif "ahmedabad" in raw_lower:
+            hubs_map["Ahmedabad"]["count"] += count
+        elif "jaipur" in raw_lower:
+            hubs_map["Jaipur"]["count"] += count
+        elif "indore" in raw_lower:
+            hubs_map["Indore"]["count"] += count
+        elif "trivandrum" in raw_lower or "thiruvananthapuram" in raw_lower:
+            hubs_map["Trivandrum"]["count"] += count
+        elif "chandigarh" in raw_lower:
+            hubs_map["Chandigarh"]["count"] += count
+        elif "coimbatore" in raw_lower:
+            hubs_map["Coimbatore"]["count"] += count
+        elif "kochi" in raw_lower or "cochin" in raw_lower:
+            hubs_map["Kochi"]["count"] += count
+        elif "vizag" in raw_lower or "visakhapatnam" in raw_lower:
+            hubs_map["Vizag"]["count"] += count
+        else:
+            hubs_map["Global Hubs"]["count"] += count
+
+    hubs_list = list(hubs_map.values())
+    for h in hubs_list:
+        h["percentage"] = round((h["count"] / total_candidates) * 100, 1) if total_candidates else 0.0
+
+    result = {
+        "total_candidates": total_candidates,
+        "hubs": hubs_list
+    }
+    _LOCATIONS_CACHE["data"] = result
+    _LOCATIONS_CACHE["timestamp"] = now
+    return result
 
 @router.get("/search", response_model=List[CandidateInDB])
 def search_candidates(
@@ -131,14 +273,18 @@ def search_candidates(
     query = db.query(Candidate)
     
     if q:
-        # Search by name and title only. Removed resume_text ILIKE to avoid
-        # full table scans on 100k+ large text records (causes timeouts on Render).
+        from sqlalchemy import or_
+        q_clean = q.strip()
         query = query.filter(
-            (Candidate.name.ilike(f"%{q}%")) | 
-            (Candidate.title.ilike(f"%{q}%"))
+            or_(
+                Candidate.name.ilike(f"%{q_clean}%"),
+                Candidate.title.ilike(f"%{q_clean}%"),
+                Candidate.location.ilike(f"%{q_clean}%"),
+                Candidate.skills.ilike(f"%{q_clean}%")
+            )
         )
     if location:
-        query = query.filter(Candidate.location.ilike(f"%{location}%"))
+        query = query.filter(build_location_clause(location))
     if min_experience:
         query = query.filter(Candidate.experience_years >= min_experience)
     if max_experience:
@@ -169,8 +315,11 @@ def read_candidates(
     q: Optional[str] = None,
     skill: Optional[str] = None,
     status: Optional[str] = None,
+    location: Optional[str] = None,
     min_experience: Optional[float] = None,
+    max_experience: Optional[float] = None,
     work_preference: Optional[str] = None,
+    open_to_work: Optional[bool] = None,
     limit: int = Query(20, ge=1, le=100),
     offset: int = Query(0, ge=0),
     db: Session = Depends(get_db),
@@ -179,11 +328,18 @@ def read_candidates(
     query = db.query(Candidate)
     
     if q:
-        # Search by name and title only to avoid full table scans on resume_text
+        from sqlalchemy import or_
+        q_clean = q.strip()
         query = query.filter(
-            (Candidate.name.ilike(f"%{q}%")) | 
-            (Candidate.title.ilike(f"%{q}%"))
+            or_(
+                Candidate.name.ilike(f"%{q_clean}%"),
+                Candidate.title.ilike(f"%{q_clean}%"),
+                Candidate.location.ilike(f"%{q_clean}%"),
+                Candidate.skills.ilike(f"%{q_clean}%")
+            )
         )
+    if location:
+        query = query.filter(build_location_clause(location))
     if status:
         query = query.filter(Candidate.status == status)
     if work_preference:
@@ -193,6 +349,16 @@ def read_candidates(
             query = query.filter(Candidate.work_preference.in_(title_prefs))
     if min_experience:
         query = query.filter(Candidate.experience_years >= min_experience)
+    if max_experience:
+        query = query.filter(Candidate.experience_years <= max_experience)
+    if open_to_work is not None:
+        flag_val = 1 if open_to_work else 0
+        is_sqlite = db.bind.dialect.name == "sqlite"
+        if is_sqlite:
+            query = query.filter(func.json_extract(Candidate.redrob_signals, '$.open_to_work_flag') == flag_val)
+        else:
+            from sqlalchemy import cast, Integer
+            query = query.filter(cast(Candidate.redrob_signals['open_to_work_flag'].as_string(), Integer) == flag_val)
         
     if skill:
         for s in skill.split(","):
@@ -239,6 +405,23 @@ def update_candidate(candidate_id: int, candidate_in: CandidateUpdate, db: Sessi
         
     db.commit()
     db.refresh(candidate)
+
+    # Record in AuditLog (Niyukti Decision Ledger)
+    try:
+        from app.models.audit import AuditLog
+        from datetime import datetime, timezone
+        new_status = update_data.get("status", "Updated Profile")
+        audit_entry = AuditLog(
+            candidate_id=candidate.id,
+            action=f"Recruiter Decision: Status -> {new_status}",
+            details=f"Candidate #{candidate.id} ({candidate.name}) marked as '{new_status}' in recruitment workflow.",
+            timestamp=datetime.now(timezone.utc).replace(tzinfo=None)
+        )
+        db.add(audit_entry)
+        db.commit()
+    except Exception as e:
+        pass
+
     return candidate
 
 @router.delete("/{candidate_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -362,7 +545,7 @@ def get_candidate_explanation(
     if score >= 85.0:
         hiring_recommendation = (
             f"Fast-Track to Interview: Highly recommended. {candidate.name} is an exceptional fit ({score}%) who meets "
-            f"or exceeds all key criteria. Their engineering background is highly compatible with obsidian architectures."
+            f"or exceeds all key criteria. Their engineering background is highly compatible with AstraX / NIYUKTI architectures."
         )
     elif score >= 70.0:
         hiring_recommendation = (

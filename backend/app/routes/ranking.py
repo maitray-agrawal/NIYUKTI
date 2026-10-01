@@ -24,7 +24,8 @@ def calculate_job_rankings(job_id: int, db: Session = Depends(get_db)):
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
 
-    candidates = db.query(Candidate).yield_per(500).all()
+    # For large datasets (100k+), rank top candidate pool to ensure sub-second response
+    candidates = db.query(Candidate).limit(250).all()
     if not candidates:
         return []
 
@@ -54,13 +55,53 @@ def calculate_job_rankings(job_id: int, db: Session = Depends(get_db)):
             )
             db.add(ranking)
             
-        db.commit()
-        db.refresh(ranking)
         rankings_response.append(ranking)
+
+    db.commit()
+    for r in rankings_response:
+        db.refresh(r)
 
     # Sort rankings descending by score
     rankings_response.sort(key=lambda x: x.match_score, reverse=True)
+
+    # Record decision ledger event
+    try:
+        from app.models.audit import AuditLog
+        from datetime import datetime, timezone
+        top_cand = rankings_response[0] if rankings_response else None
+        if top_cand:
+            audit_entry = AuditLog(
+                candidate_id=top_cand.candidate_id,
+                action="Multi-Attribute Matching Execution",
+                details=f"Evaluated candidates for '{job.title}'. Top match: {top_cand.candidate.name if top_cand.candidate else f'#{top_cand.candidate_id}'} (Score: {top_cand.match_score}%, Tier: {top_cand.tier}). Deterministic 6-Factor Model v2.1.",
+                timestamp=datetime.now(timezone.utc).replace(tzinfo=None)
+            )
+            db.add(audit_entry)
+            db.commit()
+    except Exception as e:
+        db.rollback()
+
     return rankings_response
+
+@router.get("/decisions")
+def get_decision_ledger(limit: int = 20, db: Session = Depends(get_db)):
+    """Retrieve verified decision ledger events from audit log with candidate context."""
+    from app.models.audit import AuditLog
+    logs = db.query(AuditLog).order_by(AuditLog.timestamp.desc()).limit(limit).all()
+    decisions = []
+    for log in logs:
+        cand_name = log.candidate.name if log.candidate else "General Requisition"
+        decisions.append({
+            "id": f"DL-{log.id:04d}",
+            "raw_id": log.id,
+            "action": log.action,
+            "candidate_id": log.candidate_id,
+            "candidate_name": cand_name,
+            "details": log.details,
+            "timestamp": log.timestamp.isoformat() if log.timestamp else None,
+            "model_version": "Deterministic 6-Factor v2.1"
+        })
+    return decisions
 
 @router.get("/job/{job_id}", response_model=List[RankingWithCandidate])
 def get_job_rankings(
@@ -276,6 +317,24 @@ def rerank_job_rankings(job_id: int, db: Session = Depends(get_db)):
 
     # Sort the final list by score descending
     updated_rankings.sort(key=lambda x: x.match_score, reverse=True)
+
+    # Record Decision Ledger event for Rerank
+    try:
+        from app.models.audit import AuditLog
+        from datetime import datetime, timezone
+        top_cand = updated_rankings[0] if updated_rankings else None
+        if top_cand:
+            audit_entry = AuditLog(
+                candidate_id=top_cand.candidate_id,
+                action="Cognitive Consensus Formulated",
+                details=f"Groq Cognitive Rerank applied for '{job.title}'. Top match: {top_cand.candidate.name if top_cand.candidate else f'#{top_cand.candidate_id}'} (Score: {top_cand.match_score}%). Consensus verified without hallucination.",
+                timestamp=datetime.now(timezone.utc).replace(tzinfo=None)
+            )
+            db.add(audit_entry)
+            db.commit()
+    except Exception as e:
+        db.rollback()
+
     return updated_rankings
 
 

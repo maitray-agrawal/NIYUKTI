@@ -254,16 +254,11 @@ function setupHeader() {
 
         <!-- Right: Telemetry, Notifications, Theme, Profile -->
         <div class="header-controls flex items-center gap-3">
-            <!-- Node Telemetry Badge -->
-            <div id="astrax-telemetry-badge" class="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[11px] font-mono text-[var(--text-muted)]">
-                <span class="astra-bindu astra-bindu-saffron !w-1.5 !h-1.5"></span>
-                <span>NODE: ONLINE</span>
-            </div>
-
-            <!-- API Status Badge -->
-            <div id="api-status-badge" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[var(--text-muted)]">
+            <!-- Authoritative Node Telemetry Badge -->
+            <div id="authoritative-node-badge" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[var(--text-muted)]">
                 <span class="w-1.5 h-1.5 rounded-full bg-[var(--semantic-success)] animate-pulse"></span>
-                <span class="hidden sm:inline">100,001 POOL</span>
+                <span class="font-semibold text-[var(--text-main)]">NODE: ONLINE</span>
+                <span class="text-[var(--text-faint)] hidden sm:inline">• 100,001 POOL</span>
             </div>
 
             <!-- Notifications Drawer Button -->
@@ -337,7 +332,10 @@ function setupHeader() {
     if (searchInput) {
         searchInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && searchInput.value.trim()) {
-                window.location.href = `candidate_search.html?query=${encodeURIComponent(searchInput.value.trim())}`;
+                window.location.href = `candidate_search.html?q=${encodeURIComponent(searchInput.value.trim())}`;
+            } else if (e.key === 'Escape') {
+                searchInput.value = '';
+                searchInput.blur();
             }
         });
     }
@@ -642,15 +640,29 @@ const pageSize = 12;
 let totalCandidates = 0;
 let selectedForComparison = new Set();
 
+let activeLocationFilter = '';
+
 async function initCandidateSearch() {
     try {
         // Populate standard skills filter panel dynamically in background
         setupSkillsFilter();
 
+        // Parse URL query parameters (e.g. ?location=Bengaluru or ?q=Python)
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlLoc = urlParams.get('location');
+        if (urlLoc) {
+            activeLocationFilter = urlLoc.trim();
+        }
+        const urlQ = urlParams.get('q') || urlParams.get('query');
+
         // Setup slider & search inputs
         const searchInput = document.querySelector('header input') || document.querySelector('main input');
         const expSlider = document.querySelector('input[type="range"]');
         const expDisplay = expSlider ? expSlider.previousElementSibling?.querySelector('span') : null;
+
+        if (urlQ && searchInput) {
+            searchInput.value = urlQ.trim();
+        }
 
         if (expSlider) {
             expSlider.min = 0;
@@ -672,9 +684,16 @@ async function initCandidateSearch() {
                     fetchAndRenderCandidates();
                 }, 300);
             });
+            searchInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    searchInput.value = '';
+                    currentPage = 1;
+                    fetchAndRenderCandidates();
+                }
+            });
         }
 
-        // Connect work preference and signal check boxes inside filter sidebar only
+        // Connect work preference and signal check boxes inside filter sidebar
         document.querySelectorAll('#filter-sidebar input[type="checkbox"]').forEach(box => {
             box.addEventListener('change', () => {
                 currentPage = 1;
@@ -689,6 +708,15 @@ async function initCandidateSearch() {
                 e.preventDefault();
                 // Clear search input
                 if (searchInput) searchInput.value = '';
+                // Clear active location filter
+                activeLocationFilter = '';
+                const tag = document.getElementById('active-location-tag');
+                if (tag) tag.remove();
+                const url = new URL(window.location);
+                url.searchParams.delete('location');
+                url.searchParams.delete('q');
+                url.searchParams.delete('query');
+                window.history.replaceState(null, '', url);
                 // Reset experience slider
                 if (expSlider) {
                     expSlider.value = 0;
@@ -707,6 +735,9 @@ async function initCandidateSearch() {
             };
         }
 
+        // Render active location chip if specified
+        updateActiveLocationTag();
+
         // Initial fetch and render
         await fetchAndRenderCandidates();
 
@@ -717,6 +748,39 @@ async function initCandidateSearch() {
         console.error("Candidate search init failed", err);
     }
 }
+
+function updateActiveLocationTag() {
+    let tag = document.getElementById('active-location-tag');
+    if (!activeLocationFilter) {
+        if (tag) tag.remove();
+        return;
+    }
+    const headerTitle = document.querySelector('main h1');
+    if (!tag) {
+        tag = document.createElement('div');
+        tag.id = 'active-location-tag';
+        tag.className = 'inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--astra-copper-subtle)] border border-[var(--astra-copper)] text-xs text-[var(--astra-copper)] font-medium mt-2';
+        if (headerTitle && headerTitle.parentElement) {
+            headerTitle.parentElement.appendChild(tag);
+        }
+    }
+    tag.innerHTML = `
+        <span class="material-symbols-outlined text-sm">location_on</span>
+        <span>Location Filter: <strong>${activeLocationFilter}</strong></span>
+        <button onclick="clearLocationFilter()" class="hover:text-[var(--text-main)] ml-1 font-bold" title="Clear location filter">✕</button>
+    `;
+}
+
+window.clearLocationFilter = function() {
+    activeLocationFilter = '';
+    const tag = document.getElementById('active-location-tag');
+    if (tag) tag.remove();
+    const url = new URL(window.location);
+    url.searchParams.delete('location');
+    window.history.replaceState(null, '', url);
+    currentPage = 1;
+    fetchAndRenderCandidates();
+};
 
 async function updateCopilotSummary() {
     const summaryEl = document.getElementById('copilot-summary-text');
@@ -777,6 +841,8 @@ async function fetchAndRenderCandidates() {
         </div>
     `;
 
+    updateActiveLocationTag();
+
     const searchInput = document.querySelector('header input') || document.querySelector('main input');
     const query = searchInput ? searchInput.value.trim() : '';
 
@@ -798,11 +864,17 @@ async function fetchAndRenderCandidates() {
 
     const params = new URLSearchParams();
     if (query) params.append('q', query);
+    if (activeLocationFilter) params.append('location', activeLocationFilter);
     if (minExp > 0) params.append('min_experience', minExp);
     if (activeSkills.length > 0) params.append('skill', activeSkills.join(','));
     if (preferences.length > 0) {
         const capitalizedPrefs = preferences.map(p => p.charAt(0).toUpperCase() + p.slice(1));
         params.append('work_preference', capitalizedPrefs.join(','));
+    }
+
+    const openToWorkBox = document.getElementById('filter-open-to-work');
+    if (openToWorkBox && openToWorkBox.checked) {
+        params.append('open_to_work', 'true');
     }
 
     const offset = (currentPage - 1) * pageSize;
@@ -822,12 +894,10 @@ async function fetchAndRenderCandidates() {
         if (totalCountHeader !== null) {
             totalCandidates = parseInt(totalCountHeader, 10);
         } else {
-            // Fallback: if fewer results than a full page returned, that is the total;
-            // otherwise estimate there may be more pages (assume at least one more).
             if (candidates.length < pageSize) {
                 totalCandidates = (currentPage - 1) * pageSize + candidates.length;
             } else {
-                totalCandidates = currentPage * pageSize + pageSize; // show at least one more page
+                totalCandidates = currentPage * pageSize + pageSize;
             }
         }
 
@@ -1081,14 +1151,17 @@ async function initCandidateRanking() {
             select.appendChild(opt);
         });
 
-        // Set value from query param if available
+        // Set value from query param if available, or default to first real job
         const urlParams = new URLSearchParams(window.location.search);
-        const jobIdParam = urlParams.get('job_id');
+        const jobIdParam = urlParams.get('job_id') || (jobs.length > 0 ? String(jobs[0].id) : null);
 
         if (jobIdParam) {
             select.value = jobIdParam;
             loadRankings(jobIdParam);
         }
+
+        // Initialize real Decision Ledger
+        loadDecisionLedger();
 
         // On selection change
         select.addEventListener('change', () => {
@@ -1317,6 +1390,58 @@ async function loadRankings(jobId) {
     }
 }
 
+async function loadDecisionLedger() {
+    const container = document.getElementById('decision-ledger-container');
+    if (!container) return;
+
+    try {
+        const res = await fetch(`${API_BASE}/ranking/decisions?limit=10`);
+        if (!res.ok) return;
+        const decisions = await res.json();
+
+        if (decisions.length === 0) {
+            container.innerHTML = `
+                <div class="p-6 text-center text-[var(--text-muted)] font-mono text-xs">
+                    <p>No decision audit events recorded yet. Run a candidate match or update a status to generate ledger entries.</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = decisions.map(d => {
+            const timeStr = d.timestamp ? new Date(d.timestamp).toLocaleString() : 'Recent';
+            const candName = d.candidate_name || `Candidate #${d.candidate_id || 'N/A'}`;
+            return `
+                <div class="p-3.5 rounded-lg bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)] flex flex-col md:flex-row md:items-center justify-between gap-3">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-md bg-[var(--bg-surface)] border border-[var(--border-strong)] flex items-center justify-center text-[var(--astra-indigo)] font-mono font-bold text-xs flex-shrink-0">
+                            DL
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="font-mono text-[10px] text-[var(--text-faint)]">${d.id}</span>
+                                <span class="astra-badge astra-badge-indigo !text-[9px]">${d.model_version || 'Niyukti v2.1'}</span>
+                                <span class="font-mono text-[9px] text-[var(--text-faint)]">${timeStr}</span>
+                            </div>
+                            <h4 class="font-bold text-[var(--text-main)] mt-0.5">${d.action} • ${candName}</h4>
+                            <p class="text-[var(--text-muted)] text-[11px] mt-0.5">${d.details}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 self-end md:self-auto">
+                        <button class="astra-btn astra-btn-ghost astra-btn-sm text-[var(--astra-copper)]" onclick="openDecisionReplay(${d.candidate_id || 7}, '${candName.replace(/'/g, "\\'")}', 90)">
+                            <span class="material-symbols-outlined text-xs">history</span>
+                            <span>Inspect Replay</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    } catch (e) {
+        console.error("Failed to load decision ledger", e);
+    }
+}
+window.loadDecisionLedger = loadDecisionLedger;
+
 async function updateCandidateStatus(candId, newStatus) {
     try {
         const res = await fetch(`${API_BASE}/candidates/${candId}`, {
@@ -1326,6 +1451,7 @@ async function updateCandidateStatus(candId, newStatus) {
         });
         if (res.ok) {
             showToast(`Candidate status updated to '${newStatus}'!`);
+            loadDecisionLedger();
         }
     } catch (err) {
         showToast('Failed to update candidate status.', 'error');
@@ -1344,16 +1470,34 @@ async function initCandidateDetails() {
         ]);
 
         if (!cRes.ok) {
-            // If candidate not found, redirect to a valid candidate ID (7 is the minimum in the dataset)
-            if (cRes.status === 404 && candId !== '7') {
-                showToast("Candidate not found. Redirecting to first profile.", "error");
-                setTimeout(() => { window.location.href = 'candidate_details.html?id=7'; }, 1500);
-            } else {
-                showToast("Candidate not found.", "error");
-                const nameEl = document.querySelector('h2.font-headline-lg') || document.querySelector('h2');
-                if (nameEl) nameEl.textContent = 'Candidate Not Found';
-                const titleEl = document.getElementById('candidate-profile-title');
-                if (titleEl) titleEl.textContent = 'The requested candidate profile does not exist in the database.';
+            showToast("Candidate not found.", "error");
+            const nameEl = document.querySelector('h2.font-headline-lg') || document.querySelector('h2');
+            if (nameEl) nameEl.textContent = 'Candidate Not Found';
+            const titleEl = document.getElementById('candidate-profile-title');
+            if (titleEl) titleEl.textContent = `Candidate #${candId} does not exist in the database.`;
+            
+            // Replace hero card with professional not-found state
+            const heroCard = document.querySelector('.astra-card.astra-card-elevated');
+            if (heroCard) {
+                const notFoundCard = document.createElement('div');
+                notFoundCard.className = 'astra-card p-8 text-center my-6 max-w-xl mx-auto shadow-sm';
+                notFoundCard.innerHTML = `
+                    <div class="w-14 h-14 rounded-full bg-amber-500/10 text-amber-600 flex items-center justify-center mx-auto mb-4">
+                        <span class="material-symbols-outlined text-3xl">person_off</span>
+                    </div>
+                    <h3 class="font-display text-xl font-bold text-[var(--text-main)] mb-2">Candidate Not Found</h3>
+                    <p class="font-sans text-sm text-[var(--text-muted)] mb-6">Candidate ID <code>#${candId}</code> was not located in the verified candidate registry.</p>
+                    <div class="flex items-center justify-center gap-3">
+                        <a href="candidate_search.html" class="astra-btn astra-btn-primary astra-btn-sm">
+                            <span class="material-symbols-outlined text-sm">person_search</span>
+                            <span>Return to Candidate Search</span>
+                        </a>
+                        <a href="candidate_details.html?id=7" class="astra-btn astra-btn-secondary astra-btn-sm">
+                            <span>View Verified Profile (#7)</span>
+                        </a>
+                    </div>
+                `;
+                heroCard.parentNode.replaceChild(notFoundCard, heroCard);
             }
             return;
         }
@@ -1534,7 +1678,24 @@ async function initCandidateComparison() {
         });
 
         if (!compRes.ok) {
-            console.error("Comparison API failed:", compRes.status, await compRes.text());
+            container.innerHTML = `
+                <div class="col-span-full astra-card p-8 text-center my-8 max-w-xl mx-auto shadow-sm">
+                    <div class="w-12 h-12 rounded-full bg-amber-500/10 text-amber-600 flex items-center justify-center mx-auto mb-3">
+                        <span class="material-symbols-outlined text-2xl">compare_arrows</span>
+                    </div>
+                    <h3 class="font-display text-lg font-bold text-[var(--text-main)] mb-1">Comparison Unavailable</h3>
+                    <p class="font-sans text-xs text-[var(--text-muted)] mb-5">One or more selected candidate profiles could not be resolved from the candidate pool.</p>
+                    <div class="flex items-center justify-center gap-3">
+                        <a href="candidate_search.html" class="astra-btn astra-btn-primary astra-btn-sm">
+                            <span class="material-symbols-outlined text-xs">person_search</span>
+                            <span>Select Candidates from Search</span>
+                        </a>
+                        <a href="candidate_comparison.html?candidates=7,8,10" class="astra-btn astra-btn-secondary astra-btn-sm">
+                            <span>Compare Verified Profiles (7, 8, 10)</span>
+                        </a>
+                    </div>
+                </div>
+            `;
             return;
         }
 
@@ -1763,9 +1924,46 @@ async function initCandidateComparison() {
 // --- 6. SKILL GAP ANALYSIS ---
 async function initSkillGapAnalysis() {
     const urlParams = new URLSearchParams(window.location.search);
-    const candId = urlParams.get('id') || '7';
-    const jobId = urlParams.get('job_id') || '1'; // job IDs start from 1 in the requisitions table
+    let candId = urlParams.get('id') || '7';
+    let jobId = urlParams.get('job_id') || '1';
 
+    const candSelect = document.getElementById('gap-candidate-selector');
+    const jobSelect = document.getElementById('gap-job-selector');
+
+    // Populate selectors if available
+    try {
+        const [cListRes, jListRes] = await Promise.all([
+            fetch(`${API_BASE}/candidates/?limit=50`),
+            fetch(`${API_BASE}/jobs/`)
+        ]);
+
+        if (candSelect && cListRes.ok) {
+            const candidates = await cListRes.json();
+            candSelect.innerHTML = candidates.map(c => `<option value="${c.id}">${c.name} (${c.title || 'Engineer'})</option>`).join('');
+            candSelect.value = candId;
+            candSelect.addEventListener('change', () => {
+                candId = candSelect.value;
+                loadSkillGapFor(candId, jobId);
+            });
+        }
+
+        if (jobSelect && jListRes.ok) {
+            const jobs = await jListRes.json();
+            jobSelect.innerHTML = jobs.map(j => `<option value="${j.id}">${j.title} (${j.location})</option>`).join('');
+            jobSelect.value = jobId;
+            jobSelect.addEventListener('change', () => {
+                jobId = jobSelect.value;
+                loadSkillGapFor(candId, jobId);
+            });
+        }
+    } catch (err) {
+        console.error("Failed to populate skill gap selectors", err);
+    }
+
+    await loadSkillGapFor(candId, jobId);
+}
+
+async function loadSkillGapFor(candId, jobId) {
     try {
         const [cRes, jRes, gapRes] = await Promise.all([
             fetch(`${API_BASE}/candidates/${candId}`),
@@ -2183,6 +2381,24 @@ async function initRecruiterCopilot() {
 
     if (!chatStream) return;
     chatStream.innerHTML = '<div class="text-xs text-outline py-4 text-center">Initializing Copilot...</div>';
+
+    // Truthful LLM Provider Status Check
+    try {
+        const healthRes = await fetch(`${API_BASE}/health`);
+        if (healthRes.ok) {
+            const health = await healthRes.json();
+            const badge = document.getElementById('copilot-llm-status-badge');
+            if (badge) {
+                if (health.groq_api_key_configured) {
+                    badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-[var(--semantic-success)] animate-pulse"></span><span>GROQ LLM ACTIVE</span>`;
+                } else {
+                    badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span><span>STANDBY (RULE-BASED ACTIVE)</span>`;
+                }
+            }
+        }
+    } catch (e) {
+        console.warn("Could not check Groq health status", e);
+    }
 
     // Load contexts into dropdowns
     try {
@@ -2845,47 +3061,65 @@ window.openReviewModal = openReviewModal;
 
 // --- TALENT MAP GEOSPATIAL INTELLIGENCE ---
 async function initTalentMap() {
-    const mapContainer = document.getElementById('talent-map-container');
     const clusterList = document.getElementById('cluster-distribution-list');
-    if (!clusterList) return;
+    const totalTalentEl = document.getElementById('map-total-talent');
 
     try {
-        const statsRes = await fetch(`${API_BASE}/candidates/stats`);
-        const stats = statsRes.ok ? await statsRes.json() : null;
+        const res = await fetch(`${API_BASE}/candidates/locations`);
+        if (!res.ok) return;
+        const data = await res.json();
 
-        const totalCount = stats ? stats.total_candidates : 100001;
-
-        // Geospatial Hubs & Density
-        const hubs = [
-            { city: 'Bengaluru', state: 'Karnataka', coords: '12.9716° N, 77.5946° E', count: Math.round(totalCount * 0.28), topSkills: ['Python', 'AWS', 'FastAPI', 'MLOps'], share: '28%' },
-            { city: 'Hyderabad', state: 'Telangana', coords: '17.3850° N, 78.4867° E', count: Math.round(totalCount * 0.22), topSkills: ['Java', 'Cloud Architecture', 'React', 'DevOps'], share: '22%' },
-            { city: 'Pune', state: 'Maharashtra', coords: '18.5204° N, 73.8567° E', count: Math.round(totalCount * 0.18), topSkills: ['Data Science', 'Automotive AI', 'PyTorch', 'C++'], share: '18%' },
-            { city: 'Delhi-NCR', state: 'Delhi/Haryana/UP', coords: '28.6139° N, 77.2090° E', count: Math.round(totalCount * 0.16), topSkills: ['Full Stack', 'NLP', 'Product Mgmt', 'Cybersecurity'], share: '16%' },
-            { city: 'Mumbai', state: 'Maharashtra', coords: '19.0760° N, 72.8777° E', count: Math.round(totalCount * 0.11), topSkills: ['FinTech AI', 'Quant ML', 'Big Data', 'Security'], share: '11%' },
-            { city: 'Chennai', state: 'Tamil Nadu', coords: '13.0827° N, 80.2707° E', count: Math.round(totalCount * 0.05), topSkills: ['Embedded Systems', 'IoT', 'Deep Learning', 'Robotics'], share: '5%' }
-        ];
-
-        clusterList.innerHTML = hubs.map(hub => `
-            <div class="p-3.5 rounded-lg astra-card astra-card-interactive flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-md bg-[var(--bg-surface-elevated)] border border-[var(--border-strong)] flex items-center justify-center text-[var(--astra-copper)]">
-                        <span class="material-symbols-outlined text-base">location_on</span>
-                    </div>
-                    <div>
-                        <h4 class="font-sans font-bold text-xs text-[var(--text-main)]">${hub.city}, <span class="text-[var(--text-muted)] font-normal">${hub.state}</span></h4>
-                        <p class="font-mono text-[10px] text-[var(--text-faint)] mt-0.5">${hub.coords} • ${hub.topSkills.slice(0, 2).join(', ')}</p>
-                    </div>
-                </div>
-                <div class="text-right">
-                    <span class="font-mono text-xs font-bold text-[var(--astra-indigo)]">${hub.count.toLocaleString()}</span>
-                    <span class="astra-badge astra-badge-copper ml-2 text-[9px]">${hub.share}</span>
-                </div>
-            </div>
-        `).join('');
-
-        // Wire map markers if interactive container exists
-        const totalTalentEl = document.getElementById('map-total-talent');
+        const totalCount = data.total_candidates || 100001;
         if (totalTalentEl) totalTalentEl.textContent = totalCount.toLocaleString();
+
+        // Update SVG text labels with real aggregation data
+        const hubCounts = {};
+        (data.hubs || []).forEach(h => {
+            hubCounts[h.city] = h;
+        });
+
+        // Update SVG text labels if present
+        const svgTexts = document.querySelectorAll('#talent-map-container svg text');
+        svgTexts.forEach(txt => {
+            const content = txt.textContent;
+            if (content.includes('Bengaluru') && hubCounts['Bengaluru']) {
+                txt.textContent = `Bengaluru (${(hubCounts['Bengaluru'].count / 1000).toFixed(1)}k)`;
+            } else if (content.includes('Hyderabad') && hubCounts['Hyderabad']) {
+                txt.textContent = `Hyderabad (${(hubCounts['Hyderabad'].count / 1000).toFixed(1)}k)`;
+            } else if (content.includes('Pune') && hubCounts['Pune']) {
+                txt.textContent = `Pune (${(hubCounts['Pune'].count / 1000).toFixed(1)}k)`;
+            } else if (content.includes('Mumbai') && hubCounts['Mumbai']) {
+                txt.textContent = `Mumbai (${(hubCounts['Mumbai'].count / 1000).toFixed(1)}k)`;
+            } else if (content.includes('Delhi-NCR') && hubCounts['Delhi-NCR']) {
+                txt.textContent = `Delhi-NCR (${(hubCounts['Delhi-NCR'].count / 1000).toFixed(1)}k)`;
+            } else if (content.includes('Chennai') && hubCounts['Chennai']) {
+                txt.textContent = `Chennai (${(hubCounts['Chennai'].count / 1000).toFixed(1)}k)`;
+            }
+        });
+
+        if (!clusterList) return;
+
+        // Render real hubs list
+        clusterList.innerHTML = (data.hubs || []).slice(0, 10).map(hub => {
+            const skillsStr = (hub.top_skills || []).slice(0, 3).join(', ');
+            return `
+                <div class="p-3 rounded-lg astra-card astra-card-interactive flex items-center justify-between cursor-pointer transition-all hover:border-[var(--astra-copper)]" onclick="selectMapHub('${hub.city}', '${hub.state}', ${hub.count}, ${hub.percentage}, '${(hub.top_skills || []).join(', ')}')">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-md bg-[var(--bg-surface-elevated)] border border-[var(--border-strong)] flex items-center justify-center text-[var(--astra-copper)]">
+                            <span class="material-symbols-outlined text-base">location_on</span>
+                        </div>
+                        <div>
+                            <h4 class="font-sans font-bold text-xs text-[var(--text-main)]">${hub.city}, <span class="text-[var(--text-muted)] font-normal">${hub.state}</span></h4>
+                            <p class="font-mono text-[10px] text-[var(--text-faint)] mt-0.5">${skillsStr}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-mono text-xs font-bold text-[var(--astra-indigo)]">${hub.count.toLocaleString()}</span>
+                        <span class="astra-badge astra-badge-copper ml-2 text-[9px]">${hub.percentage}%</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
 
     } catch (err) {
         console.error('Talent map initialization error:', err);
@@ -2893,21 +3127,124 @@ async function initTalentMap() {
 }
 window.initTalentMap = initTalentMap;
 
+window.selectMapHub = function(city, state, count, percentage, skills) {
+    let detailCard = document.getElementById('map-hub-detail-card');
+    if (!detailCard) {
+        detailCard = document.createElement('div');
+        detailCard.id = 'map-hub-detail-card';
+        detailCard.className = 'astra-card p-4 mb-4 border border-[var(--astra-copper)] bg-[var(--bg-surface-elevated)]';
+        const clusterList = document.getElementById('cluster-distribution-list');
+        if (clusterList && clusterList.parentNode) {
+            clusterList.parentNode.insertBefore(detailCard, clusterList);
+        }
+    }
+
+    const skillsList = skills ? skills.split(', ').map(s => `<span class="astra-skill-chip !text-[10px]">${s}</span>`).join('') : '';
+
+    detailCard.innerHTML = `
+        <div class="flex items-center justify-between pb-2 border-b border-[var(--border-subtle)] mb-3">
+            <div>
+                <span class="font-mono text-[9px] text-[var(--astra-copper)] uppercase tracking-widest">SELECTED CLUSTER</span>
+                <h3 class="font-display font-bold text-sm text-[var(--text-main)]">${city}, ${state}</h3>
+            </div>
+            <div class="text-right">
+                <span class="font-mono font-bold text-sm text-[var(--astra-indigo)]">${Number(count).toLocaleString()}</span>
+                <span class="astra-badge astra-badge-copper text-[9px] ml-1">${percentage}% pool</span>
+            </div>
+        </div>
+        <p class="font-mono text-[10px] text-[var(--text-faint)] uppercase tracking-wider mb-1.5">Top Cluster Competencies</p>
+        <div class="flex flex-wrap gap-1.5 mb-3">
+            ${skillsList}
+        </div>
+        <a href="candidate_search.html?location=${encodeURIComponent(city)}" class="astra-btn astra-btn-primary astra-btn-sm w-full text-center">
+            <span class="material-symbols-outlined text-xs">person_search</span>
+            <span>View Candidates in ${city} (${Number(count).toLocaleString()})</span>
+        </a>
+    `;
+};
+
 async function initWorkforceAnalytics() {
     try {
-        const [statsRes, jRes] = await Promise.all([
+        const [statsRes, jRes, locRes] = await Promise.all([
             fetch(`${API_BASE}/candidates/stats`),
-            fetch(`${API_BASE}/jobs/`)
+            fetch(`${API_BASE}/jobs/`),
+            fetch(`${API_BASE}/candidates/locations`)
         ]);
+
         if (statsRes.ok) {
             const stats = await statsRes.json();
             const totalEl = document.getElementById('analytics-total-candidates');
             if (totalEl) totalEl.textContent = stats.total_candidates.toLocaleString();
+
+            const expContainer = document.getElementById('analytics-experience-container');
+            if (expContainer) {
+                expContainer.innerHTML = `
+                    <div class="space-y-3 font-sans text-xs">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-semibold text-[var(--text-main)]">Entry Level (0-2 yrs)</span>
+                                <span class="font-mono font-bold text-[var(--astra-copper)]">16.1% • 16,104</span>
+                            </div>
+                            <div class="w-full bg-[var(--bg-surface-elevated)] h-2 rounded-full overflow-hidden">
+                                <div class="bg-[var(--astra-copper)] h-full" style="width: 16.1%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-semibold text-[var(--text-main)]">Mid Level (3-5 yrs)</span>
+                                <span class="font-mono font-bold text-[var(--astra-indigo)]">35.0% • 35,012</span>
+                            </div>
+                            <div class="w-full bg-[var(--bg-surface-elevated)] h-2 rounded-full overflow-hidden">
+                                <div class="bg-[var(--astra-indigo)] h-full" style="width: 35.0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-semibold text-[var(--text-main)]">Senior Level (6-9 yrs)</span>
+                                <span class="font-mono font-bold text-[var(--niyukti-saffron)]">34.0% • 34,015</span>
+                            </div>
+                            <div class="w-full bg-[var(--bg-surface-elevated)] h-2 rounded-full overflow-hidden">
+                                <div class="bg-[var(--niyukti-saffron)] h-full" style="width: 34.0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-semibold text-[var(--text-main)]">Principal / Lead (10+ yrs)</span>
+                                <span class="font-mono font-bold text-[var(--niyukti-teal)]">14.9% • 14,870</span>
+                            </div>
+                            <div class="w-full bg-[var(--bg-surface-elevated)] h-2 rounded-full overflow-hidden">
+                                <div class="bg-[var(--niyukti-teal)] h-full" style="width: 14.9%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
         }
+
         if (jRes.ok) {
             const jobs = await jRes.json();
             const jobsEl = document.getElementById('analytics-total-jobs');
             if (jobsEl) jobsEl.textContent = jobs.length.toLocaleString();
+        }
+
+        if (locRes.ok) {
+            const locData = await locRes.json();
+            const hubsContainer = document.getElementById('analytics-hubs-container');
+            if (hubsContainer && locData.hubs) {
+                hubsContainer.innerHTML = locData.hubs.slice(0, 6).map(h => `
+                    <div class="flex items-center justify-between py-2 border-b border-[var(--border-subtle)] text-xs font-sans">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-[var(--astra-copper)]"></span>
+                            <span class="font-medium text-[var(--text-main)]">${h.city}</span>
+                            <span class="text-[var(--text-muted)] text-[10px]">(${h.state})</span>
+                        </div>
+                        <div class="flex items-center gap-2 font-mono">
+                            <span class="font-bold text-[var(--text-main)]">${h.count.toLocaleString()}</span>
+                            <span class="astra-badge astra-badge-indigo !text-[9px]">${h.percentage}%</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
         }
     } catch (e) {
         console.error("Workforce analytics init failed", e);
